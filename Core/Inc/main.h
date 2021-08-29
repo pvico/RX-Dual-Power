@@ -76,10 +76,6 @@ void Error_Handler(void);
 #define S_PORT_GPIO_Port GPIOA
 #define STAT_STBY_Pin GPIO_PIN_10
 #define STAT_STBY_GPIO_Port GPIOA
-#define LED1_Pin GPIO_PIN_13
-#define LED1_GPIO_Port GPIOA
-#define SW2_Pin GPIO_PIN_14
-#define SW2_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
