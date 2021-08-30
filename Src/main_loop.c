@@ -3,12 +3,8 @@
 #include "magnet.h"
 #include "gpio.h"
 #include <stm32l021xx.h>
-// #include "dma.h"
-#include "adc.h"
+#include "voltage_sensor.h"
 
-// DMA_HandleTypeDef hdma_adc1;
-extern ADC_HandleTypeDef hadc;
-uint32_t result;
 
 void loop() {
 
@@ -18,15 +14,11 @@ void loop() {
     led1_illuminate();
   }
 
-  
-  if (HAL_ADC_PollForConversion(&hadc, 200) == HAL_OK) {
-    result = HAL_ADC_GetValue(&hadc);
-  }
-
   led2_illuminate();
-  HAL_Delay(result);
+  HAL_Delay(main_voltage()>>2);
   led2_extinguish();
-  HAL_Delay(500);
+  HAL_Delay(main_voltage()>>2);
 
-  // HAL_ADC_Start_DMA(&hadc1, &dma_result, 1);
+ 
+ 
 }
