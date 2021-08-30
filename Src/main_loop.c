@@ -4,6 +4,8 @@
 #include "gpio.h"
 #include <stm32l021xx.h>
 #include "voltage_sensor.h"
+// #include <stdio.h>
+#include "console.h"
 
 
 void loop() {
@@ -19,6 +21,5 @@ void loop() {
   led2_extinguish();
   HAL_Delay(main_voltage()>>2);
 
- 
- 
+  print_voltages();
 }

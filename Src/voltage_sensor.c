@@ -11,9 +11,32 @@ void init_voltage_sensors() {
 }
 
 uint16_t main_voltage () {
-    return adc_values[0];
+    return adc_values[0] + CORRECTION_VALUE;
 }
 
 uint16_t stby_voltage () {
-    return adc_values[1];
+    return adc_values[1] + CORRECTION_VALUE;
+}
+
+void __voltage_to_str(u_int32_t voltage, u_int8_t *buffer) {
+    u_int8_t units;
+    u_int8_t decimals;
+
+    units = voltage / 50;
+    decimals = (voltage % 50) * 2;
+
+    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
+    buffer[1] = 48 + units % 10;
+    buffer[2] = '.';
+    buffer[3] = 48 + decimals / 10;
+    buffer[4] = 48 + decimals % 10;
+    buffer[5] = 'V';
+}
+
+void main_voltage_str (uint8_t *buffer) {
+    __voltage_to_str(main_voltage(), buffer);
+}
+
+void stby_voltage_str (uint8_t *buffer) {
+    __voltage_to_str(stby_voltage(), buffer);
 }
