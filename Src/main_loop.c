@@ -15,14 +15,8 @@ extern enum led_states led2_state;
 
 void loop() {
   // test
-  led1_state = OFF;
-  // led2_state = OFF;
   led2_state = STEADY_DIM;
-  // led2_state = BLINK_FAST;
-  // led2_state = BLINK_SLOW;
-  // led2_state = STEADY_BRIGHT;
 
-  // timer_flag is set by tim21 interrupt every ms
   if (timer_flag) {
 
     // ############## 1ms loop #################

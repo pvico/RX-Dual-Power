@@ -1,6 +1,7 @@
 #include "voltage_sensor.h"
 #include "adc.h"
 
+
 extern uint32_t adc_values[2];
 extern ADC_HandleTypeDef hadc;
 uint32_t adc_values[2];
