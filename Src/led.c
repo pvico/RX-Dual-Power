@@ -2,23 +2,113 @@
 #include "gpio.h"
 #include "led.h"
 #include "config.h"
+#include <stdbool.h>
 
-void led1_illuminate() {
+enum led_states led1_state = OFF;
+enum led_states led2_state = OFF;
+
+static bool __led1_illuminated = false;
+static bool __led2_illuminated = false;
+
+
+void __led1_illuminate() {
     #ifndef DEBUG
     HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_RESET);
+    __led1_illuminated = true;
     #endif
 }
 
-void led1_extinguish() {
+void __led1_extinguish() {
     #ifndef DEBUG
     HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_SET);
+    __led1_illuminated = false;
     #endif
 }
 
-void led2_illuminate() {
+void __led2_illuminate() {
     HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_RESET);
+    __led2_illuminated = true;
 }
 
-void led2_extinguish() {
+void __led2_extinguish() {
     HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_SET);
+    __led2_illuminated = false;
+}
+
+static uint16_t __led1_counter = 0;
+static uint16_t __led2_counter = 0;
+
+void leds_loop() {
+    __led1_counter++;
+    __led2_counter++;
+
+    switch (led1_state)
+    {
+    case OFF:
+        __led1_extinguish();
+        __led1_counter = 0;
+        break;
+    case STEADY_DIM:
+        break;
+    case STEADY_BRIGHT:
+        __led1_illuminate();
+        __led1_counter = 0;        
+        break;
+    case BLINK_SLOW:
+        if (!__led1_illuminated && __led1_counter > 1000) {
+            __led1_illuminate();
+            __led1_counter = 0;
+        } else if (__led1_illuminated && __led1_counter > 1000) {
+            __led1_extinguish();
+            __led1_counter = 0;
+        }                
+        break;
+    case BLINK_FAST:
+        if (!__led1_illuminated && __led1_counter > 100) {
+            __led1_illuminate();
+            __led1_counter = 0;
+        } else if (__led1_illuminated && __led1_counter > 100) {
+            __led1_extinguish();
+            __led1_counter = 0;
+        }                        
+        break;
+    
+    default:
+        break;
+    }
+
+    switch (led2_state)
+    {
+    case OFF:
+        __led2_extinguish();
+        __led2_counter = 0;
+        break;
+    case STEADY_DIM:
+        break;
+    case STEADY_BRIGHT:
+        __led2_illuminate();
+        __led2_counter = 0;        
+        break;
+    case BLINK_SLOW:
+        if (!__led2_illuminated && __led2_counter > 1000) {
+            __led2_illuminate();
+            __led2_counter = 0;
+        } else if (__led2_illuminated && __led2_counter > 1000) {
+            __led2_extinguish();
+            __led2_counter = 0;
+        }                
+        break;
+    case BLINK_FAST:
+        if (!__led2_illuminated && __led2_counter > 100) {
+            __led2_illuminate();
+            __led2_counter = 0;
+        } else if (__led2_illuminated && __led2_counter > 100) {
+            __led2_extinguish();
+            __led2_counter = 0;
+        }                        
+        break;
+    
+    default:
+        break;
+    }
 }

@@ -21,6 +21,8 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "lptim.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -92,6 +94,8 @@ int main(void)
   MX_DMA_Init();
   MX_ADC_Init();
   MX_USART2_UART_Init();
+  MX_LPTIM1_Init();
+  MX_TIM21_Init();
   /* USER CODE BEGIN 2 */
   initialize();
   /* USER CODE END 2 */
@@ -148,8 +152,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_LPTIM1;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_PCLK;
+
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

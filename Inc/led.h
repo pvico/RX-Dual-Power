@@ -8,9 +8,8 @@
 #define LED2_GPIO GPIOA
 #define LED2_PIN GPIO_PIN_7 
 
-void led1_illuminate();
-void led1_extinguish();
-void led2_illuminate();
-void led2_extinguish();
+enum led_states {OFF, STEADY_DIM, STEADY_BRIGHT, BLINK_SLOW, BLINK_FAST};
+
+void leds_loop();
 
 #endif /* D86274A9_C095_49D9_9A72_98E31E11064A */
