@@ -14,8 +14,6 @@ extern enum led_states led2_state;
 
 
 void loop() {
-  // test
-  led2_state = STEADY_DIM;
 
   if (timer_flag) {
 
@@ -23,11 +21,11 @@ void loop() {
 
     leds_loop();
 
-    // if (is_magnet_detected()) {
-    //   led1_state = STEADY_BRIGHT;
-    // } else {
-    //   led1_state = OFF;
-    // }
+    if (is_magnet_detected()) {
+      led2_state = STEADY_BRIGHT;
+    } else {
+      led2_state = STEADY_DIM;
+    }
 
     display_loop();
 

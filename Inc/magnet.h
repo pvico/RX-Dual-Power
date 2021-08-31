@@ -7,7 +7,7 @@
 
 #define MAGNET_PIN GPIO_PIN_0
 #define MAGNET_GPIO GPIOA
-#define MAGNET_PRESENT GPIO_PIN_SET
+#define MAGNET_PRESENT GPIO_PIN_RESET
 
 bool is_magnet_detected();
 

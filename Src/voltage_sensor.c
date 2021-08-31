@@ -19,9 +19,9 @@ uint16_t stby_voltage () {
     return adc_values[1] + CORRECTION_VALUE;
 }
 
-void __voltage_to_str(u_int32_t voltage, u_int8_t *buffer) {
-    u_int8_t units;
-    u_int8_t decimals;
+void __voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+    uint8_t units;
+    uint8_t decimals;
 
     units = voltage / 50;
     decimals = (voltage % 50) * 2;
