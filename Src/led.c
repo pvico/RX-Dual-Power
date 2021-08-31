@@ -49,6 +49,12 @@ void leds_loop() {
         __led1_counter = 0;
         break;
     case STEADY_DIM:
+        if (!__led1_illuminated && __led1_counter > 10) {
+            __led1_illuminate();
+            __led1_counter = 0;
+        } else {
+            __led1_extinguish();
+        }                
         break;
     case STEADY_BRIGHT:
         __led1_illuminate();
@@ -84,6 +90,12 @@ void leds_loop() {
         __led2_counter = 0;
         break;
     case STEADY_DIM:
+        if (!__led2_illuminated && __led2_counter > 10) {
+            __led2_illuminate();
+            __led2_counter = 0;
+        } else {
+            __led2_extinguish();
+        }   
         break;
     case STEADY_BRIGHT:
         __led2_illuminate();
