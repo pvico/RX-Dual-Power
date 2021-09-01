@@ -8,6 +8,11 @@
 #define LED2_GPIO GPIOA
 #define LED2_PIN GPIO_PIN_7 
 
+#define LED_BLINK_SLOW_PERIOD_MILLIS    1000
+#define LED_BLINK_FAST_PERIOD_MILLIS    50
+
+#define LED_DIM_FACTOR  10
+
 enum led_states {OFF, STEADY_DIM, STEADY_BRIGHT, BLINK_SLOW, BLINK_FAST};
 
 void leds_loop();

@@ -39,9 +39,6 @@ static uint16_t __led1_counter = 0;
 static uint16_t __led2_counter = 0;
 
 void leds_loop() {
-    __led1_counter++;
-    __led2_counter++;
-
     switch (led1_state)
     {
     case OFF:
@@ -49,7 +46,7 @@ void leds_loop() {
         __led1_counter = 0;
         break;
     case STEADY_DIM:
-        if (!__led1_illuminated && __led1_counter > 10) {
+        if (!__led1_illuminated && __led1_counter > LED_DIM_FACTOR) {
             __led1_illuminate();
             __led1_counter = 0;
         } else {
@@ -61,19 +58,19 @@ void leds_loop() {
         __led1_counter = 0;        
         break;
     case BLINK_SLOW:
-        if (!__led1_illuminated && __led1_counter > 1000) {
+        if (!__led1_illuminated && __led1_counter > LED_BLINK_SLOW_PERIOD_MILLIS) {
             __led1_illuminate();
             __led1_counter = 0;
-        } else if (__led1_illuminated && __led1_counter > 1000) {
+        } else if (__led1_illuminated && __led1_counter > LED_BLINK_SLOW_PERIOD_MILLIS) {
             __led1_extinguish();
             __led1_counter = 0;
         }                
         break;
     case BLINK_FAST:
-        if (!__led1_illuminated && __led1_counter > 100) {
+        if (!__led1_illuminated && __led1_counter > LED_BLINK_FAST_PERIOD_MILLIS) {
             __led1_illuminate();
             __led1_counter = 0;
-        } else if (__led1_illuminated && __led1_counter > 100) {
+        } else if (__led1_illuminated && __led1_counter > LED_BLINK_FAST_PERIOD_MILLIS) {
             __led1_extinguish();
             __led1_counter = 0;
         }                        
@@ -82,6 +79,7 @@ void leds_loop() {
     default:
         break;
     }
+    __led1_counter++;
 
     switch (led2_state)
     {
@@ -90,7 +88,7 @@ void leds_loop() {
         __led2_counter = 0;
         break;
     case STEADY_DIM:
-        if (!__led2_illuminated && __led2_counter > 10) {
+        if (!__led2_illuminated && __led2_counter > LED_DIM_FACTOR) {
             __led2_illuminate();
             __led2_counter = 0;
         } else {
@@ -102,19 +100,19 @@ void leds_loop() {
         __led2_counter = 0;        
         break;
     case BLINK_SLOW:
-        if (!__led2_illuminated && __led2_counter > 1000) {
+        if (!__led2_illuminated && __led2_counter > LED_BLINK_SLOW_PERIOD_MILLIS) {
             __led2_illuminate();
             __led2_counter = 0;
-        } else if (__led2_illuminated && __led2_counter > 1000) {
+        } else if (__led2_illuminated && __led2_counter > LED_BLINK_SLOW_PERIOD_MILLIS) {
             __led2_extinguish();
             __led2_counter = 0;
         }                
         break;
     case BLINK_FAST:
-        if (!__led2_illuminated && __led2_counter > 100) {
+        if (!__led2_illuminated && __led2_counter > LED_BLINK_FAST_PERIOD_MILLIS) {
             __led2_illuminate();
             __led2_counter = 0;
-        } else if (__led2_illuminated && __led2_counter > 100) {
+        } else if (__led2_illuminated && __led2_counter > LED_BLINK_FAST_PERIOD_MILLIS) {
             __led2_extinguish();
             __led2_counter = 0;
         }                        
@@ -123,4 +121,5 @@ void leds_loop() {
     default:
         break;
     }
+    __led2_counter++;
 }

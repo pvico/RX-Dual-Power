@@ -6,11 +6,9 @@
 #include "voltage_sensor.h"
 #include <stdbool.h>
 #include "console.h"
+#include "system.h"
 
 extern bool timer_flag;
-
-extern enum led_states led1_state;
-extern enum led_states led2_state;
 
 
 void loop() {
@@ -19,16 +17,10 @@ void loop() {
 
     // ############## 1ms loop #################
 
+    magnet_loop();
     leds_loop();
-
-    if (is_magnet_detected()) {
-      led2_state = STEADY_BRIGHT;
-    } else {
-      led2_state = STEADY_DIM;
-    }
-
-    display_loop();
-
+    console_display_loop();   // no console display if DEBUG is not defined in config.h
+    system_loop();    // must be last ?
 
     // ############ end 1ms loop ###############
 
