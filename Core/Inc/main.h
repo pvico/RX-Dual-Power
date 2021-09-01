@@ -60,6 +60,7 @@ void SystemClock_Config();
 /* Private defines -----------------------------------------------------------*/
 #define SW1_Pin GPIO_PIN_9
 #define SW1_GPIO_Port GPIOB
+#define SW1_EXTI_IRQn EXTI4_15_IRQn
 #define CTL1_Pin GPIO_PIN_14
 #define CTL1_GPIO_Port GPIOC
 #define CTL2_Pin GPIO_PIN_15
@@ -77,6 +78,11 @@ void SystemClock_Config();
 #define S_PORT_GPIO_Port GPIOA
 #define STAT_STBY_Pin GPIO_PIN_10
 #define STAT_STBY_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_13
+#define LED1_GPIO_Port GPIOA
+#define SW2_Pin GPIO_PIN_14
+#define SW2_GPIO_Port GPIOA
+#define SW2_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

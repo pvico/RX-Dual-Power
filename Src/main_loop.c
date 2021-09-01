@@ -22,9 +22,9 @@ void main_loop() {
     magnet_loop();
     button_loop();
     leds_loop();
-    debug_console_display_loop();   // no debug_console display if DEBUG is not defined in config.h
+    debug_console_display_loop();   // no debug_console display if CONSOLE_OUTPUT is not defined in config.h
     power_source_loop();
-    system_loop();    // must be last ?
+    system_loop();
 
     // ############ end 1ms loop ###############
 

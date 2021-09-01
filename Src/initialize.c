@@ -6,6 +6,7 @@
 #include "debug_console.h"
 
 
+extern enum led_states led1_state;
 extern enum led_states led2_state;
 
 void initialize() {
@@ -19,5 +20,6 @@ void initialize() {
   debug_console_print_splash();
 
   //test
-  led2_state = STEADY_DIM;
+  led1_state = STEADY_DIM;
+  led2_state = BLINK_SLOW;
 }

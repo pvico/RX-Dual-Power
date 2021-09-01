@@ -81,7 +81,3 @@ void magnet_loop() {
 inline bool is_magnet_double_activation_active() {
   return double_activation_state;
 }
-
-void disable_magnet_double_activation() {
-  double_activation_state = false;
-}

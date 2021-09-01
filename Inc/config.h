@@ -9,7 +9,9 @@
 // DEBUG not defined:
 //      Set PA13 (label LED1) as GPIO output open drain no pullup no pulldown
 //      Set PA14 (label SW2) as GPIO input pullup
-#define DEBUG
+// #define DEBUG
+
+// #define CONSOLE_OUTPUT
 
 
 

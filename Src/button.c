@@ -9,6 +9,8 @@
 
 extern enum led_states led1_state;
 
+static bool double_activation_state = false;
+
 static enum button_states sw1_debounced_state = BUTTON_NOT_DEPRESSED;
 static enum button_states sw2_debounced_state = BUTTON_NOT_DEPRESSED;
 
@@ -28,9 +30,9 @@ static uint16_t __sw1_depressed__loop_counter = 0;
 static uint16_t __sw1_not_depressed__loop_counter = 0;
 static uint16_t __sw2_depressed__loop_counter = 0;
 static uint16_t __sw2_not_depressed__loop_counter = 0;
+static uint16_t __double_activation__loop_counter = 0;
 void button_loop() {
     if (__is_sw1_depressed()) {
-        // NVIC_SystemReset();
         if (sw1_debounced_state == BUTTON_NOT_DEPRESSED) {
             __sw1_depressed__loop_counter++;
             if (__sw1_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
@@ -67,11 +69,19 @@ void button_loop() {
         }
     }
 
-    // if (sw1_debounced_state == BUTTON_DEPRESSED) {
-    //     led1_state = STEADY_BRIGHT;
-    //     leds_loop();
-    //     // debug_console_print_system_status();
-    // } else {
-    //     led1_state = STEADY_DIM;
-    // }
+    if (sw1_debounced_state == BUTTON_DEPRESSED && 
+            sw2_debounced_state == BUTTON_DEPRESSED) {
+        __double_activation__loop_counter++;
+        if (__double_activation__loop_counter > BUTTON_DOUBLE_ACTIVATION_MILLIS) {
+            double_activation_state = true;
+        }
+    } else {
+        __double_activation__loop_counter = 0; 
+        double_activation_state = false;       
+    }
+}
+
+
+bool is_button_double_activation_active() {
+    return double_activation_state;
 }
