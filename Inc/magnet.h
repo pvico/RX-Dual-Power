@@ -17,4 +17,7 @@ enum magnet_states{MAGNET_PRESENT, MAGNET_NOT_PRESENT};
 
 void magnet_loop();
 
+bool is_magnet_double_activation_active();
+void disable_magnet_double_activation();
+
 #endif /* F70FDB9F_40FF_4C83_A6DE_912D82AD15A0 */

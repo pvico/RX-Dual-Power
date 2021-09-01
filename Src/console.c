@@ -40,16 +40,31 @@ void console_print_system_status() {
 //   #endif
 // }
 
-void console_print_single_activation() {
+// void console_print_single_activation() {
+//   #ifdef DEBUG
+//   uint8_t data[] = "SINGLE ACTIVATION\r\n";
+//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+//   #endif
+// }
+
+// void console_print_double_activation() {
+//   #ifdef DEBUG
+//   uint8_t data[] = "DOUBLE ACTIVATION\r\n";
+//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+//   #endif
+// }
+
+void console_print_entering_stop_mode() {
   #ifdef DEBUG
-  uint8_t data[] = "SINGLE ACTIVATION\r\n";
+  uint8_t data[] = "ENTERING STOP MODE\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }
 
-void console_print_double_activation() {
+void console_print_exiting_stop_mode() {
   #ifdef DEBUG
-  uint8_t data[] = "DOUBLE ACTIVATION\r\n";
+  uint8_t data[] = "EXITING STOP MODE\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }
+

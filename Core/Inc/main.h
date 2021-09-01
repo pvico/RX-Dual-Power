@@ -54,7 +54,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void SystemClock_Config();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -66,6 +66,7 @@ void Error_Handler(void);
 #define CTL2_GPIO_Port GPIOC
 #define MAGNET_Pin GPIO_PIN_0
 #define MAGNET_GPIO_Port GPIOA
+#define MAGNET_EXTI_IRQn EXTI0_1_IRQn
 #define V_MAIN_Pin GPIO_PIN_1
 #define V_MAIN_GPIO_Port GPIOA
 #define V_STBY_Pin GPIO_PIN_4

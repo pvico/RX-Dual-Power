@@ -34,39 +34,33 @@ static uint16_t __after_activation_loop_counter = 0;
 void magnet_loop() {
     if (__is_magnet_detected()) {
       if (magnet_debounced_state == MAGNET_NOT_PRESENT) { 
-        // magnet is detected and magnet_debounced_state is MAGNET_NOT_PRESENT
-        
         __magnet_detected_loop_counter++;
         if (__magnet_detected_loop_counter > MAGNET_DEBOUNCE_DELAY_MILLIS) {      // > 1 sec.
           magnet_debounced_state = MAGNET_PRESENT;
+          __magnet_detected_loop_counter = 0;
+
           if (__after_activation_loop_counter > MAGNET_SECOND_DETECTION_MINIMUM_INTERVAL_MILLIS &&
             __after_activation_loop_counter < MAGNET_SECOND_DETECTION_TIMEOUT_MILLIS) {
             double_activation_state = true;
             single_activation_state = false;
-            console_print_double_activation();
+            // console_print_double_activation();
             __after_activation_loop_counter = 0;
           } else {
             double_activation_state = false;
             single_activation_state = true;
-            console_print_single_activation();
+            // console_print_single_activation();
             __after_activation_loop_counter = 0;
           }
-          __magnet_detected_loop_counter = 0;
         }
-      } else {
-        // magnet is detected and magnet_debounced_state is MAGNET_PRESENT
       }
     } else {
       // magnet is not detected
       if (magnet_debounced_state == MAGNET_PRESENT) {
-        // magnet is not detected and magnet_debounced_state is MAGNET_PRESENT
         __magnet_not_detected_loop_counter++;
         if (__magnet_not_detected_loop_counter > MAGNET_DEBOUNCE_DELAY_MILLIS) {      // > 1 sec.
           magnet_debounced_state = MAGNET_NOT_PRESENT;
           __magnet_not_detected_loop_counter = 0;
         }               
-      } else {
-        // magnet is not detected and magnet_debounced_state is MAGNET_NOT_PRESENT
       }
     }    
     __show_magnet_presence();
@@ -77,4 +71,13 @@ void magnet_loop() {
         __after_activation_loop_counter = MAGNET_SECOND_DETECTION_TIMEOUT_MILLIS;
       }
     }
+}
+
+
+inline bool is_magnet_double_activation_active() {
+  return double_activation_state;
+}
+
+void disable_magnet_double_activation() {
+  double_activation_state = false;
 }
