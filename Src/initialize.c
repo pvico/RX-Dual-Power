@@ -3,8 +3,10 @@
 #include "voltage_sensor.h"
 #include "tim.h"
 #include "output_control.h"
+#include "debug_console.h"
 
 
+extern enum led_states led2_state;
 
 void initialize() {
 
@@ -13,4 +15,9 @@ void initialize() {
   HAL_TIM_Base_Start_IT(&htim21);
 
   void power_on();
+
+  debug_console_print_splash();
+
+  //test
+  led2_state = STEADY_DIM;
 }

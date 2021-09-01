@@ -8,6 +8,7 @@
 #include "debug_console.h"
 #include "system.h"
 #include "power_source.h"
+#include "button.h"
 
 extern bool timer_flag;
 
@@ -19,6 +20,7 @@ void main_loop() {
     // ############## 1ms loop #################
 
     magnet_loop();
+    button_loop();
     leds_loop();
     debug_console_display_loop();   // no debug_console display if DEBUG is not defined in config.h
     power_source_loop();

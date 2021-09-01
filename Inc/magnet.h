@@ -5,8 +5,8 @@
 #include <stm32l021xx.h>
 #include "stdbool.h"
 
-#define MAGNET_PIN GPIO_PIN_0
-#define MAGNET_GPIO GPIOA
+// #define MAGNET_PIN GPIO_PIN_0
+// #define MAGNET_GPIO GPIOA
 #define MAGNET_PRESENT_PIN_STATE GPIO_PIN_RESET
 
 #define MAGNET_DEBOUNCE_DELAY_MILLIS    100

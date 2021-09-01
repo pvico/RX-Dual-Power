@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "config.h"
 #include "debug_console.h"
+#include "main.h"
 
 
 static bool double_activation_state = false;
@@ -11,7 +12,7 @@ static bool single_activation_state = false;
 static enum magnet_states magnet_debounced_state = MAGNET_NOT_PRESENT;
 
 static bool __is_magnet_detected() {
-    return HAL_GPIO_ReadPin(MAGNET_GPIO, MAGNET_PIN) == MAGNET_PRESENT_PIN_STATE;
+    return HAL_GPIO_ReadPin(MAGNET_GPIO_Port, MAGNET_Pin) == MAGNET_PRESENT_PIN_STATE;
 }
 
 
@@ -24,7 +25,10 @@ void __show_magnet_presence() {
     }
     led2_state = BLINK_FAST;
   } else {
-    led2_state = __led2_previous_state;
+    // magnet_debounced_state == MAGNET_NOT_PRESENT
+    if (led2_state == BLINK_FAST) {
+      led2_state = __led2_previous_state;
+    }
   }
 }
 
