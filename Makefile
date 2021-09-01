@@ -49,7 +49,7 @@ Src/led.c \
 Src/magnet.c \
 Src/voltage_sensor.c \
 Src/console.c \
-Src/sport.c \
+Src/s_port.c \
 Src/output_control.c \
 Src/button.c \
 Src/power_source.c \

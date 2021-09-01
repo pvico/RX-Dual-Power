@@ -3,6 +3,7 @@
 #include "led.h"
 #include "config.h"
 #include <stdbool.h>
+#include "main.h"
 
 enum led_states led1_state = OFF;
 enum led_states led2_state = OFF;
@@ -13,25 +14,25 @@ static bool __led2_illuminated = false;
 
 void __led1_illuminate() {
     #ifndef DEBUG
-    HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
     __led1_illuminated = true;
     #endif
 }
 
 void __led1_extinguish() {
     #ifndef DEBUG
-    HAL_GPIO_WritePin(LED1_GPIO, LED1_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
     __led1_illuminated = false;
     #endif
 }
 
 void __led2_illuminate() {
-    HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
     __led2_illuminated = true;
 }
 
 void __led2_extinguish() {
-    HAL_GPIO_WritePin(LED2_GPIO, LED2_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
     __led2_illuminated = false;
 }
 

@@ -3,11 +3,6 @@
 
 #include <stm32l021xx.h>
 
-#define LED1_GPIO GPIOA
-#define LED1_PIN GPIO_PIN_13 
-#define LED2_GPIO GPIOA
-#define LED2_PIN GPIO_PIN_7 
-
 #define LED_BLINK_SLOW_PERIOD_MILLIS    1000
 #define LED_BLINK_FAST_PERIOD_MILLIS    50
 

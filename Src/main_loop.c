@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include "console.h"
 #include "system.h"
+#include "power_source.h"
 
 extern bool timer_flag;
 
@@ -20,6 +21,7 @@ void loop() {
     magnet_loop();
     leds_loop();
     console_display_loop();   // no console display if DEBUG is not defined in config.h
+    power_source_loop();
     system_loop();    // must be last ?
 
     // ############ end 1ms loop ###############
