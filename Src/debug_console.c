@@ -1,10 +1,10 @@
-#include "console.h"
+#include "debug_console.h"
 #include "usart.h"
 #include "voltage_sensor.h"
 #include "config.h"
 
 
-void console_print_voltages() {
+void debug_console_print_voltages() {
   #ifdef DEBUG
   uint8_t data[] = "MAIN: ______\tSTBY: ______\r\n";
   main_voltage_str(data+6);
@@ -17,51 +17,51 @@ void console_print_voltages() {
 static uint16_t __display_counter = 0;
 #endif
 
-void console_display_loop() {
+void debug_console_display_loop() {
   #ifdef DEBUG
   if (__display_counter++ == 10000) {
-    console_print_voltages();
+    debug_console_print_voltages();
     __display_counter = 0;
   }
   #endif
 }
 
-void console_print_system_status() {
+void debug_console_print_system_status() {
   #ifdef DEBUG
   uint8_t data[] = "SYSTEM ______\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }
 
-// void console_print_magnet_present() {
+// void debug_console_print_magnet_present() {
 //   #ifdef DEBUG
 //   uint8_t data[] = "MAGNET PRESENT\r\n";
 //   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
 //   #endif
 // }
 
-// void console_print_single_activation() {
+// void debug_console_print_single_activation() {
 //   #ifdef DEBUG
 //   uint8_t data[] = "SINGLE ACTIVATION\r\n";
 //   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
 //   #endif
 // }
 
-// void console_print_double_activation() {
+// void debug_console_print_double_activation() {
 //   #ifdef DEBUG
 //   uint8_t data[] = "DOUBLE ACTIVATION\r\n";
 //   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
 //   #endif
 // }
 
-void console_print_entering_stop_mode() {
+void debug_console_print_entering_stop_mode() {
   #ifdef DEBUG
   uint8_t data[] = "ENTERING STOP MODE\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }
 
-void console_print_exiting_stop_mode() {
+void debug_console_print_exiting_stop_mode() {
   #ifdef DEBUG
   uint8_t data[] = "EXITING STOP MODE\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    

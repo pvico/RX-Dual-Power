@@ -2,7 +2,7 @@
 #include "led.h"
 #include <stdint.h>
 #include "config.h"
-#include "console.h"
+#include "debug_console.h"
 
 
 static bool double_activation_state = false;
@@ -43,12 +43,12 @@ void magnet_loop() {
             __after_activation_loop_counter < MAGNET_SECOND_DETECTION_TIMEOUT_MILLIS) {
             double_activation_state = true;
             single_activation_state = false;
-            // console_print_double_activation();
+            // debug_console_print_double_activation();
             __after_activation_loop_counter = 0;
           } else {
             double_activation_state = false;
             single_activation_state = true;
-            // console_print_single_activation();
+            // debug_console_print_single_activation();
             __after_activation_loop_counter = 0;
           }
         }

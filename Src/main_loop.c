@@ -5,14 +5,14 @@
 #include <stm32l021xx.h>
 #include "voltage_sensor.h"
 #include <stdbool.h>
-#include "console.h"
+#include "debug_console.h"
 #include "system.h"
 #include "power_source.h"
 
 extern bool timer_flag;
 
 
-void loop() {
+void main_loop() {
 
   if (timer_flag) {
 
@@ -20,7 +20,7 @@ void loop() {
 
     magnet_loop();
     leds_loop();
-    console_display_loop();   // no console display if DEBUG is not defined in config.h
+    debug_console_display_loop();   // no debug_console display if DEBUG is not defined in config.h
     power_source_loop();
     system_loop();    // must be last ?
 

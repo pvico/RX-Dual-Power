@@ -1,7 +1,7 @@
 #include "system.h"
 #include "magnet.h"
 #include "led.h"
-#include "console.h"
+#include "debug_console.h"
 #include "main.h"
 #include "output_control.h"
 
@@ -20,7 +20,7 @@ void __system_stop_mode() {
     led2_state = OFF;
     leds_loop();
     
-    console_print_entering_stop_mode();
+    debug_console_print_entering_stop_mode();
 
     HAL_SuspendTick();
     HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
@@ -30,11 +30,10 @@ void __system_stop_mode() {
     led1_state = led1_previous_state;
     led2_state = led2_previous_state;
     power_on();
-    console_print_exiting_stop_mode();
+    debug_console_print_exiting_stop_mode();
 }
 
 void system_loop() {
-    led2_state = STEADY_DIM;
     if (is_magnet_double_activation_active()) {
         disable_magnet_double_activation();
         __system_stop_mode();
