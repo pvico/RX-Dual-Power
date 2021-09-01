@@ -2,6 +2,7 @@
     "files.associations": {
         "stdbool.h": "c",
         "console.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "initialize.h": "c"
     }
 }

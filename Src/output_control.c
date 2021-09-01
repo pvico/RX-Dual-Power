@@ -1,5 +1,6 @@
 #include "output_control.h"
 #include "main.h"
+#include "gpio.h"
 
 // Only the code in this file can manipulate the LTC4412 CTL pins
 // to select the power source and/or switch on/off the output
