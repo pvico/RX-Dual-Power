@@ -33,9 +33,23 @@ void console_print_system_status() {
   #endif
 }
 
-void console_print_magnet_present() {
+// void console_print_magnet_present() {
+//   #ifdef DEBUG
+//   uint8_t data[] = "MAGNET PRESENT\r\n";
+//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+//   #endif
+// }
+
+void console_print_single_activation() {
   #ifdef DEBUG
-  uint8_t data[] = "MAGNET PRESENT\r\n";
+  uint8_t data[] = "SINGLE ACTIVATION\r\n";
+  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+  #endif
+}
+
+void console_print_double_activation() {
+  #ifdef DEBUG
+  uint8_t data[] = "DOUBLE ACTIVATION\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }
