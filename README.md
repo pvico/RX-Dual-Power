@@ -69,13 +69,14 @@ Approaching the magnet 2 times close to the AH180 hall effect sensor on the PCB 
 
 The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the AH180 (but not on its side). Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off<sup>8</sup>. Press any button to power on.
 
 Connecting a power source, e.g. a new battery, will also power on the system.
 
-When the model is powered off, the current consumed should be minimal<sup>8</sup>.
+When the model is powered off, the current consumed should be minimal<sup>9</sup>.
 
-<sub><sup>8</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 (< 5µA), AH180 (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
+<sub><sup>8</sup>If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
+<sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 (< 5µA), AH180 (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
 
 ## S.Port reporting
 
