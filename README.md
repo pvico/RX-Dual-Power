@@ -1,4 +1,4 @@
-# RX-Dual-Battery-Switch-R2.0
+# RX Dual Battery Switch
 
 ## Description
 TODO
@@ -35,18 +35,19 @@ To power off the RX and servos, use a neodymium magnet of sufficient size and po
 
 Approaching the magnet 2 times close to the AH180 on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The AH180 (U5) is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
-The magnet shown above will be detected when it is about 2.5cm (1") either *above* or *below* the AH180. Position the RX Dual Battery Switch appropriately in the model.
+The magnet shown above will be detected when it is about 2.5cm (1") either *above* or *below* the AH180. Position the RX Dual Battery Switch PCB appropriately in the model.
 
-Alternatively, if you don't have the magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any one button to power on. 
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
 
 ## LED signalling
 
-|                       | Green (LED1)  | Yellow (LED2) |
-| :-------------------- | :----------:  | :-----------: |
-| Using MAIN power      |      DIM      |      OFF      |
-| Using STBY power      |      OFF      |   BLINK SLOW  |
-| Power off             |      OFF      |      OFF      |
-| Magnet detected       |       x       |   BLINK FAST  |
+|                                 | Green (LED1)  | Yellow (LED2) |
+| :------------------------------ | :----------:  | :-----------: |
+| Using MAIN power                |      DIM      |      OFF      |
+| Using STBY power strategy 1     |      OFF      |   BLINK SLOW  |
+| Using STBY power strategy 2     |      OFF      |      DIM      |
+| Power off                       |      OFF      |      OFF      |
+| Magnet detected                 |       x       |   BLINK FAST  |
 
 ## S.Port reporting
 
