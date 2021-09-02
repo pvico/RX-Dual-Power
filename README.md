@@ -28,17 +28,21 @@ The system must be configured for one of the following power source selection st
 
 ### If configured for strategy 1
 
-The MCU selects the power source by forcing off one of them using the CTL1 or CTL2 lines.
+As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off by setting the CTL2 line to HIGH.
 
-If MAIN PWR and STBY PWR are both low voltage  - or any one is disconnected - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied.
+When MAIN PWR is below its minimum voltage, becomes disconnected or is in short-circuit, the MCU releases the CTL2 line and sets the CTL1 line to HIGH, isolating MAIN PWR from the system and STBY PWR now powers the model.
+
+If MAIN PWR and STBY PWR are both low voltage  - or any one is disconnected or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with highest voltage now powers the model.
 
 ### If configured for strategy 2
 
 The MCU will let the LTC4412's control the power source. Both CTL1 and CTL2 lines are set to high impedance.
 
-If two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model.
+The LTC4412's will select the source with the highest voltage.
 
-### If the MCU is powered down
+Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
+
+### If the MCU is powered down due to low volatge
 
 Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, then both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection) and strategy 2 is applied.
 
@@ -51,6 +55,8 @@ Approaching the magnet 2 times close to the AH180 hall effect sensor on the PCB 
 The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the AH180 (not on the side). Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
+
+Powering off the model is achieved by the MCU setting both CTL1 and CTL2 lines to high.
 
 When the model is powered off, the current consumed should be minimal (less than 100µA).
 
