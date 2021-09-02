@@ -37,7 +37,7 @@ If MAIN PWR and STBY PWR are **both** *below minimum voltage*<sup>1</sup>  - or 
 <sub><sup>1</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup>2</sup>Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 <sub><sup>3</sup>The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off.</sub><br/>
-<sub><sup>4</sup>Both CTL1 and CTL2 lines are released (MCU pin set to high impedance).</sub><br/>
+<sub><sup>4</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
 
 ### System configured for strategy #2
 
@@ -47,11 +47,11 @@ The LTC4412's will select the source with the highest voltage and isolate the ot
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
-<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (MCU pin set to high impedance).</sub><br/>
+<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
 
 ### If the MCU is powered down due to low volatge
 
-Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>6</sup.
+Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>6</sup>.
 
 <sub><sup>6</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
