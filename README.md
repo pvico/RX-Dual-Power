@@ -34,7 +34,7 @@ As long as MAIN PWR is above its minimum voltage (according to its type), the MC
 
 When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnected or in short-circuit - STBY PWR powers the model<sup>4</sup>.
 
-If MAIN PWR and STBY PWR are **both** *below minimum voltage*<sup>3</sup>  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied<sup>5</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
+If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied<sup>5</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
 <sub><sup>2</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup>3</sup>Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
