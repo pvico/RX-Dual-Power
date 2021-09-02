@@ -34,10 +34,10 @@ When MAIN PWR is *below its minimum voltage*<sup>2</sup> - but **not** disconnec
 
 If MAIN PWR and STBY PWR are **both** *below minimum voltage*<sup>1</sup>  - or if *any one* is disconnected or in short-circuit -  strategy #2 is applied<sup>4</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
-<sub><sup>1</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (set to high impedance).</sub><br/>
-<sub><sup>2</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
+<sub><sup>1</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
+<sub><sup>2</sup>Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 <sub><sup>3</sup>The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off.</sub><br/>
-<sub><sup>4</sup>Both CTL1 and CTL2 lines are released.</sub><br/>
+<sub><sup>4</sup>Both CTL1 and CTL2 lines are released (MCU pin set to high impedance).</sub><br/>
 
 ### System configured for strategy #2
 
@@ -47,7 +47,7 @@ The LTC4412's will select the source with the highest voltage and isolate the ot
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
-<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (set to high impedance).</sub><br/>
+<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (MCU pin set to high impedance).</sub><br/>
 
 ### If the MCU is powered down due to low volatge
 
