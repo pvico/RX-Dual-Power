@@ -13,11 +13,11 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 - LIFE 2-4S (6.6 to 13.2V)
 - NIMH 4-5S (4.8 to 6V)
 
-Maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage should be at least 5V (4.8V is ok for NIMH 2S).
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage should be at least 5V (4.8V is ok for NIMH 2S).
 
 With the *available voltage*<sup>1</sup> decreasing due to battery discharge, the micro-controller (called MCU here after) will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the receiver and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
 
-Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and both power source voltages must be sufficient to drive that BEC*.
+Whatever voltages are present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
 
 <sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this available voltage less a diode drop.</sub><br/>
 
