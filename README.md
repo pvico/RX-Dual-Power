@@ -26,27 +26,34 @@ The system must be configured for one of the following power source selection st
 1. Use MAIN PWR as long as it is available and of sufficient voltage, otherwise use STBY PWR
 2. Use the power source with the highest voltage
 
-### System configured for strategy 1
+### System configured for strategy #1
 
-As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off by setting the CTL2 line to HIGH and releasing the CTL1 line.
+As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off<sup>1</sup>.
 
-When MAIN PWR is *below its minimum voltage** - but **not** disconnected or in short-circuit - the MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off and STBY PWR now powers the model.
+When MAIN PWR is *below its minimum voltage*<sup>2</sup> - but **not** disconnected or in short-circuit - STBY PWR powers the model<sup>3</sup>.
 
-If MAIN PWR and STBY PWR are **both** *below minimum voltage**  - or if *any one* is disconnected or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
+If MAIN PWR and STBY PWR are **both** *below minimum voltage*<sup>1</sup>  - or if *any one* is disconnected or in short-circuit -  strategy #2 is applied<sup>4</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
-\*Below minimum voltage only applies to a battery. A BEC is never below minimum voltage. It is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V). 
+<sub><sup>1</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (set to high impedance).</sub><br/>
+<sub><sup>2</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
+<sub><sup>3</sup>The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off.</sub><br/>
+<sub><sup>4</sup>Both CTL1 and CTL2 lines are released.</sub><br/>
 
-### System configured for strategy 2
+### System configured for strategy #2
 
-The MCU will let the LTC4412's control the power source. Both CTL1 and CTL2 lines are set to high impedance.
+The MCU will let the LTC4412's control the power source<sup>5</sup>. 
 
 The LTC4412's will select the source with the highest voltage and isolate the other one from the sytem.
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
+<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (set to high impedance).</sub><br/>
+
 ### If the MCU is powered down due to low volatge
 
-Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, then both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection) and strategy 2 is applied.
+Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>6</sup.
+
+<sub><sup>6</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
 ## Powering off the model
 
@@ -73,15 +80,15 @@ These are transmitted using sensor ID: **TBD**
 
 ### Messages
 
-| Message               | Condition                                                                       |
-| :-------------------: | :------------------------------------------------------------------------------ |
-| USING MAIN PWR        | System configured for strategy 1 is selected and MAIN PWR is the power source   |
-| USING STBY PWR        | System configured for strategy 1 selected and STBY PWR is the power source      |
-| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage                       |
-| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage                       |
-| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                                          |
-| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                                          |
-| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED                       |
+| Message               | Condition                                                                        |
+| :-------------------: | :------------------------------------------------------------------------------- |
+| USING MAIN PWR        | System configured for strategy #1 is selected and MAIN PWR is the power source   |
+| USING STBY PWR        | System configured for strategy #1 selected and STBY PWR is the power source      |
+| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage                        |
+| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage                        |
+| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                                           |
+| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                                           |
+| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED                        |
 
 Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**.
 Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
@@ -90,15 +97,15 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 ## LED signalling
 
-| Condition*                                        | Green (LED1)  | Yellow (LED2) |
-| ------------------------------------------------- | :----------:  | :-----------: |
-| Power off                                         |      OFF      |      OFF      |
-| Magnet detected                                   |       x       |     BRIGHT    |
-| MAIN PWR LOW or DISCONNECTED                      |   BLINK FAST  |       x       |
-| STBY PWR LOW or DISCONNECTED                      |       x       |   BLINK FAST  |
-| Using STBY PWR (system configured for strategy 1) |       x       |   BLINK SLOW  |
-| Using STBY PWR (system configured for strategy 2) |       x       |      DIM      |
-| Using MAIN PWR                                    |      DIM      |       x       |
+| Condition*                                         | Green (LED1)  | Yellow (LED2) |
+| -------------------------------------------------- | :----------:  | :-----------: |
+| Power off                                          |      OFF      |      OFF      |
+| Magnet detected                                    |       x       |     BRIGHT    |
+| MAIN PWR LOW or DISCONNECTED                       |   BLINK FAST  |       x       |
+| STBY PWR LOW or DISCONNECTED                       |       x       |   BLINK FAST  |
+| Using STBY PWR (system configured for strategy #1) |       x       |   BLINK SLOW  |
+| Using STBY PWR (system configured for strategy #2) |       x       |      DIM      |
+| Using MAIN PWR                                     |      DIM      |       x       |
 
 \* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.
 
