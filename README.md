@@ -15,7 +15,7 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 
 Maximum voltage is 16.8V (fully charged LIPO 4S). The MCU will remain powered down to about 4V. The RX and servos will remain powered down to an available voltage of 2.5V. However, most receivers and/or servos will have failed before reaching this.
 
-Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the RX or servos, a BEC must be placed *after* the RX Dual Battery Switch and *both power source voltages* must be sufficient to drive that BEC.
+Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the RX or servos, *a BEC must be placed **after** the RX Dual Battery Switch and both power source voltages must be sufficient to drive that BEC*.
 
 ## Strategies
 
@@ -36,7 +36,7 @@ To power off the RX and servos, use a neodymium magnet of sufficient size and po
 
 Approaching the magnet 2 times close to the AH180 hall effect sensor on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The AH180 (U5) is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
-The magnet shown above will be detected when it is about 2.5cm (1") either *above* or *below* the AH180. Position the RX Dual Battery Switch PCB appropriately in the model.
+The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the AH180 (not on the side). Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
 
@@ -61,10 +61,10 @@ These are transmitted using sensor ID: **TBD**
 | STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                                          |
 | CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED                       |
 
-Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**
-Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each message.
+Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**.
+Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
 
-If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage reporting.
+If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
 
 ## LED signalling
 
@@ -78,4 +78,4 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 | Using STBY PWR (system configured for strategy 2) |       x       |      DIM      |
 | Using MAIN PWR                                    |      DIM      |       x       |
 
-\* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED, LED1 and LED2 will both blink fast whichever source is powering the model.
+\* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.
