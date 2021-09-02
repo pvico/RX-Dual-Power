@@ -30,11 +30,11 @@ The system must be configured for one of the following power source selection st
 
 As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off by setting the CTL2 line to HIGH and releasing the CTL1 line.
 
-When MAIN PWR is below its minimum voltage - but *not* disconnected* or in short-circuit - the MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off and STBY PWR now powers the model.
+When MAIN PWR is *below its minimum voltage** - but **not** disconnected or in short-circuit - the MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off and STBY PWR now powers the model.
 
-If MAIN PWR and STBY PWR are *both* low voltage  - or if *any one* is disconnected* or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
+If MAIN PWR and STBY PWR are **both** *below minimum voltage**  - or if *any one* is disconnected or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
-\*A BEC delivering a voltage below 4.8V is considered disconnected. 
+\*Below minimum voltage only applies to a battery. A BEC is never below minimum voltage. It is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V). 
 
 ### System configured for strategy 2
 
