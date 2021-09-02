@@ -40,34 +40,42 @@ The magnet shown above will be detected when it is about 2.5cm (1") either *abov
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
 
-## LED signalling
-
-|                                      | Green (LED1)  | Yellow (LED2) |
-| ------------------------------------ | :----------:  | :-----------: |
-| Using MAIN PWR                       |      DIM      |      OFF      |
-| Using STBY PWR (strategy 1 selected) |      OFF      |   BLINK SLOW  |
-| Using STBY PWR (strategy 2 selected )|      OFF      |      DIM      |
-| Power off                            |      OFF      |      OFF      |
-| Magnet detected                      |       x       |   BLINK FAST  |
-
 ## S.Port reporting
-
-### Messages
-
-| Message               | Condition                                                 |
-| :-------------------: | :-------------------------------------------------------- |
-| USING MAIN PWR        | Strategy 1 is selected and MAIN PWR is the power source   |
-| USING STBY PWR        | Strategy 1 selected and STBY PWR is the power source      |
-| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage |
-| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage |
-| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                    |
-| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                    |
 
 ### Values
 
 - MAIN PWR voltage
 - STBY PWR voltage
 
-Non-standard S.Port sensor id's or messages are used, so adequate programming of the transmitter using OpenTX must be done to have vocal messages corresponding to these reportings.
+These are transmitted using sensor ID: **TBD**
 
-If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate message must be configured in response to the main power source voltage reporting.
+### Messages
+
+| Message               | Condition                                                                       |
+| :-------------------: | :------------------------------------------------------------------------------ |
+| USING MAIN PWR        | System configured for strategy 1 is selected and MAIN PWR is the power source   |
+| USING STBY PWR        | System configured for strategy 1 selected and STBY PWR is the power source      |
+| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage                       |
+| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage                       |
+| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                                          |
+| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                                          |
+| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED                       |
+
+Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**
+Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each message.
+
+If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage reporting.
+
+## LED signalling
+
+| Condition*                                        | Green (LED1)  | Yellow (LED2) |
+| ------------------------------------------------- | :----------:  | :-----------: |
+| Power off                                         |      OFF      |      OFF      |
+| Magnet detected                                   |       x       |     BRIGHT    |
+| MAIN PWR LOW or DISCONNECTED                      |   BLINK FAST  |       x       |
+| STBY PWR LOW or DISCONNECTED                      |       x       |   BLINK FAST  |
+| Using STBY PWR (system configured for strategy 1) |       x       |   BLINK SLOW  |
+| Using STBY PWR (system configured for strategy 2) |       x       |      DIM      |
+| Using MAIN PWR                                    |      DIM      |       x       |
+
+\* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED, LED1 and LED2 will both blink fast whichever source is powering the model.

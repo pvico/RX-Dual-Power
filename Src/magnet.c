@@ -20,13 +20,13 @@ extern enum led_states led2_state;
 static enum led_states __led2_previous_state;
 void __show_magnet_presence() {
   if (magnet_debounced_state == MAGNET_PRESENT) {
-    if (led2_state != BLINK_FAST) {
+    if (led2_state != BRIGHT) {
       __led2_previous_state = led2_state;
     }
-    led2_state = BLINK_FAST;
+    led2_state = BRIGHT;
   } else {
     // magnet_debounced_state == MAGNET_NOT_PRESENT
-    if (led2_state == BLINK_FAST) {
+    if (led2_state == BRIGHT) {
       led2_state = __led2_previous_state;
     }
   }
