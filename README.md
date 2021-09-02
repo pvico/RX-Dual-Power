@@ -13,22 +13,34 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 - LIFE 2-4S (6.6 to 13.2V)
 - NIMH 4-5S (4.8 to 6V)
 
-Maximum voltage is 16.8V (fully charged LIPO 4S). The MCU will remain powered down to about 4V. The RX and servos will remain powered down to an available voltage of 2.5V. However, most receivers and/or servos will have failed before reaching this.
+Maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage should be at least 5V (4.8V is ok for NIMH 2S).
+
+With the available voltage decreasing due to battery discharge, the MCU will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the RX and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
 
 Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the RX or servos, *a BEC must be placed **after** the RX Dual Battery Switch and both power source voltages must be sufficient to drive that BEC*.
 
-## Strategies
+## Power source selection strategy
 
-One of the following power source selection strategies must be selected:
+The system must be configured for one of the following power source selection strategies:
 
-1. Use MAIN PWR as long as it is available and of sufficient voltage, otherwise use STBY PWR.
-2. Use the power source with the highest voltage. If 2 batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model.
+1. Use MAIN PWR as long as it is available and of sufficient voltage, otherwise use STBY PWR
+2. Use the power source with the highest voltage
 
-For strategy 1, the MCU determines the power source. For strategy 2, the MCU will let the LTC4412's control the power source.
+### If configured for strategy 1
 
-Note: if strategy 1 is selected and MAIN PWR and STBY PWR are both low voltage  - or one is disconnected - then strategy 2 is applied.
+The MCU selects the power source by forcing off one of them using the CTL1 or CTL2 lines.
 
-Should the MCU become unpowered, e.g. if the available voltage is too low to keep the 3.3V regulator powered, then strategy 2 is applied.
+If MAIN PWR and STBY PWR are both low voltage  - or any one is disconnected - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied.
+
+### If configured for strategy 2
+
+The MCU will let the LTC4412's control the power source. Both CTL1 and CTL2 lines are set to high impedance.
+
+If two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model.
+
+### If the MCU is powered down
+
+Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, then both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection) and strategy 2 is applied.
 
 ## Powering off the model
 
@@ -39,6 +51,8 @@ Approaching the magnet 2 times close to the AH180 hall effect sensor on the PCB 
 The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the AH180 (not on the side). Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
+
+When the model is powered off, the current consumed should be minimal (less than 100µA).
 
 ## S.Port reporting
 
