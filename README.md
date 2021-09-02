@@ -17,7 +17,7 @@ Maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source vol
 
 With the available voltage decreasing due to battery discharge, the MCU will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the RX and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
 
-Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the RX or servos, *a BEC must be placed **after** the RX Dual Battery Switch and both power source voltages must be sufficient to drive that BEC*.
+Whatever voltages are present at the power source inputs can be present at the output. So, if one or both of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and both power source voltages must be sufficient to drive that BEC*.
 
 ## Power source selection strategy
 
@@ -26,19 +26,21 @@ The system must be configured for one of the following power source selection st
 1. Use MAIN PWR as long as it is available and of sufficient voltage, otherwise use STBY PWR
 2. Use the power source with the highest voltage
 
-### If configured for strategy 1
+### System configured for strategy 1
 
-As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off by setting the CTL2 line to HIGH.
+As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off by setting the CTL2 line to HIGH and releasing the CTL1 line.
 
-When MAIN PWR is below its minimum voltage, becomes disconnected or is in short-circuit, the MCU releases the CTL2 line and sets the CTL1 line to HIGH, isolating MAIN PWR from the system and STBY PWR now powers the model.
+When MAIN PWR is below its minimum voltage - but *not* disconnected* or in short-circuit - the MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off and STBY PWR now powers the model.
 
-If MAIN PWR and STBY PWR are both low voltage  - or any one is disconnected or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with highest voltage now powers the model.
+If MAIN PWR and STBY PWR are *both* low voltage  - or if *any one* is disconnected* or in short-circuit - then both CTL1 and CTL2 lines are set to high impedance and strategy 2 is applied, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
-### If configured for strategy 2
+\*A BEC delivering a voltage below 4.8V is considered disconnected. 
+
+### System configured for strategy 2
 
 The MCU will let the LTC4412's control the power source. Both CTL1 and CTL2 lines are set to high impedance.
 
-The LTC4412's will select the source with the highest voltage.
+The LTC4412's will select the source with the highest voltage and isolate the other one from the sytem.
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
@@ -99,3 +101,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 | Using MAIN PWR                                    |      DIM      |       x       |
 
 \* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.
+
+## System configuration
+
+In config.h and re-compiling or by programming through the S.Port connector: **TBD**
