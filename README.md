@@ -71,9 +71,9 @@ The magnet shown above will be detected when it is about 2.5cm (1") either *dire
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off. Press any button to power on. 
 
-Powering off the model is achieved by the MCU setting both CTL1 and CTL2 lines to high.
+When the model is powered off, the current consumed should be minimal<sup>8</sup>.
 
-When the model is powered off, the current consumed should be minimal (less than 100µA).
+<sub><sup>8</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 (< 5µA), AH180 (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
 
 ## S.Port reporting
 
