@@ -1,8 +1,8 @@
 # RX Dual Battery Switch
 
 ## Description
-TODO
 
+**TODO**
 
 ## Types of power sources
 
