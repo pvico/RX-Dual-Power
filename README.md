@@ -55,6 +55,10 @@ Should the MCU become unpowered, e.g. if the available voltage becomes too low t
 
 <sub><sup>6</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
+## Typical configurations
+
+**TODO**
+
 ## Powering off the model
 
 To power off the RX and servos, use a neodymium magnet of sufficient size and power ([e.g. this one](https://www.amazon.de/-/en/Magnetpro-Countersunk-Magnet-Cushions-Capsule/dp/B08K39Q1DL/ref=pd_sbs_1/261-1102478-9650911?pd_rd_w=4NK6S&pf_rd_p=b1c388c3-48c2-4960-8532-fa8f1477aee9&pf_rd_r=2AJZ6JFC8H0XXN0D8038&pd_rd_r=500284af-6c54-4b1d-af8f-a95a1c957906&pd_rd_wg=SNuGS&pd_rd_i=B08K39Q1DL&psc=1), 20 x 7mm, 10kg force).
