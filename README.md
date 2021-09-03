@@ -8,16 +8,16 @@
 
 The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
 
-- BEC from 5 to 8.4V
+- BEC from 4.8 to 8.4V
 - LIPO 2-4S (7.4 to 14.8V)
 - LIFE 2-4S (6.6 to 13.2V)
 - NIMH 4-5S (4.8 to 6V)
 
-The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage should be at least 5V (4.8V is ok for NIMH 2S).
-
-With the *available voltage*<sup>1</sup> decreasing due to battery discharge, the micro-controller (called MCU here after) will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the receiver and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 4.8V (NIMH 2S).
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
+
+With the *available voltage*<sup>1</sup> decreasing due to battery discharge, the micro-controller (called MCU here after) will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the receiver and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
 
 <sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this available voltage less a diode drop.</sub><br/>
 
@@ -65,9 +65,9 @@ Should the MCU become unpowered, e.g. if the available voltage becomes too low t
 
 To power off the RX and servos, use a neodymium magnet of sufficient size and power ([e.g. this one](https://www.amazon.de/-/en/Magnetpro-Countersunk-Magnet-Cushions-Capsule/dp/B08K39Q1DL/ref=pd_sbs_1/261-1102478-9650911?pd_rd_w=4NK6S&pf_rd_p=b1c388c3-48c2-4960-8532-fa8f1477aee9&pf_rd_r=2AJZ6JFC8H0XXN0D8038&pd_rd_r=500284af-6c54-4b1d-af8f-a95a1c957906&pd_rd_wg=SNuGS&pd_rd_i=B08K39Q1DL&psc=1), 20 x 7mm, 10kg force).
 
-Approaching the magnet 2 times close to the AH180 hall effect sensor on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The AH180 location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
+Approaching the magnet 2 times within 2 seconds close to the hall effect sensor on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The hall effect sensor location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
-The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the AH180 (but not on its side). Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
+The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off<sup>8</sup>. Press any button to power on.
 
@@ -76,7 +76,7 @@ Connecting a power source, e.g. a new battery, will also power on the system.
 When the model is powered off, the current consumed should be minimal<sup>9</sup>.
 
 <sub><sup>8</sup>If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
-<sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 (< 5µA), AH180 (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
+<sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
 
 ## S.Port reporting
 
@@ -89,15 +89,15 @@ These are transmitted using sensor ID: **TBD**
 
 ### Messages
 
-| Message               | Condition                                                                        |
-| :-------------------: | :------------------------------------------------------------------------------- |
-| USING MAIN PWR        | System configured for strategy #1 is selected and MAIN PWR is the power source   |
-| USING STBY PWR        | System configured for strategy #1 selected and STBY PWR is the power source      |
-| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage                        |
-| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage                        |
-| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                                           |
-| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                                           |
-| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED                        |
+| Message               | Condition                                                          |
+| :-------------------: | :----------------------------------------------------------------- |
+| USING MAIN PWR        | System configured for strategy #1 and MAIN PWR is the power source |
+| USING STBY PWR        | System configured for strategy #1 and STBY PWR is the power source |
+| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage          |
+| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage          |
+| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                             |
+| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                             |
+| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED          |
 
 Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**.
 Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
