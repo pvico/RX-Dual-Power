@@ -17,6 +17,7 @@ The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
 
+**TO BE CONFIRMED**
 With the *available voltage*<sup>1</sup> decreasing due to battery discharge, the micro-controller (called MCU here after) will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the receiver and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.
 
 <sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this available voltage less a diode drop.</sub><br/>
@@ -71,9 +72,9 @@ The magnet shown above will be detected when it is about 2.5cm (1") either *dire
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off<sup>8</sup>. Press any button to power on.
 
-Connecting a power source, e.g. a new battery, will also power on the system.
+Connecting a power source, e.g. a new battery, will also power on the model.
 
-When the model is powered off, the current consumed should be minimal<sup>9</sup>.
+When the model is powered off, the current consumed is minimal<sup>9</sup>.
 
 <sub><sup>8</sup>If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
 <sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
