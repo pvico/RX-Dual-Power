@@ -124,4 +124,6 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 ## System configuration
 
-In config.h and re-compiling or by programming through the S.Port connector: **TBD**
+**TBD**
+
+Using buttons or by programming through the S.Port connector:
