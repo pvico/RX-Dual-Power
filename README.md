@@ -65,7 +65,7 @@ Approaching the magnet 2 times within 2 seconds close to the hall effect sensor 
 
 The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off<sup>8</sup>. Press any button to power on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model<sup>8</sup>. Press any button to power it back on.
 
 Connecting a power source, e.g. a new battery, will also power on the model.
 
