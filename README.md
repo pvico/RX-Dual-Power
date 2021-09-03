@@ -1,4 +1,4 @@
-# RX Dual Battery Switch
+# RX Dual Power Switch
 
 ## Description
 
