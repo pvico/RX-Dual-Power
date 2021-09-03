@@ -8,20 +8,18 @@
 
 The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
 
-- BEC from 4.8 to 8.4V
-- LIPO 2-4S (7.4 to 14.8V)
-- LIFE 2-4S (6.6 to 13.2V)
-- NIMH 4-5S (4.8 to 6V)
+- BEC from 5 to 8.4V
+- LIPO 2-4S (7.4 to 14.8V nominal, 8.4 to 16.8V fully charged)
+- LIFE 2-4S (6.6 to 13.2V nominal, 7 to 14V fully charged)
+- NIMH 4-5S (4.8 to 6V nominal, not recommended)
 
-The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 4.8V (NIMH 2S).
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended55 as they tend to be unreliable.
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
 
-**TO BE CONFIRMED [**
-With the *available voltage*<sup>1</sup> decreasing due to battery discharge, the micro-controller (called MCU here after) will remain powered until the available voltage reaches about 4V. Even if the MCU has powered down due to low voltage, the receiver and servos will still remain powered until a voltage of 2.5V is reached. However, most receivers and/or servos will have failed before reaching this low voltage.**]**
+Even with the *available voltage*<sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until the available voltage becomes so low that the receiver and/or servos fail.
 
-<sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this available voltage less a diode drop.</sub><br/>
-
+<sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain above 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, by that time, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but with such a low voltage most receivers and servos will have failed.</sub><br/>
 ## Power source selection strategy
 
 The system must be configured for one of the following power source selection strategies:
@@ -51,13 +49,6 @@ The LTC4412's select the source with the highest voltage and isolate the other o
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
 <sub><sup>6</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
-
-### If the MCU is powered down due to low volatge
-
-**TO BE CONFIRMED [**
-Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>7</sup>.**]**
-
-<sub><sup>7</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
 ## Typical configurations
 
