@@ -64,9 +64,9 @@ Note: if two batteries of the same type are used as power source, they will be s
 
 ## Powering off the model
 
-To power off the RX and servos, use a neodymium magnet of sufficient size and power.
+To power off the receivers and servos, use a neodymium magnet of sufficient size and power.
 
-Approaching the magnet 2 times within 2 seconds close to the hall effect sensor on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The hall effect sensor location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
+Approaching the magnet close to the hall effect sensor on the PCB twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The hall effect sensor location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
 A stack of 8 12x5mm round magnets will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. To increase the magnet distance, stack more magnets or use larger ones.
 

@@ -18,8 +18,4 @@ void initialize() {
   void power_on();
 
   debug_console_print_splash();
-
-  //test
-  led1_state = STEADY_DIM;
-  led2_state = BLINK_SLOW;
 }
