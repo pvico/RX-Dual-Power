@@ -44,9 +44,9 @@ If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one**
 
 ### System configured for strategy #2
 
-The MCU will let the LTC4412's control the power source<sup>6</sup>. 
+The MCU lets the LTC4412's control the power source<sup>6</sup>. 
 
-The LTC4412's will select the source with the highest voltage and isolate the other one from the sytem.
+The LTC4412's select the source with the highest voltage and isolate the other one from the sytem.
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
 
@@ -54,7 +54,7 @@ Note: if two batteries of the same type are used as power source, they will be s
 
 ### If the MCU is powered down due to low volatge
 
-Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>7</sup>.
+**TO BE CONFIRMED [**Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>7</sup>.**]**
 
 <sub><sup>7</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
