@@ -108,7 +108,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 ## LED signalling
 
-| Condition*                                         | Green (LED1)  | Yellow (LED2) |
+| Condition<sup>*</sup>                                         | Green (LED1)  | Yellow (LED2) |
 | -------------------------------------------------- | :----------:  | :-----------: |
 | Power off                                          |      OFF      |      OFF      |
 | Magnet detected                                    |       x       |     BRIGHT    |
@@ -118,7 +118,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 | Using STBY PWR (system configured for strategy #2) |       x       |      DIM      |
 | Using MAIN PWR                                     |      DIM      |       x       |
 
-\* Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.
+<sub><sup>*</sup>Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
 ## System configuration
 
