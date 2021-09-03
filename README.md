@@ -95,15 +95,15 @@ These are transmitted using sensor ID: **TBD**
 
 ### Messages
 
-| Message               | Condition                                                          |
-| :-------------------: | :----------------------------------------------------------------- |
-| USING MAIN PWR        | System configured for strategy #1 and MAIN PWR is the power source |
-| USING STBY PWR        | System configured for strategy #1 and STBY PWR is the power source |
-| STBY PWR LOW          | STBY PWR is a battery and it is below its minimum voltage          |
-| MAIN PWR LOW          | MAIN PWR is a battery and it is below its minimum voltage          |
-| MAIN PWR DISCONNECTED | MAIN PWR is below 0.5V                                             |
-| STBY PWR DISCONNECTED | STBY PWR is below 0.5V                                             |
-| CRITICAL              | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED          |
+| Message               | Value | Condition                                                          |
+| :-------------------: | :---: | :----------------------------------------------------------------- |
+| USING MAIN PWR        |  TBD  | System configured for strategy #1 and MAIN PWR is the power source |
+| USING STBY PWR        |  TBD  | System configured for strategy #1 and STBY PWR is the power source |
+| STBY PWR LOW          |  TBD  | STBY PWR is a battery and it is below its minimum voltage          |
+| MAIN PWR LOW          |  TBD  | MAIN PWR is a battery and it is below its minimum voltage          |
+| MAIN PWR DISCONNECTED |  TBD  | MAIN PWR is below 0.5V                                             |
+| STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                             |
+| CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED          |
 
 Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**.
 Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
