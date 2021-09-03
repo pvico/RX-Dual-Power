@@ -77,7 +77,7 @@ void debug_console_print_sw1_depressed() {
 
 void debug_console_print_splash() {
   #ifdef CONSOLE_OUTPUT
-  uint8_t data[] = "\r\nRX DUAL BATTERY SWITCH\r\nPhilippe Vico - 2021\r\n";
+  uint8_t data[] = "\r\nRX Dual Power\r\nPhilippe Vico - 2021\r\n";
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
   #endif
 }

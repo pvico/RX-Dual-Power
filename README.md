@@ -1,4 +1,4 @@
-# RX Dual Power Switch
+# RX Dual Power
 
 ## Description
 
@@ -20,7 +20,7 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 
 The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended as they tend to be unreliable.
 
-Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
+Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
 
 Even with the *available voltage*<sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
 ##  
@@ -68,7 +68,7 @@ To power off the RX and servos, use a neodymium magnet of sufficient size and po
 
 Approaching the magnet 2 times within 2 seconds close to the hall effect sensor on the PCB will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The hall effect sensor location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
-The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Battery Switch PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
+The magnet shown above will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model<sup>8</sup>. Press any button to power it back on.
 
