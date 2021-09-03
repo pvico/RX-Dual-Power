@@ -35,23 +35,23 @@ As long as MAIN PWR is above its minimum voltage (according to its type), the MC
 
 When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnected or in short-circuit - STBY PWR powers the model<sup>4</sup>.
 
-If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied<sup>5</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
+If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied and the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
 ### System configured for strategy #2
 
-The MCU lets the LTC4412's control the power source<sup>6</sup>. 
+The MCU lets the LTC4412's control the power source<sup>5</sup>. 
 
 The LTC4412's select the source with the highest voltage and isolate the other one from the sytem.
 
-Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
+Note: if two batteries of the same type are used as power source, they will be selected alternatively<sup>6</sup> and will discharge in parallel.
 
 ##  
 
 <sub><sup>2</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup>3</sup>Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 <sub><sup>4</sup>The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be higher than STBY PWR: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.4V) and a fully charged LIFE 2S as STBY PWR (7.2V).</sub><br/>
-<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance) and the LTC4412's control the power source.</sub><br/>
-<sub><sup>6</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
+<sub><sup>5</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
+<sub><sup>6</sup>Whichever one is 20mV above the other will power the model.</sub><br/>
 
 ## Typical configurations
 
