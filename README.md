@@ -13,7 +13,7 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 - LIFE 2-4S (6.6 to 13.2V nominal, 7 to 14V fully charged)
 - NIMH 4-5S (4.8 to 6V nominal, not recommended)
 
-The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended55 as they tend to be unreliable.
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended as they tend to be unreliable.
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
 
