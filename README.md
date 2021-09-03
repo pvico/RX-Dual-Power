@@ -13,14 +13,15 @@ The main power source (labelled MAIN PWR on the back of the PCB) and the standby
 - LIFE 2-4S (6.6 to 13.2V nominal, 7 to 14V fully charged)
 - NIMH 4-5S (4.8 to 6V nominal, not recommended)
 
-The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended as they tend to be unreliable.
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended55 as they tend to be unreliable.
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Battery Switch and **both** power source voltages must be sufficient to drive that BEC*.
 
-Even with the *available voltage*<sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until the available voltage becomes so low that the receiver and/or servos fail.
+Even with the *available voltage*<sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time, until the available voltage becomes so low and that the receiver and/or servos fail.
 ##  
 
 <sub><sup>1</sup>The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain above 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, by that time, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but with such a low voltage most receivers and servos will have failed.</sub><br/>
+
 ## Power source selection strategy
 
 The system must be configured for one of the following power source selection strategies:
@@ -36,6 +37,8 @@ When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnec
 
 If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied<sup>5</sup>, the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
+##  
+
 <sub><sup>2</sup>By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup>3</sup>Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 <sub><sup>4</sup>The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be higher than STBY PWR: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.4V) and a fully charged LIFE 2S as STBY PWR (7.2V).</sub><br/>
@@ -48,6 +51,8 @@ The MCU lets the LTC4412's control the power source<sup>6</sup>.
 The LTC4412's select the source with the highest voltage and isolate the other one from the sytem.
 
 Note: if two batteries of the same type are used as power source, they will be selected alternativeley, whichever one is 20mV above the other will power the model. They will discharge in parallel.
+
+##  
 
 <sub><sup>6</sup>Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
 
@@ -68,6 +73,8 @@ Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simu
 Connecting a power source, e.g. a new battery, will also power on the model.
 
 When the model is powered off, the current consumed is minimal<sup>9</sup>.
+
+##  
 
 <sub><sup>8</sup>If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
 <sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
@@ -113,6 +120,8 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 | Using STBY PWR (system configured for strategy #1) |       x       |   BLINK SLOW  |
 | Using STBY PWR (system configured for strategy #2) |       x       |      DIM      |
 | Using MAIN PWR                                     |      DIM      |       x       |
+
+##  
 
 <sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
