@@ -66,7 +66,7 @@ Note: if two batteries of the same type are used as power source, they will be s
 
 To power off the receiver and servos, use a neodymium magnet of sufficient size and power. To be detected, it must be positioned either *directly above* or *directly below* the hall effect sensor on the PCB *but not on its side*. The hall effect sensor location is clearly indicated on the PCB with the label 'MAGNET' and an arrow.
 
-**TODO:** picture here
+<img width="500px" src="Additional Documents/img/Magnet_on_PCB.jpg">
 
 Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
 
