@@ -68,7 +68,7 @@ To power off the receivers and servos, use a neodymium magnet of sufficient size
 
 Approaching the magnet close to the hall effect sensor on the PCB twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on. The hall effect sensor location is clearly indicated on the PCB with a label 'MAGNET' and an arrow. 
 
-A stack of 8 12x5mm round magnets will be detected when it is about 2.5cm (1") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. To increase the magnet distance, stack more magnets or use larger ones.
+A stack of 8 12x5mm round magnets will be detected when it is about 3cm (1 1/4") either *directly above* or *directly below* the hall effect sensor *but not on its side*. Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. To increase the magnet distance, stack more magnets or use larger ones.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model<sup>8</sup>. Press any button to power it back on.
 
