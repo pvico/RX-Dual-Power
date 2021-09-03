@@ -26,7 +26,7 @@ Even with the *available voltage*<sup>1</sup> decreasing due to battery discharg
 
 The system can be configured to use one of the following strategies for the selection of the power source:
 
-- **Strategy #1**: Use MAIN PWR as long as it is available and of sufficient voltage, otherwise use STBY PWR
+- **Strategy #1**: Use MAIN PWR as long as it is available and has sufficient voltage, otherwise use STBY PWR
 - **Strategy #2**: Use the power source with the highest voltage
 
 ### System configured for strategy #1
