@@ -106,9 +106,13 @@ Adequate programming of the transmitter using OpenTX must be done to have audio 
 
 If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
 
+## SBUS2 reporting
+
+**TODO**
+
 ## LED signalling
 
-| Condition<sup>*</sup>                                         | Green (LED1)  | Yellow (LED2) |
+| Condition <sup>*</sup>                                         | Green (LED1)  | Yellow (LED2) |
 | -------------------------------------------------- | :----------:  | :-----------: |
 | Power off                                          |      OFF      |      OFF      |
 | Magnet detected                                    |       x       |     BRIGHT    |

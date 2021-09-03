@@ -10,3 +10,4 @@
 ### Optional
 
 - Watchdog timer
+- SBUS2
