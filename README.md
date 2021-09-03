@@ -54,7 +54,8 @@ Note: if two batteries of the same type are used as power source, they will be s
 
 ### If the MCU is powered down due to low volatge
 
-**TO BE CONFIRMED [**Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>7</sup>.**]**
+**TO BE CONFIRMED [**
+Should the MCU become unpowered, e.g. if the available voltage becomes too low to keep the 3.3V regulator powered, strategy #2 is applied<sup>7</sup>.**]**
 
 <sub><sup>7</sup>Both CTL1 and CTL2 lines are set to high impedance just before the MCU powers down (brownout detection).</sub><br/>
 
