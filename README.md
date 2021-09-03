@@ -4,6 +4,10 @@
 
 **TODO**
 
+<img src="Additional Documents/img/PCB Design Top.png">
+
+<img src="Additional Documents/img/PCB Design Bottom.png">
+
 [Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
 
 ## Types of power sources
