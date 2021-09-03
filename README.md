@@ -33,7 +33,7 @@ The system must be configured for one of the following power source selection st
 
 As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off<sup>2</sup>.
 
-When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnected or in short-circuit - STBY PWR powers the model<sup>4</sup>.
+When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnected or in short-circuit - the MCU selects STBY PWR and forces MAIN PWR off<sup>4</sup>.
 
 If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied and the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
