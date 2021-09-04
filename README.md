@@ -7,7 +7,7 @@
 
 This is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal primary electrical source or a backup battery. Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction.
 
-For electric models, the radio system is often powered by the BEC<sup>1</sup> present on the ESC<sup>2</sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup>3</sup> or other reasons.
+For electric models, the radio system is often powered by the BEC<sup>1</sup> present on the ESC<sup>2</sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup>3</sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
 
 [Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
