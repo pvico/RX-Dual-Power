@@ -6,9 +6,7 @@
 
 This is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) of the model from either the normal primary electrical source or a backup battery. Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in the loss or destruction of the model.
 
-For electrical models whose radio system is powered by the BEC<sup>1</sup> present on the ESC<sup>2</sup> - and this is the most common configuration - 
-
-another relatively common failure
+For electrical models, the most common configuration is having the radio system powered by the BEC<sup>1</sup> present on the ESC<sup>2</sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup>3</sup or other reasons.
 
 <img width="500px" src="Additional Documents/img/PCB Design Top.png">
 <!-- <img width="500px" src="Additional Documents/img/PCB Design Bottom.png"> -->
@@ -18,6 +16,7 @@ another relatively common failure
 
 <sub><sup>1</sup>Battery Eliminator Circuit, a device reducing the battery voltage to a level acceptable by the radio system. Most of the time, it is a buck converter, a switching step-down DC-DC converter.</sub><br/>
 <sub><sup>2</sup>Electronic Speed Controller. Electric motors used today on RC models are usually of the brushless type. Brushless motors need a specific speed controller called an ESC and generally use LiPo (lithium polymer) batteries consisting of 3 cells or more in series (labelled 3S, 4S, etc.). Most often, ESC's are equipped with a BEC on the same PCB. When they are not, they are usually labelled "opto"</sub><br/>
+<sub>3<sup></sup>Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use I(although an execellent online application to do just that is available here: [https://www.ecalc.ch](https://www.ecalc.ch)) If have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
 
 ## Types of power sources
 
