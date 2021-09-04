@@ -7,7 +7,7 @@
 
 This is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal primary electrical source or a backup battery. Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction.
 
-For electric models, the radio system is often powered by the BEC<sup>1</sup> present on the ESC<sup>2</sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup>3</sup> or other reasons, resulting in the associated BEC being destroyed as well.
+For electric models, the radio system is often powered by the BEC <sup>1</sup> present on the ESC <sup>2</sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup>3</sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
 
 [Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
@@ -30,7 +30,7 @@ The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
 
-Even with the *available voltage*<sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
+Even with the *available voltage* <sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
 ##  
 
 <sub><sup>1</sup> The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, by that time, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but with such a low voltage most receivers and servos will have failed.</sub><br/>
@@ -44,19 +44,19 @@ The system can be configured to use one of the following strategies for the sele
 
 ### System configured for strategy #1
 
-As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off<sup>2</sup>.
+As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off <sup>2</sup>.
 
-When MAIN PWR is *below its minimum voltage*<sup>3</sup> - but **not** disconnected or in short-circuit - the MCU selects STBY PWR and forces MAIN PWR off<sup>4</sup>.
+When MAIN PWR is *below its minimum voltage* <sup>3</sup> - but **not** disconnected or in short-circuit - the MCU selects STBY PWR and forces MAIN PWR off <sup>4</sup>.
 
 If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied and the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
 ### System configured for strategy #2
 
-The MCU lets the LTC4412's control the power source<sup>5</sup>. 
+The MCU lets the LTC4412's control the power source <sup>5</sup>. 
 
 The LTC4412's select the source with the highest voltage and isolate the other one from the sytem.
 
-Note: if two batteries of the same type are used as power source, they will be selected alternatively<sup>6</sup> and will discharge in parallel.
+Note: if two batteries of the same type are used as power source, they will be selected alternatively <sup>6</sup> and will discharge in parallel.
 
 ##  
 
@@ -78,13 +78,13 @@ To power off the receiver and servos, use a neodymium magnet of sufficient size 
 
 Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
 
-Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets<sup>7</sup>.
+Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup>7</sup>.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model<sup>8</sup>. Press any button to power it back on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup>8</sup>. Press any button to power it back on.
 
 Connecting a power source, e.g. a new battery, will also power on the model.
 
-When the model is powered off, the current consumed is minimal<sup>9</sup>.
+When the model is powered off, the current consumed is minimal <sup>9</sup>.
 
 ##  
 
