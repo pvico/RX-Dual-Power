@@ -30,10 +30,10 @@ The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
 
-Even with the *available voltage* <sup>1</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
+Even with the *available voltage* <sup>4</sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
 ##  
 
-<sub><sup>1</sup> The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, by that time, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but with such a low voltage most receivers and servos will have failed.</sub><br/>
+<sub><sup>4</sup> The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, by that time, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but with such a low voltage most receivers and servos will have failed.</sub><br/>
 
 ## Power source selection strategy
 
@@ -44,27 +44,27 @@ The system can be configured to use one of the following strategies for the sele
 
 ### System configured for strategy #1
 
-As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off <sup>2</sup>.
+As long as MAIN PWR is above its minimum voltage (according to its type), the MCU selects MAIN PWR and forces STBY PWR off <sup>5</sup>.
 
-When MAIN PWR is *below its minimum voltage* <sup>3</sup> - but **not** disconnected or in short-circuit - the MCU selects STBY PWR and forces MAIN PWR off <sup>4</sup>.
+When MAIN PWR is *below its minimum voltage* <sup>6</sup> - but **not** disconnected or in short-circuit - the MCU selects STBY PWR and forces MAIN PWR off <sup>7</sup>.
 
 If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied and the source with the highest voltage now powers the model, the other one becoming isolated from the system.
 
 ### System configured for strategy #2
 
-The MCU lets the LTC4412's control the power source <sup>5</sup>. 
+The MCU lets the LTC4412's control the power source <sup>8</sup>. 
 
 The LTC4412's select the source with the highest voltage and isolate the other one from the sytem.
 
-Note: if two batteries of the same type are used as power source, they will be selected alternatively <sup>6</sup> and will discharge in parallel.
+Note: if two batteries of the same type are used as power source, they will be selected alternatively <sup>9</sup> and will discharge in parallel.
 
 ##  
 
-<sub><sup>2</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
-<sub><sup>3</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
-<sub><sup>4</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
-<sub><sup>5</sup> Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
-<sub><sup>6</sup> Whichever one is 20mV above the other will power the model.</sub><br/>
+<sub><sup>5</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
+<sub><sup>6</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
+<sub><sup>7</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
+<sub><sup>8</sup> Both CTL1 and CTL2 lines are released (MCU pins set to high impedance).</sub><br/>
+<sub><sup>9</sup> Whichever one is 20mV above the other will power the model.</sub><br/>
 
 ## Typical configurations
 
@@ -78,19 +78,19 @@ To power off the receiver and servos, use a neodymium magnet of sufficient size 
 
 Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
 
-Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup>7</sup>.
+Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup>10</sup>.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup>8</sup>. Press any button to power it back on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup>11</sup>. Press any button to power it back on.
 
 Connecting a power source, e.g. a new battery, will also power on the model.
 
-When the model is powered off, the current consumed is minimal <sup>9</sup>.
+When the model is powered off, the current consumed is minimal <sup>12</sup>.
 
 ##  
 
-<sub><sup>7</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
-<sub><sup>8</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
-<sub><sup>9</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
+<sub><sup>10</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
+<sub><sup>11</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
+<sub><sup>12</sup> Less than 100µA. Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
 
 ## S.Port reporting
 
