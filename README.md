@@ -195,7 +195,7 @@ When the model is powered off, if the AH180 detects a magnet or if a button is d
 The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 ##  
 
-<sub><sup id="note10">10</sup> This is needed to avoid the MOSFET body diode letting a reverse current flow into into the connected battery when the output voltage coming from the other input source is higher.</sub><br/>
+<sub><sup id="note10">10</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
 <sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
 
 
