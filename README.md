@@ -47,29 +47,13 @@ With the *available voltage* - the highest of MAIN PWR voltage and STBY PWR volt
 
 ## Power source selection
 
-<!-- The system can be configured to use one of the following strategies for the selection of the power source:
-
-- **Strategy #1**: Use MAIN PWR as long as it is available and has sufficient voltage, otherwise use STBY PWR
-- **Strategy #2**: Use the power source with the highest voltage
-
-**For most situations, strategy #1 makes more sense**. Using strategy #1, no current will be drawn from the STBY PWR battery as long as you change the MAIN PWR battery before it reaches a low level. Strategy #2 may be useful is some cases <sup><a href="#note5">5</a></sup>.
-
-### System configured for strategy #1 -->
-
 1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
 2. When MAIN PWR is *below its minimum voltage* <sup><a href="#note5">5</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
 
 3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  The source with the highest voltage powers the model, the other one is isolated from the system.
-
-<!-- ### System configured for strategy #2
-
-The source with the highest voltage powers the model, the other one is isolated from the system. 
-
-Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively and will discharge in parallel. -->
 #
 
-<!-- <sub><sup id="note5">5</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/> -->
 <sub><sup id="note5">5</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 
 ## Typical configurations
@@ -189,7 +173,7 @@ Using buttons or by programming through the S.Port connector.
 The circuit is based on the Linear Technology LTC4412
 
 
-To connect your STM32 SWD programmer (e.g. STMicroelectronics ST-Link/V2) to the PCB, use a "DYKB 1.27mm spacing Test stand PCB clip" double row 1.27mm-3P, available on Aliexpress.
+To connect your STM32 SWD programmer (e.g. STMicroelectronics ST-Link/V2) to the PCB, use a "DYKB 1.27mm spacing Test stand PCB clip, double row, 1.27mm-3P", available on Aliexpress.
 
 <img css="margin:0 auto;" width="600px" src="Additional Documents/img/SWD Clip.jpg">
 
