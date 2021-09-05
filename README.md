@@ -21,6 +21,8 @@ The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver a
 
 [Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
 
+*The Gerber files of the PCB will be published here after testing the system in real use will be completed.*
+
 ## Types of power sources
 
 The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
