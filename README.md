@@ -106,7 +106,7 @@ Position the RX Dual Power PCB appropriately in the model to be able to power of
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note9">9</a></sup>. Press any button to power it back on.
 
-When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note10">10</a></sup>. It is best to always start a flight session with fully charged batteries.
+When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note10">10</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
 #
 
 <sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
@@ -171,18 +171,18 @@ On each input, two P-channel MOSFET's, mounted back-to-back<sup><a href="#note10
 
 This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on the Linear Technology LTC4412 "ideal diode" IC. This IC will drive the MOSFET's and will never allow a reverse current to enter the connected battery when the voltage at the output is higher than the battery, even if the MCU attempts to open the MOSFET's on both inputs.
 
-By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated MOSFET's off. If the MCU drives the CTL pin low - or put its corresponding GPIO pin to high impedance - the LTC4412 will open its associated MOSFET's provided the source voltage is 20mV above the output (which may be at a higher voltage powered by the other source). 
+By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated MOSFET's off. If the MCU drives the CTL pin low - or put its corresponding GPIO pin to high impedance - the LTC4412 will open its associated MOSFET's but only if its source voltage is at least 20mV above the output voltage (which could be at a higher voltage if powered by the other source). 
 
 So, refering to the "Power source selection" chapter here above:
 * Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
 * Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
-* Step 3 (both sources below minimum voltage or any one disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
+* Step 3 (when both sources are below minimum voltage or if any one is disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
 
 The STAT_STBY signals to the MCU when STBY PWR is powering the output.
 
 The input source voltages are measured by the MCU through R8/R15 and R9/R16.
 
-The AH180 hall effect sensor signals (MAGNET signal driven low) to the MCU when a magnet is in close range to the sensor.
+The AH180 hall effect sensor signals to the MCU when a magnet is in close range to the sensor (MAGNET signal is driven low).
 
 The HT7533 3.3V linear regulator will provide the 3.3V supplying the MCU, the Hall effect sensor and the LED's. It is powered by any of the two input voltages through the diodes D1 & D2. So the highest voltage input powers the HT7533. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have put CTL1 and CTL2 to high impedance state and the LTC4412's will select whichever power source has the highest voltage to power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour becomes uncertain but most receivers and servos will have failed before reaching that voltage.
 
