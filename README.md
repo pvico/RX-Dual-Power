@@ -6,11 +6,11 @@
 <p align="center"><sup>Click on the picture for a very high resolution image (7200x4900)</sup></p>
 
 
-Battery failures are one of the most common failures affecting radio controlled models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
+Battery failures are one of the most common failures affecting radio controlled models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC<sup><a href="#note1">1</a></sup> present on the ESC<sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
 The RX Dual Power is a safety device for RC models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
 
-Commercial devices with this capability are available. Some are quite sophisticated but more bulky (and expensive!). Others are smaller and would flash a high power LED on the model when the backup battery is used but have no telemetry <sup><a href="#note4">4</a></sup>.
+Commercial devices with this capability are available. Some are quite sophisticated but more bulky (and expensive!). Others are smaller and would flash a high power LED on the model when the backup battery is used but have no telemetry<sup><a href="#note4">4</a></sup>.
 
 The RX Dual Power:
 * Can use any electrical power source used in RC models both for primary and backup sources: BEC or battery (LiPo, LiFe, NiMh).
@@ -49,7 +49,7 @@ With the *available voltage* - the highest of MAIN PWR voltage and STBY PWR volt
 
 1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
-2. When MAIN PWR is *below its minimum voltage* <sup><a href="#note5">5</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
+2. When MAIN PWR is *below its minimum voltage*<sup><a href="#note5">5</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
 
 3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  The source with the highest voltage powers the model, the other one is isolated from the system.
 #
@@ -62,8 +62,8 @@ With the *available voltage* - the highest of MAIN PWR voltage and STBY PWR volt
 
 A non-powered glider will use 2 batteries.
 
-- If **all** servos are of "HV" type (high voltage) <sup><a href="#note6">6</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
-- If **any** servo is not of HV type, you could use <sup><a href="#note7">7</a></sup>
+- If **all** servos are of "HV" type (high voltage)<sup><a href="#note6">6</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
+- If **any** servo is not of HV type, you could use<sup><a href="#note7">7</a></sup>
     * Any 3-4S LiPo or LiFe battery for both MAIN PWR and STBY PWR and place a BEC after the RX Dual Power
     * A 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 4S NiMh as STBY PWR
     * 4S NiMh batteries for both MAIN PWR and STBY PWR
@@ -104,11 +104,11 @@ To power off the receiver and servos, use a neodymium magnet of sufficient size 
 
 Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
 
-Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup><a href="#note8">8</a></sup>.
+Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets<sup><a href="#note8">8</a></sup>.
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note9">9</a></sup>. Press any button to power it back on.
 
-When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks <sup><a href="#note10">10</a></sup>. It is best to always start a flight session with fully charged batteries.
+When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note10">10</a></sup>. It is best to always start a flight session with fully charged batteries.
 #
 
 <sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
@@ -169,7 +169,7 @@ Using buttons or by programming through the S.Port connector: **TBD**
 <a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
 <p align="center"><sup>Click on the picture for the pdf file</sup></p></br>
 
-On each input, two P-channel MOSFET's, mounted back-to-back <sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
+On each input, two P-channel MOSFET's, mounted back-to-back<sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
 
 This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on the Linear Technology LTC4412 "ideal diode" IC. This IC will drive the MOSFET's and will never allow a reverse current to enter the connected battery when the voltage at the output is higher than the battery, even if the MCU attempts to open the MOSFET's on both inputs.
 
@@ -177,7 +177,7 @@ By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated
 
 So, refering to the "Power source selection" chapter here above:
 * Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
-* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output <sup><a href="#note11">11</a></sup>.
+* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
 * Step 3 (both sources below minimum voltage or any one disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
 
 The STAT_STBY signals to the MCU when STBY PWR is powering the output.
