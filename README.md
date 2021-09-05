@@ -2,8 +2,8 @@
 
 ## Description
 
-<div css="width: 100%"><img css="margin:0 auto;" width="600px" src="Additional Documents/img/RX Dual Power Top.jpg"></div>
-<!-- <img width="500px" src="Additional Documents/img/PCB Design Bottom.png"> -->
+<img css="margin:0 auto;" width="600px" src="Additional Documents/img/RX Dual Power Top.jpg">
+<img css="margin:0 auto;" width="600px" src="Additional Documents/img/RX Dual Power Back.jpg">
 
 Battery failures are one of the most common failures affecting radio controlled models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
