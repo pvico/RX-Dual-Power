@@ -5,22 +5,19 @@
 <img width="500px" src="Additional Documents/img/PCB Design Top.png">
 <!-- <img width="500px" src="Additional Documents/img/PCB Design Bottom.png"> -->
 
+Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
+
 This is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
 
-Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction.
+Commercial devices are available having this capability. Some are quite sophisticated but more bulky. Others are smaller and would flash a high power LED on the model when the backup battery is used. I have seen a schematic on the web of a system using the same LTC4412 circuits as this project but without the possibility to choose the power source selection strategy as explained below and with no telemetry.
 
-For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
+The RX Dual Power:
+* Can use any electrical power source used in radio controlled models both for primary and backup sources: BEC or battery (LiPo, LiFe, NiMh).
+* Is able to use telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
+* Uses a magnet to power off the receiver and servos (or buttons if you forgot your magnet !).
+* Is small enough (60x40mm) the be placed in most models.
 
-Commercial devices are available to perform this. Some are quite sophisticated but more bulky. Others are smaller and would flash a high power LED on the model when the backup battery is used. I have seen a schematic of a system using the same LTC4412 circuits as this one but with no possibility to choose the power source selection strategy as explained below.
-
-The RX Dual Power is small enough (60x40mm) the be placed in most models.
-
-It is able to use telemetry to communicate the power status and whether normal or backup power source is used to the transmitter. The transmitter can then be programmed to output vocal messages to reflect this. 
-
-The RX Dual Power uses either SBUS2 or S.Port to communicate with the receiver and will then work only with Futaba, FrSky or compatible receivers. A transmitter using OpenTX is ideal but not mandatory.
-
-With the RX Dual Power, like some of these devices, you can use a magnet to power off the receiver and servos.
-
+The RX Dual Power uses either  S.Port or SBUS2 to communicate with the receiver and will only work with Futaba, FrSky or compatible receivers. A transmitter using OpenTX is ideal but not mandatory.
 
 [Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
 
@@ -37,7 +34,7 @@ The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source
 
 Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
 
-Even with the *available voltage* <sup><a href="#note4">4</a></sup> decreasing due to battery discharge, the receiver and servos will remain powered all the time until this voltage becomes so low that the receiver and/or servos fail.
+With the *available voltage* <sup><a href="#note4">4</a></sup> decreasing due to battery discharge, the receiver and servos will remain powered at all times until this voltage becomes so low that the receiver and/or servos fail.
 
 ## Power source selection strategy
 
