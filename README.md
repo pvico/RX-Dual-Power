@@ -15,7 +15,7 @@ Commercial devices with this capability are available. Some are quite sophistica
 The RX Dual Power:
 * Can use any electrical power source used in RC models both for primary and backup sources: BEC or battery (LiPo, LiFe, NiMh).
 * Is able to use telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
-* Uses a magnet to power off the receiver and servos (or buttons if you forgot your magnet !).
+* Uses a magnet to power off the receiver and servos (or use the buttons if you forgot your magnet !).
 * Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
 * XT30 or XT60 connectors can be soldered directly on the PCB to connect batteries.
@@ -82,7 +82,7 @@ If you use an "opto" ESC (it has no BEC), or you don't want to use the ESC's BEC
 
 ### Airplane with gas/glow engine
 
-Same as glider above. Size the batteries according to the model: using a 300mAh on a big gas engine model is not appropriate!
+Same as glider above. Size the batteries according to the model: using a 300mAh on a big gas engine model is not enough!
 
 ### Helicopter and multicopter
 
@@ -160,9 +160,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 ## Configuring the RX Dual Power
 
-**TBD**
-
-Using buttons or by programming through the S.Port connector.
+Using buttons or by programming through the S.Port connector: **TBD**
 
 ## Electronic circuit
 
@@ -197,6 +195,8 @@ When the model is powered off, if the AH180 detects a magnet or if a button is d
 
 <sub><sup id="note10">10</sup> This is needed to avoid the MOSFET body diode to let a reverse current flow into into the connected battery when the output voltage coming from the other input source is higher.</sub><br/>
 <sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
+
+The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 
 ## Building and Flashing the firmware
 
