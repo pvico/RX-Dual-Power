@@ -5,9 +5,9 @@
 <img width="500px" src="Additional Documents/img/PCB Design Top.png">
 <!-- <img width="500px" src="Additional Documents/img/PCB Design Bottom.png"> -->
 
-Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
+Battery failures are one of the most common failures affecting radio controlled models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC <sup><a href="#note1">1</a></sup> present on the ESC <sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload <sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
-This is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
+This is a safety device for RC models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
 
 Commercial devices are available having this capability. Some are quite sophisticated but more bulky. Others are smaller and would flash a high power LED on the model when the backup battery is used. I have seen a schematic on the web of a system using the same LTC4412 circuits as this project but without the possibility to choose the power source selection strategy as explained below and with no telemetry.
 
