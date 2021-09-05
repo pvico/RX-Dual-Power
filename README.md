@@ -43,12 +43,6 @@ Any voltage present at the power source inputs can be present at the output. So,
 With the *available voltage* - the highest of MAIN PWR voltage and STBY PWR voltage - decreasing due to batteries discharging, the receiver and servos will remain powered at all times until this voltage becomes so low that the receiver and/or servos fail.
 
 **Note:** when using a BEC as input to MAIN PWR or STBY PWR, the RX Dual Power will measure the BEC's output voltage and will not detect a low battery voltage situation until the BEC fails due to low battery.
-#
-
-<sub><sup id="note5">5</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/>
-<sub><sup id="note6">6</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
-<sub><sup id="note7">7</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
-<sub><sup id="note8">8</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
 
 ## Power source selection strategy
 
@@ -72,6 +66,12 @@ The system can be configured to use one of the following strategies for the sele
 The source with the highest voltage powers the model, the other one is isolated from the system. 
 
 Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively and will discharge in parallel.
+#
+
+<sub><sup id="note5">5</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/>
+<sub><sup id="note6">6</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
+<sub><sup id="note7">7</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
+<sub><sup id="note8">8</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
 
 ## Typical configurations
 
