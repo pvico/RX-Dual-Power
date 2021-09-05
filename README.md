@@ -15,15 +15,11 @@ The RX Dual Power:
 * Can use any electrical power source used in RC models both for primary and backup sources: BEC or battery (LiPo, LiFe, NiMh).
 * Is able to use telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
 * Uses a magnet to power off the receiver and servos (or buttons if you forgot your magnet !).
-* Is small enough (60x40mm) the be placed in most models.
-* XT30 or XT60 connectors can be soldered directly on the PCB to connect batteries.
+* Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
+* XT30 or XT60 connectors can be soldered directly on the PCB to connect batteries.
 
 The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver and will only work with Futaba, FrSky or compatible receivers. A transmitter using OpenTX is ideal but not mandatory.
-
-[Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
-
-*The Gerber files of the PCB will be published here after testing in real conditions has been completed.*
 
 ## Types of power sources
 
@@ -162,7 +158,14 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 **TBD**
 
-Using buttons or by programming through the S.Port connector:
+Using buttons or by programming through the S.Port connector.
+
+## Electronic circuit
+
+[Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
+
+*The Gerber files of the PCB will be published here after testing in real conditions has been completed.*
+
 ##  
 
 <sub><sup id="note1">1</sup> Battery Eliminator Circuit, a device reducing the battery voltage to a level acceptable by the radio system. Most of the time, the BEC is a buck converter: a switching mode step-down DC-DC converter.</sub><br/>
