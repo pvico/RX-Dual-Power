@@ -25,7 +25,7 @@ The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver a
 <sub><sup id="note1">1</sup> Battery Eliminator Circuit, a device reducing the battery voltage to a level acceptable by the radio system. Most of the time, the BEC is a buck converter: a switching mode step-down DC-DC converter.</sub><br/>
 <sub><sup id="note2">2</sup> Electronic Speed Controller. Electric motors used today on RC models are usually of the brushless type. Brushless motors need a specific speed controller called an ESC and generally use LiPo (lithium polymer) batteries consisting of 3 cells or more in series (labelled 3S, 4S, etc.). Very often, ESC's are equipped with a BEC on the same PCB. When they are not, they are usually labelled "opto"</sub><br/>
 <sub id="note3">3<sup></sup> Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use (although an excellent power drive calculator is available online here: [https://www.ecalc.ch](https://www.ecalc.ch)). Too often, I have heard modellers having a perfectly matched LiPo 3S power drive say "Oh, I will try this with a 4S to have more power". If have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
-<sub id="note4"> 4<sup></sup> I have seen a schematic on the web of a system using the same LTC4412 circuits as this project but without the possibility to choose the power source selection strategy (it uses strategy #2) and with no telemetry.</sub><br/>
+<sub id="note4"> 4<sup></sup> I have seen a schematic on the web of a system using the same LTC4412 circuits as this project but it always uses the source with the highest voltage and has no telemetry.</sub><br/>
 
 ## Types of power sources
 
@@ -44,34 +44,32 @@ With the *available voltage* - the highest of MAIN PWR voltage and STBY PWR volt
 
 **Note:** when using a BEC as input to MAIN PWR or STBY PWR, the RX Dual Power will measure the BEC's output voltage and will not detect a low battery voltage situation until the BEC fails due to low battery.
 
-## Power source selection strategy
+## Power source selection
 
-The system can be configured to use one of the following strategies for the selection of the power source:
+<!-- The system can be configured to use one of the following strategies for the selection of the power source:
 
 - **Strategy #1**: Use MAIN PWR as long as it is available and has sufficient voltage, otherwise use STBY PWR
 - **Strategy #2**: Use the power source with the highest voltage
 
 **For most situations, strategy #1 makes more sense**. Using strategy #1, no current will be drawn from the STBY PWR battery as long as you change the MAIN PWR battery before it reaches a low level. Strategy #2 may be useful is some cases <sup><a href="#note5">5</a></sup>.
 
-### System configured for strategy #1
+### System configured for strategy #1 -->
 
 1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
-2. When MAIN PWR is *below its minimum voltage* <sup><a href="#note6">6</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
+2. When MAIN PWR is *below its minimum voltage* <sup><a href="#note5">5</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
 
-3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  strategy #2 is applied.
+3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  The source with the highest voltage powers the model, the other one is isolated from the system.
 
-### System configured for strategy #2
+<!-- ### System configured for strategy #2
 
 The source with the highest voltage powers the model, the other one is isolated from the system. 
 
-Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively and will discharge in parallel.
+Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively and will discharge in parallel. -->
 #
 
-<sub><sup id="note5">5</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/>
-<sub><sup id="note6">6</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
-<sub><sup id="note7">7</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
-<sub><sup id="note8">8</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
+<!-- <sub><sup id="note5">5</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/> -->
+<sub><sup id="note5">5</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 
 ## Typical configurations
 
@@ -79,8 +77,8 @@ Note: with strategy #2, if two batteries of the same type and number of cells ar
 
 A non-powered glider will use 2 batteries.
 
-- If **all** servos are of "HV" type (high voltage) <sup><a href="#note7">7</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
-- If **any** servo is not of HV type, you could use <sup><a href="#note8">8</a></sup>
+- If **all** servos are of "HV" type (high voltage) <sup><a href="#note6">6</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
+- If **any** servo is not of HV type, you could use <sup><a href="#note7">7</a></sup>
     * Any 3-4S LiPo or LiFe battery for both MAIN PWR and STBY PWR and place a BEC after the RX Dual Power
     * A 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 4S NiMh as STBY PWR
     * 4S NiMh batteries for both MAIN PWR and STBY PWR
@@ -108,6 +106,10 @@ For a glow engine helicopter: as for glow engine airplane.
 An electric helicopter could still be landed in autorotaion after a failure of the main power source and the RX Dual Power can be used with a STBY battery just like an airplane with electric motor.
 
 The RX Dual Power is probably not very useful for multi-copters. Should the main power source fail, the motor(s) will stop and the model will crash anyway.
+#
+
+<sub><sup id="note6">6</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
+<sub><sup id="note7">7</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
 
 ## Powering off the model
 
@@ -117,11 +119,16 @@ To power off the receiver and servos, use a neodymium magnet of sufficient size 
 
 Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
 
-Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup><a href="#note10">10</a></sup>.
+Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets <sup><a href="#note8">8</a></sup>.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note11">11</a></sup>. Press any button to power it back on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note9">9</a></sup>. Press any button to power it back on.
 
-When the model is powered off, the current consumed is minimal (60 *micro* amperes!) <sup><a href="#note12">12</a></sup>. A small 300mAh battery would completely discharge in about 2 weeks <sup><a href="#note12a">12a</a></sup>. It is best to always start a flight session with fully charged batteries.
+When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks <sup><a href="#note10">10</a></sup>. It is best to always start a flight session with fully charged batteries.
+#
+
+<sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
+<sub><sup id="note9">9</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
+<sub><sup id="note10">10</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and the BEC voltage is lower than the backup battery, then the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well *provided there was never a condition where it was used in flight*</sub>
 
 ## S.Port reporting
 
@@ -155,7 +162,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 ## LED signalling
 
-| Condition <sup>13</sup>                                         | Green (LED1)  | Yellow (LED2) |
+| Condition <sup>*</sup>                                         | Green (LED1)  | Yellow (LED2) |
 | -------------------------------------------------- | :----------:  | :-----------: |
 | Power off                                          |      OFF      |      OFF      |
 | Magnet detected                                    |       x       |     BRIGHT    |
@@ -164,6 +171,8 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 | Using STBY PWR (system configured for strategy #1) |       x       |   BLINK SLOW  |
 | Using STBY PWR (system configured for strategy #2) |       x       |      DIM      |
 | Using MAIN PWR                                     |      DIM      |       x       |
+
+<sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
 ## Configuring the RX Dual Power
 
@@ -181,10 +190,6 @@ Using buttons or by programming through the S.Port connector.
 
 ##  
 
-<sub><sup id="note10">10</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
-<sub><sup id="note11">11</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
-<sub><sup id="note12a">12a</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and the BEC voltage is lower than the backup battery, then the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well *provided there was never a condition where it was used in flight*</sub>
-<sub><sup id="note13">13</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 <sub><sup id="note50">50</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup id="note40">40</sup>The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but most receivers and servos will have failed before reaching that voltage.</sub><br/>
 <sub><sup id="note70">70</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
