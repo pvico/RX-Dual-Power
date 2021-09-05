@@ -94,7 +94,7 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 #
 
 <sub><sup id="note6">6</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.2 or 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
-<sub><sup id="note7">7</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
+<sub><sup id="note7">7</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR.</sub><br/>
 
 ## Powering off the model
 
@@ -122,21 +122,21 @@ When the model is powered off, the current consumed is minimal (60 *micro* amper
 - MAIN PWR voltage
 - STBY PWR voltage
 
-These are transmitted using sensor ID: **TBD**
+These are transmitted using sensor ID: **1 to 28, TBD**
 
 ### Messages
 
-| Message               | Value | Condition                                                          |
-| :-------------------: | :---: | :----------------------------------------------------------------- |
-| USING MAIN PWR        |  TBD  | System configured for strategy #1 and MAIN PWR is the power source |
-| USING STBY PWR        |  TBD  | System configured for strategy #1 and STBY PWR is the power source |
-| STBY PWR LOW          |  TBD  | STBY PWR is a battery and it is below its minimum voltage          |
-| MAIN PWR LOW          |  TBD  | MAIN PWR is a battery and it is below its minimum voltage          |
-| MAIN PWR DISCONNECTED |  TBD  | MAIN PWR is below 0.5V                                             |
-| STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                             |
-| CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED          |
+| Message               | Value | Condition                                                 |
+| :-------------------: | :---: | :-------------------------------------------------------- |
+| USING MAIN PWR        |  TBD  | MAIN PWR is the power source                              |
+| USING STBY PWR        |  TBD  | STBY PWR is the power source                              |
+| STBY PWR LOW          |  TBD  | STBY PWR is a battery and it is below its minimum voltage |
+| MAIN PWR LOW          |  TBD  | MAIN PWR is a battery and it is below its minimum voltage |
+| MAIN PWR DISCONNECTED |  TBD  | MAIN PWR is below 0.5V                                    |
+| STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                    |
+| CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED |
 
-Note: these are non standard ad-hoc messages transmitted using sensor ID: **TBD**.
+Note: these are non standard ad-hoc messages transmitted using sensor ID: **1 to 28, TBD**.
 Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
 
 If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
@@ -166,24 +166,46 @@ Using buttons or by programming through the S.Port connector.
 
 ## Electronic circuit
 
-
-<a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
-<p align="center"><sup>Click on the picture for the pdf file</sup></p>
-
 *The Gerber files of the PCB will be published here after testing in real conditions has been completed.*
 
-The circuit is based on the Linear Technology LTC4412
+<a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
+<p align="center"><sup>Click on the picture for the pdf file</sup></p></br>
 
+On each input, two P-channel MOSFET's, mounted back-to-back <sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
+
+This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on the Linear Technology LTC4412 "ideal diode" IC. This IC will drive the MOSFET's and will never allow a reverse current to enter the connected battery when the voltage at the output is higher than the battery, even if the MCU attempts to open the MOSFET's on both inputs.
+
+By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated MOSFET's off. If the MCU drives the CTL pin low - or put its corresponding GPIO pin to high impedance - the LTC4412 will open its associated MOSFET's provided the source voltage is 20mV above the output (which may be at a higher voltage powered by the other source). 
+
+So, refering to the "Power source selection" chapter here above:
+* Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
+* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output <sup><a href="#note11">11</a></sup>.
+* Step 3 (both sources below minimum voltage or any one disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
+
+The STAT_STBY signals to the MCU when STBY PWR is powering the output.
+
+The input source voltages are measured by the MCU through R8/R15 and R9/R16.
+
+The AH180 hall effect sensor signals (MAGNET signal driven low) to the MCU when a magnet is in close range to the sensor.
+
+The HT7533 3.3V linear regulator will provide the 3.3V supplying the MCU, the Hall effect sensor and the LED's. It is powered by any of the two input voltages through the diodes D1 & D2. So the highest voltage input powers the HT7533. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have put CTL1 and CTL2 to high impedance state and the LTC4412's will select whichever power source has the highest voltage to power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour becomes uncertain but most receivers and servos will have failed before reaching that voltage.
+
+Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).
+
+When the model is powered off, if the AH180 detects a magnet or if a button is depressed, the SW1, SW2 or MAGNET signals will trigger an interrupt that will awake the MCU from the STOP mode. The MCU will then simply perform a restart, like if a power source was first connected to the PCB.
+##  
+
+<sub><sup id="note10">10</sup> This is needed to avoid the MOSFET body diode to let a reverse current flow into into the connected battery when the output voltage coming from the other input source is higher.</sub><br/>
+<sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
+
+## Building and Flashing the firmware
+
+**TODO**
 
 To connect your STM32 SWD programmer (e.g. STMicroelectronics ST-Link/V2) to the PCB, use a "DYKB 1.27mm spacing Test stand PCB clip, double row, 1.27mm-3P", available on Aliexpress.
 
-<img css="margin:0 auto;" width="600px" src="Additional Documents/pdf/RX Dual Power.pdf.pdf">
+<img css="margin:0 auto;" width="600px" src="Additional Documents/img/SWD Clip.jpg">
 
-##  
+#
 
-<sub><sup id="note50">50</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
-<sub><sup id="note40">40</sup>The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but most receivers and servos will have failed before reaching that voltage.</sub><br/>
-<sub><sup id="note70">70</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
-<sub><sup id="note80">80</sup> The MCU lets the LTC4412's control the power source by releasing both CTL1 and CTL2 lines (MCU pins set to high impedance).</sub><br/>
-<sub><sup id="note90">90</sup> The LTC4412's select whichever one is 20mV above the other.</sub><br/>
-<sub><sup id="note120">120</sup> Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).</sub><br/>
+&nbsp;
