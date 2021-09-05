@@ -166,7 +166,9 @@ Using buttons or by programming through the S.Port connector.
 
 ## Electronic circuit
 
-[Schematic](https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf)
+
+<a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
+<p align="center"><sup>Click on the picture for the pdf file</sup></p>
 
 *The Gerber files of the PCB will be published here after testing in real conditions has been completed.*
 
@@ -175,7 +177,7 @@ The circuit is based on the Linear Technology LTC4412
 
 To connect your STM32 SWD programmer (e.g. STMicroelectronics ST-Link/V2) to the PCB, use a "DYKB 1.27mm spacing Test stand PCB clip, double row, 1.27mm-3P", available on Aliexpress.
 
-<img css="margin:0 auto;" width="600px" src="Additional Documents/img/SWD Clip.jpg">
+<img css="margin:0 auto;" width="600px" src="Additional Documents/pdf/RX Dual Power.pdf.pdf">
 
 ##  
 
