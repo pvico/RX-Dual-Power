@@ -45,7 +45,6 @@ The system can be configured to use one of the following strategies for the sele
 - **Strategy #1**: Use MAIN PWR as long as it is available and has sufficient voltage, otherwise use STBY PWR
 - **Strategy #2**: Use the power source with the highest voltage
 
-For most situations, strategy #1 makes more sense. Strategy #2 may be useful is some cases.
 
 ### System configured for strategy #1
 
@@ -61,6 +60,8 @@ The source with the highest voltage powers the model, the other one is isolated 
 
 Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively <sup><a href="#note9">9</a></sup> and will discharge in parallel.
 
+**For most situations, strategy #1 makes more sense**. Strategy #2 may be useful is some cases <sup><a href="#note9aa">9aa</a></sup>.
+
 ## Typical configurations
 
 ### Airplane or glider with electric motor
@@ -69,8 +70,8 @@ Note: with strategy #2, if two batteries of the same type and number of cells ar
 
 A non-powered glider will use 2 batteries.
 
-- If **all** servos are of "HV" type (high voltage) <sup><a href="#note8a">9a</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
-- If **any** servo is not of HV type, you could use <sup><a href="#note8a">9b</a></sup>
+- If **all** servos are of "HV" type (high voltage) <sup><a href="#note9a">9a</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
+- If **any** servo is not of HV type, you could use <sup><a href="#note9b">9b</a></sup>
     * Any 3-4S LiPo or LiFe battery for both MAIN PWR and STBY PWR and place a BEC after the RX Dual Power
     * A 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 4S NiMh as STBY PWR
     * 4S NiMh batteries for both MAIN PWR and STBY PWR
@@ -160,6 +161,7 @@ Using buttons or by programming through the S.Port connector:
 <sub><sup id="note7">7</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
 <sub><sup id="note8">8</sup> The MCU lets the LTC4412's control the power source by releasing both CTL1 and CTL2 lines (MCU pins set to high impedance).</sub><br/>
 <sub><sup id="note9">9</sup> The LTC4412's select whichever one is 20mV above the other.</sub><br/>
+<sub><sup id="note9aa">9aa</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to 7.2 or even 7V before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel. This can bring the LiPo to a low voltage that can damage it.</sub><br/>
 <sub><sup id="note9a">9a</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
 <sub><sup id="note9b">9b</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
 <sub><sup id="note10">10</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
