@@ -45,6 +45,7 @@ The system can be configured to use one of the following strategies for the sele
 - **Strategy #1**: Use MAIN PWR as long as it is available and has sufficient voltage, otherwise use STBY PWR
 - **Strategy #2**: Use the power source with the highest voltage
 
+**For most situations, strategy #1 makes more sense**. Using strategy #1, no current will be drawn from the STBY PWR battery as long as you change the MAIN PWR battery before it reaches a low level. Strategy #2 may be useful is some cases <sup><a href="#note4a">4a</a></sup>.
 
 ### System configured for strategy #1
 
@@ -59,8 +60,6 @@ The system can be configured to use one of the following strategies for the sele
 The source with the highest voltage powers the model, the other one is isolated from the system <sup><a href="#note8">8</a></sup>. 
 
 Note: with strategy #2, if two batteries of the same type and number of cells are used as power sources, they will be selected alternatively <sup><a href="#note9">9</a></sup> and will discharge in parallel.
-
-**For most situations, strategy #1 makes more sense**. Using strategy #1, no current will be drawn from the STBY PWR battery as long as you change the MAIN PWR battery before it reaches a low level. Strategy #2 may be useful is some cases <sup><a href="#note9aa">9aa</a></sup>.
 
 ## Typical configurations
 
@@ -173,12 +172,12 @@ Using buttons or by programming through the S.Port connector.
 <sub id="note3">3<sup></sup> Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use (although an excellent power drive calculator is available online here: [https://www.ecalc.ch](https://www.ecalc.ch)). Too often, I have heard modellers having a perfectly matched LiPo 3S power drive say "Oh, I will try this with a 4S to have more power". If have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
 <sub id="note3a"> 3a<sup></sup>I have seen a schematic on the web of a system using the same LTC4412 circuits as this project but without the possibility to choose the power source selection strategy (it uses strategy #2) and with no telemetry.</sub><br/>
 <sub><sup id="note4">4</sup> The available voltage is the highest of MAIN PWR voltage and STBY PWR voltage. The HT7533 voltage regulator delivering the 3.3V supply to the STM32 MCU is powered by this voltage less a diode drop. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have switched to strategy #2 and whichever power source has the highest voltage will power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour is uncertain but most receivers and servos will have failed before reaching that voltage.</sub><br/>
+<sub><sup id="note4a">4a</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/>
 <sub><sup id="note5">5</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
 <sub><sup id="note6">6</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 <sub><sup id="note7">7</sup> The MCU releases the CTL2 line and sets the CTL1 line to HIGH, forcing MAIN PWR off. Note that we have to do this instead of applying strategy #2 because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
 <sub><sup id="note8">8</sup> The MCU lets the LTC4412's control the power source by releasing both CTL1 and CTL2 lines (MCU pins set to high impedance).</sub><br/>
 <sub><sup id="note9">9</sup> The LTC4412's select whichever one is 20mV above the other.</sub><br/>
-<sub><sup id="note9aa">9aa</sup> Using a 2S LiPo as MAIN PWR and a 2S LiFe as STBY PWR is **not** such a case: if you use strategy #2, the LiPo will discharge down to about 7.2 before the LiFe takes over. Then as the LiFe starts to discharge, it will alternate between the LiPo and the LiFe and they will discharge in parallel, keeping the same voltage. This can bring the LiPo to a dangerously low voltage and it could be damaged.</sub><br/>
 <sub><sup id="note9a">9a</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
 <sub><sup id="note9b">9b</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR. If the BEC powering MAIN PWR is set for a higher voltage than STBY PWR's BEC, using strategy #2 is perfectly ok.</sub><br/>
 <sub><sup id="note10">10</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
