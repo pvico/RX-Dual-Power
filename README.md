@@ -188,6 +188,11 @@ Using buttons or by programming through the S.Port connector.
 
 The circuit is based on the Linear Technology LTC4412
 
+
+To connect your STM32 SWD programmer (e.g. STMicroelectronics ST-Link/V2) to the PCB, use a "DYKB 1.27mm spacing Test stand PCB clip" double row 1.27mm-3P, available on Aliexpress.
+
+<img css="margin:0 auto;" width="600px" src="Additional Documents/img/SWD Clip.jpg">
+
 ##  
 
 <sub><sup id="note50">50</sup> By setting the CTL2 line to HIGH and releasing the CTL1 line (MCU pin set to high impedance).</sub><br/>
