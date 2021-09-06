@@ -15,7 +15,7 @@ void initialize() {
 
   HAL_TIM_Base_Start_IT(&htim21);
 
-  void power_on();
+  power_on();
 
   debug_console_print_splash();
 
