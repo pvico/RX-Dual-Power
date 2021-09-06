@@ -15,7 +15,7 @@ Battery failures are one of the most common failures affecting radio controlled 
 The RX Dual Power:
 * Can use any electrical power source used in RC models both for normal and backup sources: BEC or battery (LiPo, LiFe, NiMh).
 * Uses telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
-* Uses a magnet to power off the receiver and servos (you can use the buttons if you forgot your magnet !).
+* Uses a magnet to power off the receiver and servos (you can use the buttons if you forgot your magnet!).
 * Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
 * XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) to connect batteries.
