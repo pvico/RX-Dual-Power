@@ -18,7 +18,7 @@ The RX Dual Power:
 * Uses a magnet to power off the receiver and servos (or use the buttons if you forgot your magnet !).
 * Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
-* XT30 or XT60 connectors can be soldered directly on the PCB to connect batteries.
+* XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) to connect batteries.
 
 The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver and will only work with Futaba, FrSky or compatible receivers. A transmitter using OpenTX is ideal but not mandatory.
 #
@@ -29,6 +29,8 @@ The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver a
 <!-- <sub id="note4"> 4<sup></sup> I have seen a schematic on the web of a device using the same LTC4412 circuits as this project but it always uses the source with the highest voltage and has no telemetry.</sub><br/> -->
 
 ## Power source selection
+
+The normal primary power source is labelled MAIN PWR on the back of the PCB and the backup power source is labelled STBY PWR on the back of the PCB.
 
 1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
@@ -71,9 +73,39 @@ When the model is powered off, the current consumed is minimal (60 *micro* amper
 <sub><sup id="note9">9</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
 <sub><sup id="note10">10</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
 
+## S.Port reporting
+
+### Values
+
+- MAIN PWR voltage
+- STBY PWR voltage
+
+These are transmitted using sensor ID: **1 to 28, TBD**
+
+### Messages
+
+| Message               | Value | Condition                                                 |
+| :-------------------: | :---: | :-------------------------------------------------------- |
+| USING MAIN PWR        |  TBD  | MAIN PWR is the power source                              |
+| USING STBY PWR        |  TBD  | STBY PWR is the power source                              |
+| STBY PWR LOW          |  TBD  | STBY PWR is a battery and it is below its minimum voltage |
+| MAIN PWR LOW          |  TBD  | MAIN PWR is a battery and it is below its minimum voltage |
+| MAIN PWR DISCONNECTED |  TBD  | MAIN PWR is below 0.5V                                    |
+| STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                    |
+| CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED |
+
+Note: these are non standard ad-hoc messages transmitted using sensor ID: **1 to 28, TBD**.
+Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
+
+If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
+
+## SBUS2 reporting
+
+**TODO**
+
 ## Types of power sources
 
-The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
+MAIN PWR and STBY PWR can be any of the following:
 
 - BEC from 5 to 8.4V
 - LIPO 2-4S (7.4 to 14.8V nominal, 8.4 to 16.8V fully charged)
@@ -125,36 +157,6 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 
 <sub><sup id="note6">6</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.2 or 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
 <sub><sup id="note7">7</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR.</sub><br/>
-
-## S.Port reporting
-
-### Values
-
-- MAIN PWR voltage
-- STBY PWR voltage
-
-These are transmitted using sensor ID: **1 to 28, TBD**
-
-### Messages
-
-| Message               | Value | Condition                                                 |
-| :-------------------: | :---: | :-------------------------------------------------------- |
-| USING MAIN PWR        |  TBD  | MAIN PWR is the power source                              |
-| USING STBY PWR        |  TBD  | STBY PWR is the power source                              |
-| STBY PWR LOW          |  TBD  | STBY PWR is a battery and it is below its minimum voltage |
-| MAIN PWR LOW          |  TBD  | MAIN PWR is a battery and it is below its minimum voltage |
-| MAIN PWR DISCONNECTED |  TBD  | MAIN PWR is below 0.5V                                    |
-| STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                    |
-| CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED |
-
-Note: these are non standard ad-hoc messages transmitted using sensor ID: **1 to 28, TBD**.
-Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
-
-If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
-
-## SBUS2 reporting
-
-**TODO**
 
 ## Configuring the RX Dual Power
 
