@@ -9,33 +9,33 @@
 // the associated MOSFET(s)
 
 
-bool is_main_power_forced_off() {
-    return HAL_GPIO_ReadPin(CTL1_GPIO_Port, CTL1_Pin) == GPIO_PIN_SET;
-}
-
-bool is_stby_power_forced_off() {
-    return HAL_GPIO_ReadPin(CTL2_GPIO_Port, CTL2_Pin) == GPIO_PIN_SET;
-}
-
-void __force_main_power_off() {
+static void __force_main_power_off() {
     HAL_GPIO_WritePin(CTL1_GPIO_Port, CTL1_Pin, GPIO_PIN_SET);
 }
 
-void __force_stdby_power_off() {
+static void __force_stdby_power_off() {
     HAL_GPIO_WritePin(CTL2_GPIO_Port, CTL2_Pin, GPIO_PIN_SET);
 }
+
+// static bool __is_main_power_forced_off() {
+//     return HAL_GPIO_ReadPin(CTL1_GPIO_Port, CTL1_Pin) == GPIO_PIN_SET;
+// }
+
+// static bool __is_stby_power_forced_off() {
+//     return HAL_GPIO_ReadPin(CTL2_GPIO_Port, CTL2_Pin) == GPIO_PIN_SET;
+// }
 
 void let_LTCs_determine_power_source() {
     HAL_GPIO_WritePin(CTL1_GPIO_Port, CTL1_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(CTL2_GPIO_Port, CTL2_Pin, GPIO_PIN_RESET);
 }
 
-void force_main_power_on() {
+void main_power_on() {
     HAL_GPIO_WritePin(CTL1_GPIO_Port, CTL1_Pin, GPIO_PIN_RESET);
     __force_stdby_power_off();
 }
 
-void force_stby_power_on() {
+void stby_power_on() {
     HAL_GPIO_WritePin(CTL2_GPIO_Port, CTL2_Pin, GPIO_PIN_RESET);
     __force_main_power_off();
 }
