@@ -175,7 +175,7 @@ It is a 4 layer PCB with generous copper fill areas and plenty of vias to connec
 <a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
 <p align="center"><sup>Click on the picture for the pdf file</sup></p></br>
 
-On each input, two P-channel MOSFET's, mounted back-to-back<sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
+On each input, two P-channel MOSFET's (Q1/Q2 and Q3/Q4), mounted back-to-back<sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
 
 This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on the Linear Technology LTC4412 "ideal diode" IC. This IC will drive the MOSFET's and will never allow a reverse current to enter the connected battery when the voltage at the output is higher than the battery, even if the MCU attempts to open the MOSFET's on both inputs.
 
