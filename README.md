@@ -52,7 +52,7 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 | Using STBY PWR               |       x       |   BLINK SLOW  |
 | Using MAIN PWR               |      DIM      |       x       |
 
-An external LED can be connected to the PCB. It will illuminate toghether with the yellow led to indicate when the magnet is detected or if STBY PWR is being used.
+An external LED can be connected to the PCB. It will illuminate together with the yellow led to indicate when the magnet is detected or if STBY PWR is being used.
 
 <sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
