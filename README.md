@@ -14,7 +14,7 @@ Battery failures are one of the most common failures affecting radio controlled 
 
 The RX Dual Power:
 * Can use any electrical power source used in RC models both for primary and backup sources: BEC or battery (LiPo, LiFe, NiMh).
-* Is able to use telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
+* Uses telemetry to communicate to the transmitter whether normal or backup power source is used. The transmitter can then be programmed to output vocal messages to reflect this. It will also transmit the voltage of both power sources.
 * Uses a magnet to power off the receiver and servos (or use the buttons if you forgot your magnet !).
 * Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
@@ -53,6 +53,38 @@ Any voltage present at the power source inputs can be present at the output. So,
 #
 
 <sub><sup id="note5">5</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
+
+## LED signalling
+
+| Condition <sup>*</sup>       | Green (LED1)  | Yellow (LED2) |
+| ---------------------------- | :----------:  | :-----------: |
+| Power off                    |      OFF      |      OFF      |
+| Magnet detected              |       x       |     BRIGHT    |
+| MAIN PWR LOW or DISCONNECTED |   BLINK FAST  |       x       |
+| STBY PWR LOW or DISCONNECTED |       x       |   BLINK FAST  |
+| Using STBY PWR               |       x       |   BLINK SLOW  |
+| Using MAIN PWR               |      DIM      |       x       |
+
+<sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
+
+## Powering off the model
+
+To power off the receiver and servos, use a neodymium magnet of sufficient size and power. To be detected, it must be positioned either *directly above* or *directly below* the hall effect sensor on the PCB *but not on its side*. The hall effect sensor location is clearly indicated on the PCB with the label 'MAGNET' and an arrow.
+
+<img width="500px" src="Additional Documents/img/Magnet_on_PCB.jpg">
+
+Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
+
+Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets<sup><a href="#note8">8</a></sup>.
+
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note9">9</a></sup>. Press any button to power it back on.
+
+When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note10">10</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
+#
+
+<sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
+<sub><sup id="note9">9</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
+<sub><sup id="note10">10</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
 
 ## Typical configurations
 
@@ -94,25 +126,6 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 <sub><sup id="note6">6</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.2 or 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
 <sub><sup id="note7">7</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR.</sub><br/>
 
-## Powering off the model
-
-To power off the receiver and servos, use a neodymium magnet of sufficient size and power. To be detected, it must be positioned either *directly above* or *directly below* the hall effect sensor on the PCB *but not on its side*. The hall effect sensor location is clearly indicated on the PCB with the label 'MAGNET' and an arrow.
-
-<img width="500px" src="Additional Documents/img/Magnet_on_PCB.jpg">
-
-Approaching the magnet close to the hall effect sensor twice within 2 seconds will power off the model. When the model is powered off, approaching the magnet once will power the model back on.
-
-Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets<sup><a href="#note8">8</a></sup>.
-
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note9">9</a></sup>. Press any button to power it back on.
-
-When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note10">10</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
-#
-
-<sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
-<sub><sup id="note9">9</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
-<sub><sup id="note10">10</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
-
 ## S.Port reporting
 
 ### Values
@@ -142,19 +155,6 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 ## SBUS2 reporting
 
 **TODO**
-
-## LED signalling
-
-| Condition <sup>*</sup>       | Green (LED1)  | Yellow (LED2) |
-| ---------------------------- | :----------:  | :-----------: |
-| Power off                    |      OFF      |      OFF      |
-| Magnet detected              |       x       |     BRIGHT    |
-| MAIN PWR LOW or DISCONNECTED |   BLINK FAST  |       x       |
-| STBY PWR LOW or DISCONNECTED |       x       |   BLINK FAST  |
-| Using STBY PWR               |       x       |   BLINK SLOW  |
-| Using MAIN PWR               |      DIM      |       x       |
-
-<sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
 ## Configuring the RX Dual Power
 
