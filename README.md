@@ -32,7 +32,7 @@ The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver a
 
 The normal primary power source is labelled MAIN PWR on the back of the PCB and the backup power source is labelled STBY PWR on the back of the PCB.
 
-1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
+1. As long as MAIN PWR is above its minimum voltage (according to the type of power source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
 2. When MAIN PWR is *below its minimum voltage*<sup><a href="#note5">5</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
 
@@ -51,6 +51,8 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 | STBY PWR LOW or DISCONNECTED |       x       |   BLINK FAST  |
 | Using STBY PWR               |       x       |   BLINK SLOW  |
 | Using MAIN PWR               |      DIM      |       x       |
+
+An external LED can be connected to the PCB. It will illuminate toghether with the yellow led to indicate when the magnet is detected or if STBY PWR is being used.
 
 <sub><sup>*</sup> Listed in order of priority. For example, if both MAIN PWR and STBY PWR are LOW or DISCONNECTED (CRITICAL condition), LED1 and LED2 will both blink fast whichever source is powering the model.</sub>
 
