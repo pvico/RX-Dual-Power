@@ -181,7 +181,7 @@ This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on 
 
 By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated MOSFET's off. If the MCU drives the CTL pin low - or put its corresponding GPIO pin to high impedance - the LTC4412 will open its associated MOSFET's but only if its source voltage is at least 20mV above the output voltage (which could be at a higher voltage if powered by the other source). 
 
-So, refering to the "Power source selection" chapter here above:
+So, refering to the "Power source selection" section here above:
 * Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
 * Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
 * Step 3 (when both sources are below minimum voltage or if any one is disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
@@ -194,7 +194,7 @@ The AH180 hall effect sensor signals to the MCU when a magnet is in close range 
 
 The HT7533 3.3V linear regulator will provide the 3.3V supplying the MCU, the Hall effect sensor and the LED's. It is powered by any of the two input voltages through the diodes D1 & D2. So the highest voltage input powers the HT7533. If the available voltage drops below 5V, the MCU VDD supply will gradually become unregulated but will initially remain at 3.3V. When the available voltage drops below about 4V, the MCU VDD will drop below 3.3V and the power source voltage measurements will become invalid. Anyway, well before this happens, the MCU will have put CTL1 and CTL2 to high impedance state and the LTC4412's will select whichever power source has the highest voltage to power the receiver and servos. When the available voltage drops below about 2.5V, the MCU will shut down and the LTC4412's behaviour becomes uncertain but most receivers and servos will have failed before reaching that voltage.
 
-Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32 MCU will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).
+Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32L021 will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).
 
 When the model is powered off, if the AH180 detects a magnet or if a button is depressed, the SW1, SW2 or MAGNET signals will trigger an interrupt that will awake the MCU from the STOP mode. The MCU will then simply perform a restart, like if a power source was first connected to the PCB.
 
@@ -203,7 +203,6 @@ The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 
 <sub><sup id="note10">10</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
 <sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
-
 
 ## Building and Flashing the firmware
 
