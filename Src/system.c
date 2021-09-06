@@ -11,7 +11,7 @@
 
 extern UART_HandleTypeDef huart2;
 
-void __set_not_needed_gpio_pins_to_analog() {
+static void __set_not_needed_gpio_pins_to_analog() {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -31,7 +31,7 @@ void __set_not_needed_gpio_pins_to_analog() {
     HAL_UART_MspDeInit(&huart2);
 }
 
-void __system_stop_mode() {
+static void __system_stop_mode() {
     power_off();
     
     debug_console_print_entering_stop_mode();

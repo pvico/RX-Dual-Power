@@ -1,8 +1,8 @@
 #include "power_source.h"
 
 
-enum source_type main_source_type;
-enum source_type stby_source_type;
+struct Power_Source main_power_source;
+struct Power_Source stby_power_source;
 
 
 void power_source_loop() {
