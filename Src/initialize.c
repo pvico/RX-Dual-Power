@@ -18,4 +18,7 @@ void initialize() {
   void power_on();
 
   debug_console_print_splash();
+
+  // // TEST
+  // led1_state = STEADY_DIM;
 }

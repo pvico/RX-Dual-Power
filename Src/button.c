@@ -33,6 +33,7 @@ static uint16_t __sw2_not_depressed__loop_counter = 0;
 static uint16_t __double_activation__loop_counter = 0;
 void button_loop() {
     if (__is_sw1_depressed()) {
+        __sw1_not_depressed__loop_counter = 0;
         if (sw1_debounced_state == BUTTON_NOT_DEPRESSED) {
             __sw1_depressed__loop_counter++;
             if (__sw1_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
@@ -42,6 +43,7 @@ void button_loop() {
         }
     } else {
         // not depressed
+        __sw1_depressed__loop_counter = 0;
         if (sw1_debounced_state == BUTTON_DEPRESSED) {
             __sw1_not_depressed__loop_counter++;
             if (__sw1_not_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
@@ -51,6 +53,7 @@ void button_loop() {
         }
     }
     if (__is_sw2_depressed()) {
+        __sw2_not_depressed__loop_counter = 0;
         if (sw2_debounced_state == BUTTON_NOT_DEPRESSED) {
             __sw2_depressed__loop_counter++;
             if (__sw2_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
@@ -60,6 +63,7 @@ void button_loop() {
         }
     } else {
         // not depressed
+        __sw2_depressed__loop_counter = 0;
         if (sw2_debounced_state == BUTTON_DEPRESSED) {
             __sw2_not_depressed__loop_counter++;
             if (__sw2_not_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
