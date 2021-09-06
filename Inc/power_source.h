@@ -19,6 +19,8 @@
 
 #define MINIMUM_ACCEPTABLE_VOLTAGE_ADC_VALUE    232 // 4.6V
 
+enum source_type {BATTERY, BEC};
+
 void power_source_loop();
 
 #endif /* A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77 */

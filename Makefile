@@ -54,6 +54,8 @@ Src/output_control.c \
 Src/button.c \
 Src/power_source.c \
 Src/system.c \
+Src/sbus2.c \
+Src/x-bus.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_adc.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_adc_ex.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.c \
