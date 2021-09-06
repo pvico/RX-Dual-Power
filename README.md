@@ -28,21 +28,6 @@ The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver a
 <sub id="note3">3<sup></sup> Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use (although an excellent power drive calculator is available online here: [https://www.ecalc.ch](https://www.ecalc.ch)). Too often, I have heard modellers having a perfectly matched LiPo 3S power drive say "Oh, I will try this with a 4S to have more power". If have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
 <!-- <sub id="note4"> 4<sup></sup> I have seen a schematic on the web of a device using the same LTC4412 circuits as this project but it always uses the source with the highest voltage and has no telemetry.</sub><br/> -->
 
-## Types of power sources
-
-The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
-
-- BEC from 5 to 8.4V
-- LIPO 2-4S (7.4 to 14.8V nominal, 8.4 to 16.8V fully charged)
-- LIFE 2-4S (6.6 to 13.2V nominal, 7.2 to 14.4V fully charged)
-- NIMH 4-5S (4.8 to 6V nominal, not recommended)
-
-The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended as they tend to be unreliable.
-
-Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
-
-**Note:** when using a BEC as input to MAIN PWR or STBY PWR, the RX Dual Power will measure the BEC's output voltage and will not detect a low battery voltage situation until the BEC fails due to low battery.
-
 ## Power source selection
 
 1. As long as MAIN PWR is above its minimum voltage (according to the type of source), MAIN PWR is selected and STBY PWR is isolated from the system.
@@ -85,6 +70,21 @@ When the model is powered off, the current consumed is minimal (60 *micro* amper
 <sub><sup id="note8">8</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily.</sub><br/>
 <sub><sup id="note9">9</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
 <sub><sup id="note10">10</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
+
+## Types of power sources
+
+The main power source (labelled MAIN PWR on the back of the PCB) and the standby power source (labelled STBY PWR on the back of the PCB) can be any of the following:
+
+- BEC from 5 to 8.4V
+- LIPO 2-4S (7.4 to 14.8V nominal, 8.4 to 16.8V fully charged)
+- LIFE 2-4S (6.6 to 13.2V nominal, 7.2 to 14.4V fully charged)
+- NIMH 4-5S (4.8 to 6V nominal, not recommended)
+
+The maximum allowed voltage is 16.8V (fully charged LIPO 4S). The minimum source voltage is 5V. A NIMH 4S (4.8V) can be used but NIMH batteries are generally not recommended as they tend to be unreliable.
+
+Any voltage present at the power source inputs can be present at the output. So, if **one or both** of the power source voltages is above the maximum voltage of the receiver or servos, *a BEC must be placed **after** the RX Dual Power and **both** power source voltages must be sufficient to drive that BEC*.
+
+**Note:** when using a BEC as input to MAIN PWR or STBY PWR, the RX Dual Power will measure the BEC's output voltage and will not detect a low battery voltage situation until the BEC fails due to low battery.
 
 ## Typical configurations
 
