@@ -164,9 +164,13 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 
 Using buttons or by programming through the S.Port connector: **TBD**
 
-## Electronic circuit
+## PCB
 
 *The Gerber files of the PCB will be published here after testing in real conditions has been completed.*
+
+It is a 4 layer PCB with generous copper fill areas and plenty of vias to connect the layers. 
+
+## Electronic circuit
 
 <a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
 <p align="center"><sup>Click on the picture for the pdf file</sup></p></br>
