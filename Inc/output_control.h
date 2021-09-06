@@ -6,10 +6,12 @@
 // bool is_main_power_forced_off();
 // bool is_stby_power_forced_off();
 
-void let_LTCs_determine_power_source();
+//These functions are called by power_source_loop to set the "step" of power source selection (see README)
 void main_power_on();
 void stby_power_on();
+void let_LTCs_determine_power_source();
 
+// These functions are called when powering on or off with magnet or button
 void power_off();
 void power_on();
 

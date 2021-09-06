@@ -21,6 +21,7 @@ The RX Dual Power:
 * XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) to connect batteries.
 
 The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver and will only work with Futaba, FrSky or compatible receivers. A transmitter using OpenTX is ideal but not mandatory.
+Future development: X-bus (Spektrum)
 #
 
 <sub><sup id="note1">1</sup> Battery Eliminator Circuit, a device reducing the battery voltage to a level acceptable by the radio system. Most of the time, the BEC is a buck converter: a switching mode step-down DC-DC converter.</sub><br/>

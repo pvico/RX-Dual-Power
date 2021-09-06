@@ -9,4 +9,5 @@
 ### Optional
 
 - Watchdog timer
-- SBUS2
+- SBUS2 (Futaba)
+- X-BUS (Spektrum)
