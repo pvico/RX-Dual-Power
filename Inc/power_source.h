@@ -17,21 +17,39 @@
 // #define NIMH_4S         12
 // #define NIMH_5S         13
 
+#include <stdbool.h>
+#include <stdint.h>
+
 
 // TBD:
-#define MINIMUM_ACCEPTABLE_VOLTAGE_ADC_VALUE    232 // 4.6V
+#define CRITICAL_VOLTAGE_ADC_VALUE    232 // 4.6V
 
 typedef enum source_types {BATTERY, BEC} source_type;
 typedef enum battery_types {LIPO, LIFE, NIMH} battery_type;
 typedef enum battery_number_cellss {_2S, _3S, _4S, _5S} battery_number_cells;
+typedef enum source_positions {MAIN, STBY} source_position;
 
 typedef struct
 {
     source_type source_type;
     battery_type battery_type;
     battery_number_cells battery_number_cells;
+    source_position source_position;
+    bool valid;
 } Power_Source;
 
+Power_Source create_BEC_power_source(source_position position);
+Power_Source create_LiPo_power_source(battery_number_cells numbers_cells, source_position position);
+Power_Source create_LiFe_power_source(battery_number_cells numbers_cells, source_position position);
+Power_Source create_NiMh_power_source(battery_number_cells numbers_cells, source_position position);
+
+bool is_power_source_valid(Power_Source *power_source);
+
+bool is_power_source_below_minimum_voltage(Power_Source *power_source);
+
+bool is_power_source_disconnected_or_shorted(Power_Source *power_source);
+
+bool is_critical(Power_Source *main_power_source, Power_Source *stby_power_source);
 
 void power_source_loop();
 

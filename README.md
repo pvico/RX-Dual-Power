@@ -20,8 +20,14 @@ The RX Dual Power:
 * Can power the receiver and servos up to 10A. 
 * XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) to connect batteries.
 
-The RX Dual Power uses either S.Port or SBUS2 to communicate with the receiver and will initially only work with Futaba, FrSky or compatible receivers.
-Future development: X-bus (Spektrum).
+The RX Dual Power will at first uses S.Port to communicate with the receiver and will initially only work with FrSky or compatible receivers.
+
+Future development: 
+
+- SBUS2 (Futaba)
+- X-bus (Spektrum)
+- Mlink (Multiplex)
+
 A transmitter using OpenTX is ideal but not mandatory.
 #
 
@@ -104,6 +110,14 @@ Adequate programming of the transmitter using OpenTX must be done to have audio 
 If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.
 
 ## SBUS2 reporting
+
+**TODO**
+
+## X-BUS reporting
+
+**TODO**
+
+## Mlink reporting
 
 **TODO**
 
