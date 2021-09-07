@@ -7,12 +7,12 @@
 #include "led.h"
 #include "debug_console.h"
 
-extern enum led_states led1_state;
+extern led_state led1_state;
 
 static bool double_activation_state = false;
 
-static enum button_states sw1_debounced_state = BUTTON_NOT_DEPRESSED;
-static enum button_states sw2_debounced_state = BUTTON_NOT_DEPRESSED;
+static button_state sw1_debounced_state = BUTTON_NOT_DEPRESSED;
+static button_state sw2_debounced_state = BUTTON_NOT_DEPRESSED;
 
 static bool __is_sw1_depressed() {
     return HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == GPIO_PIN_RESET;

@@ -21,16 +21,16 @@
 // TBD:
 #define MINIMUM_ACCEPTABLE_VOLTAGE_ADC_VALUE    232 // 4.6V
 
-enum source_type {BATTERY, BEC};
-enum battery_type {LIPO, LIFE, NIMH};
-enum battery_number_cells {_2S, _3S, _4S, _5S};
+typedef enum source_types {BATTERY, BEC} source_type;
+typedef enum battery_types {LIPO, LIFE, NIMH} battery_type;
+typedef enum battery_number_cellss {_2S, _3S, _4S, _5S} battery_number_cells;
 
-struct Power_Source
+typedef struct
 {
-    enum source_type source_type;
-    enum battery_type battery_type;
-    enum battery_number_cells battery_number_cells;
-};
+    source_type source_type;
+    battery_type battery_type;
+    battery_number_cells battery_number_cells;
+} Power_Source;
 
 
 void power_source_loop();

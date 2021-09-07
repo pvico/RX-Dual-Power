@@ -6,7 +6,7 @@
 #define BUTTON_DEBOUNCE_DELAY_MILLIS    10
 #define BUTTON_DOUBLE_ACTIVATION_MILLIS    2000
 
-enum button_states{BUTTON_DEPRESSED, BUTTON_NOT_DEPRESSED};
+typedef enum button_states {BUTTON_DEPRESSED, BUTTON_NOT_DEPRESSED} button_state;
 
 void button_loop();
 

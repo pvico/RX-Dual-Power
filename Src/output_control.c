@@ -6,7 +6,7 @@
 
 // Only the code in this file can manipulate the LTC4412 CTL pins
 // to select the power source and/or switch on/off the output
-// Extra attention required when modifying
+// Extra attention required when modifying this code
 // CTL pin of the LTC4412, when set to high, always swicthes off
 // the associated MOSFET(s)
 

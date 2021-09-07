@@ -6,8 +6,8 @@
 #include "debug_console.h"
 
 
-extern enum led_states led1_state;
-extern enum led_states led2_state;
+extern led_state led1_state;
+extern led_state led2_state;
 
 void initialize() {
 

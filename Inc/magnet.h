@@ -13,7 +13,7 @@
 #define MAGNET_SECOND_DETECTION_TIMEOUT_MILLIS    2000
 #define MAGNET_SECOND_DETECTION_MINIMUM_INTERVAL_MILLIS    100
 
-enum magnet_states{MAGNET_PRESENT, MAGNET_NOT_PRESENT};
+typedef enum magnet_states {MAGNET_PRESENT, MAGNET_NOT_PRESENT} magnet_state;
 
 void magnet_loop();
 

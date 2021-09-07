@@ -8,7 +8,7 @@
 
 #define LED_DIM_FACTOR  10
 
-enum led_states {OFF, STEADY_DIM, STEADY_BRIGHT, BLINK_SLOW, BLINK_FAST};
+typedef enum led_states {OFF, STEADY_DIM, STEADY_BRIGHT, BLINK_SLOW, BLINK_FAST} led_state;
 
 void leds_loop();
 

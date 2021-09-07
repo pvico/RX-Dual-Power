@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #include "main.h"
 
-enum led_states led1_state = OFF;
-enum led_states led2_state = OFF;
+led_state led1_state = OFF;
+led_state led2_state = OFF;
 
 static bool __led1_illuminated = false;
 static bool __led2_illuminated = false;

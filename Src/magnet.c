@@ -9,15 +9,15 @@
 static bool double_activation_state = false;
 static bool single_activation_state = false;
 
-static enum magnet_states magnet_debounced_state = MAGNET_NOT_PRESENT;
+static magnet_state magnet_debounced_state = MAGNET_NOT_PRESENT;
 
 static bool __is_magnet_detected() {
     return HAL_GPIO_ReadPin(MAGNET_GPIO_Port, MAGNET_Pin) == MAGNET_PRESENT_PIN_STATE;
 }
 
 
-extern enum led_states led2_state;
-static enum led_states __led2_previous_state;
+extern led_state led2_state;
+static led_state __led2_previous_state;
 void __show_magnet_presence() {
   if (magnet_debounced_state == MAGNET_PRESENT) {
     if (led2_state != STEADY_BRIGHT) {
