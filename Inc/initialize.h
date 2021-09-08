@@ -3,7 +3,7 @@
 
 
 
-typedef enum initialization_results {INITIALIZE_OK, INITIALIZE__NOT_OK} initialization_result;
+typedef enum initialization_results {INITIALIZE_OK, INITIALIZE_NOT_OK} initialization_result;
 
 
 void initialize();

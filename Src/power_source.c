@@ -1,28 +1,62 @@
 #include "power_source.h"
 
 
-Power_Source main_power_source;
-Power_Source stby_power_source;
+Power_Source main_power_source = {0};
+Power_Source stby_power_source = {0};
 
 
-Power_Source create_BEC_power_source(source_position position) {
-    Power_Source power_source = {0};
-    power_source.source_type = BEC;
+initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position) {
+    power_source->source_type = BEC;
     // battery_type and battery_number_cells = 0 (undefined)
-    power_source.position = position;
-    power_source.minimum_voltage_ADC_value = BEC_MINIMUM_VOLTAGE_ADC_VALUE;
-    power_source.critical_voltage_ADC_value = BEC_CRITICAL_VOLTAGE_ADC_VALUE;
-    power_source.valid = true;
-    return power_source;
+    power_source->position = position;
+    power_source->minimum_voltage_ADC_value = BEC_MINIMUM_VOLTAGE_ADC_VALUE;
+    power_source->critical_voltage_ADC_value = BEC_CRITICAL_VOLTAGE_ADC_VALUE;
+    power_source->valid = true;
+
+    return INITIALIZE_OK;
 }
 
-// Power_Source create_Battery_power_source(battery_number_cells numbers_cells, source_position position) {
-//     Power_Source power_source = {0};
-//     power_source.source_type = LIPO;
-//     power_source.battery_number_cells = numbers_cells;
-//     power_source.position = position;
-//     return power_source;
-// }
+initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position) {
+    power_source->source_type = BATTERY;
+    power_source->battery_type = type;
+    power_source->battery_number_cells = numbers_cells;
+
+    switch (type) {
+    case LIPO:
+        if (numbers_cells < _2S || numbers_cells > _4S) {
+            power_source->valid = false;
+            return INITIALIZE_NOT_OK;
+        }
+        power_source->minimum_voltage_ADC_value = numbers_cells * LIPO_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE;
+        power_source->critical_voltage_ADC_value = numbers_cells * LIPO_SINGLE_CELL_CRITICAL_VOLTAGE_ADC_VALUE;
+        break;
+    case LIFE:
+        if (numbers_cells < _2S || numbers_cells > _4S) {
+            power_source->valid = false;
+            return INITIALIZE_NOT_OK;
+        }
+        power_source->minimum_voltage_ADC_value = numbers_cells * LIFE_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE;
+        power_source->critical_voltage_ADC_value = numbers_cells * LIFE_SINGLE_CELL_CRITICAL_VOLTAGE_ADC_VALUE;
+        break;
+    case NIMH:
+        if (numbers_cells < _4S || numbers_cells > _5S) {
+            power_source->valid = false;
+            return INITIALIZE_NOT_OK;
+        }
+        power_source->minimum_voltage_ADC_value = numbers_cells * NIMH_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE;
+        power_source->critical_voltage_ADC_value = numbers_cells * NIMH_SINGLE_CELL_CRITICAL_VOLTAGE_ADC_VALUE;
+        break;
+    default:
+        power_source->valid = false;
+        return INITIALIZE_NOT_OK;
+        break;
+    }
+
+    power_source->position = position;
+    power_source->valid = true;
+
+    return INITIALIZE_OK;
+}
 
 bool is_power_source_valid(Power_Source *power_source) {
     return power_source->valid;

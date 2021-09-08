@@ -13,8 +13,19 @@
 
 // #define CONSOLE_OUTPUT
 
+// The following #defines are used if no config is stored in EEPROM
+// Both power sources being configured as BEC, it will work in all cases
+// but it could deep discharge connected batteries
 
+#define DEFAULT_MAIN_SOURCE_TYPE BEC
+// These two are not needed for BEC
+// #define DEFAULT_MAIN_BATTERY_TYPE LIFE
+// #define DEFAULT_MAIN_BATTERY_NUMBER_CELLS _2S
 
+#define DEFAULT_STBY_SOURCE_TYPE BEC
+// These two are not needed for BEC
+// #define DEFAULT_STBY_BATTERY_TYPE LIFE
+// #define DEFAULT_STBY_BATTERY_NUMBER_CELLS _2S
 
 
 #endif /* C2381FDA_B024_449A_9DE0_A68DD172B266 */

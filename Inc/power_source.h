@@ -78,8 +78,8 @@
 
 // typedef's
 typedef enum source_types {BEC, BATTERY} source_type;
-typedef enum battery_types {BATT_TYPE_UNDEFINED, LIPO, LIFE, NIMH} battery_type;
-typedef enum battery_number_cellss {BATT_CELLS_UNDEFINED, _2S, _3S, _4S, _5S} battery_number_cells;
+typedef enum battery_types {BATT_TYPE_UNDEFINED=0, LIPO, LIFE, NIMH} battery_type;
+typedef enum battery_number_cellss {BATT_CELLS_UNDEFINED=0, _2S = 2, _3S, _4S, _5S} battery_number_cells;
 typedef enum source_positions {MAIN, STBY} source_position;
 
 typedef struct {
@@ -94,8 +94,8 @@ typedef struct {
 
 // prototypes
 
-Power_Source create_BEC_power_source(source_position position);
-Power_Source create_Battery_power_source(battery_type type, battery_number_cells numbers_cells, source_position position);
+initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position);
+initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position);
 
 bool is_power_source_valid(Power_Source *power_source);
 
