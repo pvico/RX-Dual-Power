@@ -82,3 +82,10 @@ void debug_console_print_splash() {
   #endif
 }
 
+void debug_console_print_initialization_error() {
+  #ifdef CONSOLE_OUTPUT
+  uint8_t data[] = "\r\nInitialization error. Stopped.\r\n";
+  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+  #endif
+}
+

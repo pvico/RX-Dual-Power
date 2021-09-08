@@ -6,7 +6,7 @@
 // bool is_main_power_forced_off();
 // bool is_stby_power_forced_off();
 
-//These functions are called by power_source_loop to set the "step" of power source selection (see README)
+//These functions are called by switching_logic_loop to set the "step" of power source selection (see README)
 void use_main_power();
 void use_stby_power();
 void let_LTCs_determine_power_source();

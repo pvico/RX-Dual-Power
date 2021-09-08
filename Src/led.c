@@ -36,6 +36,11 @@ void __led2_extinguish() {
     __led2_illuminated = false;
 }
 
+void leds_show_error() {
+    __led1_illuminate();
+    __led2_illuminate();
+}
+
 static uint16_t __led1_counter = 0;
 static uint16_t __led2_counter = 0;
 

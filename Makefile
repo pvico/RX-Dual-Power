@@ -53,6 +53,7 @@ Src/s_port.c \
 Src/output_control.c \
 Src/button.c \
 Src/power_source.c \
+Src/switching_logic.c \
 Src/system.c \
 Src/configure.c \
 Src/sbus2.c \

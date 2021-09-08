@@ -9,6 +9,7 @@
 #include "system.h"
 #include "power_source.h"
 #include "button.h"
+#include "switching_logic.h"
 
 extern bool timer_flag;
 
@@ -22,9 +23,11 @@ void main_loop() {
     magnet_loop();
     button_loop();
     leds_loop();
-    debug_console_display_loop();   // no debug_console display if CONSOLE_OUTPUT is not defined in config.h
-    power_source_loop();
+    switching_logic_loop();
     system_loop();
+    
+    // no debug_console display if CONSOLE_OUTPUT is not defined in config.h
+    debug_console_display_loop();   
 
     // ############ end 1ms loop ###############
 

@@ -2,6 +2,7 @@
 #define B99D9472_C491_40AD_BE50_51BB818EAF15
 
 #include <stdint.h>
+#include "initialize.h"
 
 // #define CORRECTION_COEFF 1.013
 // #define BATTERY_SENSE_PIN_RATIO (CORRECTION_COEFF * (560+110) / 110)
@@ -11,7 +12,7 @@
 
 #define CORRECTION_VALUE -2;
 
-void init_voltage_sensors();
+initialization_result init_voltage_sensors();
 
 uint16_t main_voltage ();
 uint16_t stby_voltage ();
