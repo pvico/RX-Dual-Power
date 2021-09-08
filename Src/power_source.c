@@ -70,9 +70,8 @@ bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t
     return last_8ms_ADC_value < power_source->critical_voltage_ADC_value;
 }
 
-bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t average_ADC_value) {
-    // TODO
-    return false;
+bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_8ms_ADC_value) {
+    return last_8ms_ADC_value < DISCONNECTED_OR_SHORT_ADC_VALUE;
 }
 
 initialization_result init_power_sources() {
