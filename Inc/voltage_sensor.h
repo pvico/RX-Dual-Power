@@ -14,11 +14,28 @@
 
 initialization_result init_voltage_sensors();
 
+// ADC frequency is 4Mhz (HSI 16MHz, prescaler /4), period 0.25µs
+// ADC conversion time: 43µs
+//  - Sampling time: 160.5 cycles ≂ 40µs
+//  - conversion time: 12.5 cycles ≂ 3µs
+// In continuous conversion with DMA, we will have multiple conversions performed
+// between each 1ms loop iteration
+
+// These return the last ADC DMA reading, there is no averaging
+// make private ?
 uint16_t main_voltage ();
 uint16_t stby_voltage ();
 
+
 void main_voltage_str (uint8_t *buffer);
 void stby_voltage_str (uint8_t *buffer);
+
+uint16_t main_voltage_8ms_average_adc_value();
+uint16_t main_voltage_30s_average_adc_value();
+uint16_t stby_voltage_8ms_average_adc_value();
+uint16_t stby_voltage_30s_average_adc_value();
+
+void voltage_sensor_loop();
 
 #endif /* B99D9472_C491_40AD_BE50_51BB818EAF15 */
 

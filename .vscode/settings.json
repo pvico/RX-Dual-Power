@@ -5,6 +5,7 @@
         "stdint.h": "c",
         "initialize.h": "c",
         "random": "c",
-        "limits": "c"
+        "limits": "c",
+        "algorithm": "c"
     }
 }

@@ -1,8 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
+ADC.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV4
 ADC.ContinuousConvMode=ENABLE
 ADC.DMAContinuousRequests=ENABLE
 ADC.EOCSelection=ADC_EOC_SINGLE_CONV
-ADC.IPParameters=ContinuousConvMode,DMAContinuousRequests,SamplingTime,EOCSelection,Resolution
+ADC.IPParameters=ContinuousConvMode,DMAContinuousRequests,SamplingTime,EOCSelection,Resolution,ClockPrescaler
 ADC.Resolution=ADC_RESOLUTION_10B
 ADC.SamplingTime=ADC_SAMPLETIME_160CYCLES_5
 Dma.ADC.0.Direction=DMA_PERIPH_TO_MEMORY
@@ -135,8 +136,8 @@ ProjectManager.MainLocation=Core/Src
 ProjectManager.NoMain=false
 ProjectManager.PreviousToolchain=
 ProjectManager.ProjectBuild=false
-ProjectManager.ProjectFileName=RX_Dual_Battery_Switch.ioc
-ProjectManager.ProjectName=RX_Dual_Battery_Switch
+ProjectManager.ProjectFileName=RX Dual Power.ioc
+ProjectManager.ProjectName=RX Dual Power
 ProjectManager.RegisterCallBack=
 ProjectManager.StackSize=0x400
 ProjectManager.TargetToolchain=Makefile

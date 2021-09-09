@@ -1,22 +1,6 @@
 #ifndef A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77
 #define A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77
 
-// Power sources
-// #define NO_SOURCE       0          
-// #define BEC_5V          1
-// #define BEC_5_5V        2
-// #define BEC_6V          3
-// #define BEC_7_4V        4
-// #define BEC_8_4V        5
-// #define LIPO_2S         6
-// #define LIPO_3S         7
-// #define LIPO_4S         8
-// #define LIFE_2S         9
-// #define LIFE_3S         10
-// #define LIFE_4S         11
-// #define NIMH_4S         12
-// #define NIMH_5S         13
-
 #include <stdbool.h>
 #include <stdint.h>
 #include "initialize.h"
@@ -102,7 +86,7 @@ bool is_power_source_valid(Power_Source *power_source);
 // if source average voltage for the last 30" is below this value, will switch to the other source
 bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t average_ADC_value);
 
-// if source average voltage for the last 10ms is below this value, will immediately switch to the other source
+// if source average voltage for the last 8ms is below this value, will immediately switch to the other source
 bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_8ms_ADC_value);
 
 bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_8ms_ADC_value);
