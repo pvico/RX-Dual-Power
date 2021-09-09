@@ -90,7 +90,7 @@ When the model is powered off, the current consumed is minimal (60 *micro* amper
 - MAIN PWR voltage
 - STBY PWR voltage
 
-These are transmitted using sensor ID: **1 to 28, TBD**
+These are transmitted using sensor ID: **26, to be confirmed**
 
 ### Messages
 
@@ -104,7 +104,7 @@ These are transmitted using sensor ID: **1 to 28, TBD**
 | STBY PWR DISCONNECTED |  TBD  | STBY PWR is below 0.5V                                    |
 | CRITICAL              |  TBD  | Both MAIN PWR and STBY PWR are either LOW or DISCONNECTED |
 
-Note: these are non standard ad-hoc messages transmitted using sensor ID: **1 to 28, TBD**.
+Note: these are non standard ad-hoc messages transmitted using sensor ID: **26, to be confirmed**.
 Adequate programming of the transmitter using OpenTX must be done to have audio and/or visual messages corresponding to each reported message.
 
 If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and/or visual message must be configured in response to the MAIN PWR voltage value reporting.

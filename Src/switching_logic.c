@@ -11,8 +11,8 @@
 // minimum voltage + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE for 30",
 // MAIN PWR will be used again.
 
-// If MAIN PWR measured voltage stays below the critical voltage for 8ms
-// (8 loop iterations), we swicth to STBY PWR. Critical voltage is always lower
+// If MAIN PWR measured voltage stays below the critical voltage for 16ms
+// (16 loop iterations), we swicth to STBY PWR. Critical voltage is always lower
 // than (or equal to for BEC) minimum voltage
 
 // Critical condition exists when both sources are below minimum voltage.

@@ -33,26 +33,26 @@ void debug_console_print_system_status() {
   #endif
 }
 
-// void debug_console_print_magnet_present() {
-//   #ifdef CONSOLE_OUTPUT
-//   uint8_t data[] = "MAGNET PRESENT\r\n";
-//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
-//   #endif
-// }
+void debug_console_print_magnet_present() {
+  #ifdef CONSOLE_OUTPUT
+  uint8_t data[] = "MAGNET PRESENT\r\n";
+  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+  #endif
+}
 
-// void debug_console_print_single_activation() {
-//   #ifdef CONSOLE_OUTPUT
-//   uint8_t data[] = "SINGLE ACTIVATION\r\n";
-//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
-//   #endif
-// }
+void debug_console_print_single_activation() {
+  #ifdef CONSOLE_OUTPUT
+  uint8_t data[] = "SINGLE ACTIVATION\r\n";
+  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+  #endif
+}
 
-// void debug_console_print_double_activation() {
-//   #ifdef CONSOLE_OUTPUT
-//   uint8_t data[] = "DOUBLE ACTIVATION\r\n";
-//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
-//   #endif
-// }
+void debug_console_print_double_activation() {
+  #ifdef CONSOLE_OUTPUT
+  uint8_t data[] = "DOUBLE ACTIVATION\r\n";
+  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+  #endif
+}
 
 void debug_console_print_entering_stop_mode() {
   #ifdef CONSOLE_OUTPUT

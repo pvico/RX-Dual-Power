@@ -23,6 +23,7 @@ void main_loop() {
     magnet_loop();
     button_loop();
     leds_loop();
+    voltage_sensor_loop();
     switching_logic_loop();
     system_loop();
     

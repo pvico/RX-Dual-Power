@@ -47,7 +47,6 @@ Src/initialize.c \
 Src/main_loop.c \
 Src/led.c \
 Src/magnet.c \
-Src/fifo.c \
 Src/voltage_sensor.c \
 Src/debug_console.c \
 Src/s_port.c \

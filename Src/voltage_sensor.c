@@ -1,5 +1,4 @@
 #include "voltage_sensor.h"
-#include "fifo.h"
 #include "adc.h"
 #include <stdint.h>
 
@@ -8,31 +7,22 @@ extern uint32_t adc_values[2];
 extern ADC_HandleTypeDef hadc;
 uint32_t adc_values[2];
 
-uint16_t adc_8ms_buffer[8] = {0};
-
-
 initialization_result init_voltage_sensors() {
   HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc, adc_values, 2);
-
-  // We are creating a 8 item fifo for the 8ms average
-  // To have an average over ≂ 30s and to limit ram usage,
-  // we create 2 64 item... TBD
-
-  // TODO, init fifos
   
-  return INITIALIZE_NOT_OK;
+  return INITIALIZE_OK;
 }
 
-uint16_t main_voltage () {
+static uint16_t __main_voltage () {
     return adc_values[0] + CORRECTION_VALUE;
 }
 
-uint16_t stby_voltage () {
+static uint16_t __stby_voltage () {
     return adc_values[1] + CORRECTION_VALUE;
 }
 
-void __voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+static void __voltage_to_str(uint32_t voltage, uint8_t *buffer) {
     uint8_t units;
     uint8_t decimals;
 
@@ -51,16 +41,75 @@ void __voltage_to_str(uint32_t voltage, uint8_t *buffer) {
     buffer[5] = 'V';
 }
 
-// TODO
-// use an average calculation instead
 void main_voltage_str (uint8_t *buffer) {
-    __voltage_to_str(main_voltage(), buffer);
+    __voltage_to_str(main_voltage_30s_average_adc_value(), buffer);
 }
 
 void stby_voltage_str (uint8_t *buffer) {
-    __voltage_to_str(stby_voltage(), buffer);
+    __voltage_to_str(stby_voltage_30s_average_adc_value(), buffer);
 }
 
+static uint16_t main_16ms_sum = 0;
+static uint8_t main_16ms_counter = 0;
+static uint16_t main_last_16ms_average = 0;
+
+static uint16_t stby_16ms_sum = 0;
+static uint8_t stby_16ms_counter = 0;
+static uint16_t stby_last_16ms_average = 0;
+
+static uint32_t main_30s_sum = 0;
+static uint16_t main_30s_counter = 0;
+static uint16_t main_last_30s_average = 0;
+
+static uint32_t stby_30s_sum = 0;
+static uint16_t stby_30s_counter = 0;
+static uint16_t stby_last_30s_average = 0;
+
 void voltage_sensor_loop() {
-    //TODO
+    main_16ms_sum += __main_voltage();
+    main_16ms_counter++;
+    if (main_16ms_counter == 16) {
+        main_16ms_counter = 0;
+        main_last_16ms_average = main_16ms_sum >> 4;    // divide by 16
+        main_16ms_sum = 0;
+    }
+    
+    stby_16ms_sum += __stby_voltage();
+    stby_16ms_counter++;
+    if (stby_16ms_counter == 16) {
+        stby_16ms_counter = 0;
+        stby_last_16ms_average = stby_16ms_sum >> 4;
+        stby_16ms_sum = 0;
+    }
+    main_30s_sum += __main_voltage();
+    main_30s_counter++;
+    if (main_30s_counter == 0x8000) {       // = 32768 => 32.768 sec.
+        main_30s_counter = 0;
+        main_last_30s_average = main_30s_sum >> 15;      // divide by 32768
+        main_30s_sum = 0;
+    }
+    
+    stby_30s_sum += __stby_voltage();
+    stby_30s_counter++;
+    if (stby_30s_counter == 0x8000) {
+        stby_30s_counter = 0;
+        stby_last_30s_average = stby_30s_sum >> 15;
+        stby_30s_sum = 0;
+    }
+}
+
+inline uint16_t main_voltage_16ms_average_adc_value() {
+    return main_last_16ms_average;
+}
+
+inline uint16_t main_voltage_30s_average_adc_value() {
+    return main_last_30s_average;
+}
+
+inline uint16_t stby_voltage_16ms_average_adc_value() {
+    return stby_last_16ms_average;
+}
+
+inline uint16_t stby_voltage_30s_average_adc_value() {
+    return stby_last_30s_average;
 }

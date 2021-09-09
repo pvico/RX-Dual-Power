@@ -6,7 +6,7 @@
 void debug_console_print_splash();
 void debug_console_print_voltages();
 void debug_console_print_system_status();
-// void debug_console_print_magnet_present();
+void debug_console_print_magnet_present();
 void debug_console_print_initialization_error();
 void debug_console_print_sw1_depressed();
 void debug_console_print_single_activation();

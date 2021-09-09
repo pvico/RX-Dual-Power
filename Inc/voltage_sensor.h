@@ -21,18 +21,13 @@ initialization_result init_voltage_sensors();
 // In continuous conversion with DMA, we will have multiple conversions performed
 // between each 1ms loop iteration
 
-// These return the last ADC DMA reading, there is no averaging
-// make private ?
-uint16_t main_voltage ();
-uint16_t stby_voltage ();
-
 
 void main_voltage_str (uint8_t *buffer);
 void stby_voltage_str (uint8_t *buffer);
 
-uint16_t main_voltage_8ms_average_adc_value();
+uint16_t main_voltage_16ms_average_adc_value();
 uint16_t main_voltage_30s_average_adc_value();
-uint16_t stby_voltage_8ms_average_adc_value();
+uint16_t stby_voltage_16ms_average_adc_value();
 uint16_t stby_voltage_30s_average_adc_value();
 
 void voltage_sensor_loop();
