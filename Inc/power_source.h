@@ -83,8 +83,8 @@ initialization_result initialize_Battery_power_source(Power_Source *power_source
 
 bool is_power_source_valid(Power_Source *power_source);
 
-// if source average voltage for the last 30" is below this value, will switch to the other source
-bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t average_ADC_value);
+// if source average voltage for the last 16" is below this value, will switch to the other source
+bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
 
 // if source average voltage for the last 16ms is below this value, will immediately switch to the other source
 bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value);

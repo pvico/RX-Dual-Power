@@ -26,9 +26,9 @@ void main_voltage_str (uint8_t *buffer);
 void stby_voltage_str (uint8_t *buffer);
 
 uint16_t main_voltage_16ms_average_adc_value();
-uint16_t main_voltage_30s_average_adc_value();
+uint16_t main_voltage_16s_average_adc_value();
 uint16_t stby_voltage_16ms_average_adc_value();
-uint16_t stby_voltage_30s_average_adc_value();
+uint16_t stby_voltage_16s_average_adc_value();
 
 void voltage_sensor_loop();
 

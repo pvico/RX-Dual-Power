@@ -42,11 +42,11 @@ static void __voltage_to_str(uint32_t voltage, uint8_t *buffer) {
 }
 
 void main_voltage_str (uint8_t *buffer) {
-    __voltage_to_str(main_voltage_30s_average_adc_value(), buffer);
+    __voltage_to_str(main_voltage_16s_average_adc_value(), buffer);
 }
 
 void stby_voltage_str (uint8_t *buffer) {
-    __voltage_to_str(stby_voltage_30s_average_adc_value(), buffer);
+    __voltage_to_str(stby_voltage_16s_average_adc_value(), buffer);
 }
 
 static uint16_t main_16ms_sum = 0;
@@ -57,13 +57,13 @@ static uint16_t stby_16ms_sum = 0;
 static uint8_t stby_16ms_counter = 0;
 static uint16_t stby_last_16ms_average = 0;
 
-static uint32_t main_30s_sum = 0;
-static uint16_t main_30s_counter = 0;
-static uint16_t main_last_30s_average = 0;
+static uint32_t main_16s_sum = 0;
+static uint16_t main_16s_counter = 0;
+static uint16_t main_last_16s_average = 0;
 
-static uint32_t stby_30s_sum = 0;
-static uint16_t stby_30s_counter = 0;
-static uint16_t stby_last_30s_average = 0;
+static uint32_t stby_16s_sum = 0;
+static uint16_t stby_16s_counter = 0;
+static uint16_t stby_last_16s_average = 0;
 
 void voltage_sensor_loop() {
     main_16ms_sum += __main_voltage();
@@ -81,20 +81,20 @@ void voltage_sensor_loop() {
         stby_last_16ms_average = stby_16ms_sum >> 4;
         stby_16ms_sum = 0;
     }
-    main_30s_sum += __main_voltage();
-    main_30s_counter++;
-    if (main_30s_counter == 0x8000) {       // = 32768 => 32.768 sec.
-        main_30s_counter = 0;
-        main_last_30s_average = main_30s_sum >> 15;      // divide by 32768
-        main_30s_sum = 0;
+    main_16s_sum += __main_voltage();
+    main_16s_counter++;
+    if (main_16s_counter == 0x4000) {       // = 16384 => 16.384 sec.
+        main_16s_counter = 0;
+        main_last_16s_average = main_16s_sum >> 14;      // divide by 16384
+        main_16s_sum = 0;
     }
     
-    stby_30s_sum += __stby_voltage();
-    stby_30s_counter++;
-    if (stby_30s_counter == 0x8000) {
-        stby_30s_counter = 0;
-        stby_last_30s_average = stby_30s_sum >> 15;
-        stby_30s_sum = 0;
+    stby_16s_sum += __stby_voltage();
+    stby_16s_counter++;
+    if (stby_16s_counter == 0x4000) {
+        stby_16s_counter = 0;
+        stby_last_16s_average = stby_16s_sum >> 14;
+        stby_16s_sum = 0;
     }
 }
 
@@ -102,14 +102,14 @@ inline uint16_t main_voltage_16ms_average_adc_value() {
     return main_last_16ms_average;
 }
 
-inline uint16_t main_voltage_30s_average_adc_value() {
-    return main_last_30s_average;
+inline uint16_t main_voltage_16s_average_adc_value() {
+    return main_last_16s_average;
 }
 
 inline uint16_t stby_voltage_16ms_average_adc_value() {
     return stby_last_16ms_average;
 }
 
-inline uint16_t stby_voltage_30s_average_adc_value() {
-    return stby_last_30s_average;
+inline uint16_t stby_voltage_16s_average_adc_value() {
+    return stby_last_16s_average;
 }

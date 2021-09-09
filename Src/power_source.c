@@ -62,8 +62,8 @@ bool is_power_source_valid(Power_Source *power_source) {
     return power_source->valid;
 }
 
-bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t average_ADC_value) {
-    return average_ADC_value < power_source->minimum_voltage_ADC_value;
+bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value) {
+    return last_16s_average_ADC_value < power_source->minimum_voltage_ADC_value;
 }
 
 bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value) {
@@ -76,5 +76,13 @@ bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_
 
 initialization_result init_power_sources() {
     // TODO
-    return INITIALIZE_OK;
+
+    // example to start with
+    if (initialize_BEC_power_source(&main_power_source, MAIN) == INITIALIZE_OK &&
+        initialize_Battery_power_source(&stby_power_source, LIFE, _2S, STBY) == INITIALIZE_OK) {
+        return INITIALIZE_OK;
+    } else {
+        return INITIALIZE_NOT_OK;
+    }
+
 }
