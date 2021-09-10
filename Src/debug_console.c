@@ -1,16 +1,20 @@
 #include "debug_console.h"
 #include "usart.h"
 #include "voltage_sensor.h"
+#include "power_source.h"
 #include "config.h"
 
 
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
+
 void debug_console_print_voltages() {
-  #ifdef CONSOLE_OUTPUT
+  // #ifdef CONSOLE_OUTPUT
   uint8_t data[] = "MAIN: ______\tSTBY: ______\r\n";
-  main_voltage_str(data+6);
-  stby_voltage_str(data+19);
+  voltage_to_str(main_power_source.last_16s_average_voltage_ADC_value, data+6);
+  voltage_to_str(stby_power_source.last_16s_average_voltage_ADC_value, data+19);
   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10); 
-  #endif
+  // #endif
 }
 
 #ifdef CONSOLE_OUTPUT

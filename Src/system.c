@@ -52,7 +52,7 @@ void system_loop() {
         __system_stop_mode();
     }
 
-    if (is_button_double_activation_active()) {
+    if (is_button_dual_activation_active()) {
         __system_stop_mode();
     }
 }

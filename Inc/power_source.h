@@ -61,10 +61,11 @@
 #define HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE  15   // 0.3V
 
 // typedef's
-typedef enum source_types {BEC, BATTERY} source_type;
-typedef enum battery_types {BATT_TYPE_UNDEFINED=0, LIPO, LIFE, NIMH} battery_type;
-typedef enum battery_number_cellss {BATT_CELLS_UNDEFINED=0, _2S = 2, _3S, _4S, _5S} battery_number_cells;
-typedef enum source_positions {MAIN, STBY} source_position;
+typedef enum {BEC, BATTERY} source_type;
+typedef enum {BATT_TYPE_UNDEFINED=0, LIPO, LIFE, NIMH} battery_type;
+typedef enum {BATT_CELLS_UNDEFINED=0, _2S = 2, _3S, _4S, _5S} battery_number_cells;
+typedef enum {MAIN, STBY} source_position;
+typedef enum {OK, LOW, DISCONNECTED_OR_SHORT} power_state;
 
 typedef struct {
     source_type source_type;
@@ -73,6 +74,11 @@ typedef struct {
     source_position position;
     uint16_t minimum_voltage_ADC_value;
     uint16_t critical_voltage_ADC_value;
+    uint16_t current_voltage_ADC_value;
+    uint16_t last_16ms_average_voltage_ADC_value;
+    uint16_t last_16s_average_voltage_ADC_value;
+    power_state state;
+    bool above_reinstate_voltage;
     bool valid;
 } Power_Source;
 
@@ -81,17 +87,19 @@ typedef struct {
 initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position);
 initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position);
 
-bool is_power_source_valid(Power_Source *power_source);
+// // if source average voltage for the last 16" is below this value, will switch to the other source
+// bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
 
-// if source average voltage for the last 16" is below this value, will switch to the other source
-bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
+// // if source average voltage for the last 16ms is below this value, will immediately switch to the other source
+// bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value);
 
-// if source average voltage for the last 16ms is below this value, will immediately switch to the other source
-bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value);
+// bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_16ms_ADC_value);
 
-bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_16ms_ADC_value);
+// bool is_power_source_above_reinstate_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
 
 initialization_result init_power_sources();
+
+void power_source_loop();
 
 
 #endif /* A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77 */

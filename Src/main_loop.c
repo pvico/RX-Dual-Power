@@ -24,10 +24,11 @@ void main_loop() {
     button_loop();
     leds_loop();
     voltage_sensor_loop();
+    power_source_loop();
     switching_logic_loop();
     system_loop();
     
-    // no debug_console display if CONSOLE_OUTPUT is not defined in config.h
+    // debug_console display only if CONSOLE_OUTPUT is defined in config.h
     debug_console_display_loop();   
 
     // ############ end 1ms loop ###############

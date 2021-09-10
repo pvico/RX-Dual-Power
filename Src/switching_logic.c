@@ -32,54 +32,27 @@
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 
-static uint16_t __loop_counter = 0;
-
-inline static bool __is_in_16s_after_startup() {
-    return __loop_counter <= 0x4000;
-}
-
-static bool __is_main_power_ok() {
-    // MAIN PWR is ok if
-    // - the 16s average voltage is above minimum voltage and the 16ms average is above critical voltage
-    //                          or
-    // - we are in the first 16 sec. after startup (the 16s average has not been computed yet) and
-    //   the 16ms average is above critical voltage
-    return !(is_power_source_below_minimum_voltage(&main_power_source, main_voltage_16s_average_adc_value()) ||
-        is_power_source_below_critical_voltage(&main_power_source, main_voltage_16ms_average_adc_value())) ||
-        (__is_in_16s_after_startup() && !is_power_source_below_critical_voltage(&main_power_source, main_voltage_16ms_average_adc_value()));
-}
-
-static bool __is_stby_power_ok() {
-    // Same logic as for MAIN PWR
-    return !(is_power_source_below_minimum_voltage(&stby_power_source, stby_voltage_16s_average_adc_value()) ||
-        is_power_source_below_critical_voltage(&stby_power_source, stby_voltage_16ms_average_adc_value())) ||
-        (__is_in_16s_after_startup() && !is_power_source_below_critical_voltage(&stby_power_source, main_voltage_16ms_average_adc_value()));
-}
+typedef enum {MAIN_PWR_ON_STBY_OK, MAIN_PWR_ON_STBY_NOT_OK, STBY_PWR_ON, CRITICAL} switching_state;
 
 void switching_logic_loop() {
-    __loop_counter++;
-    if (__loop_counter == 0xffff) {
-        __loop_counter = 0x4001;
-    }
-    // TODO HYSTERESIS
+    // TODO: HYSTERESIS to reinstate
 
-    // call functions in led.c instead of modifying global variables
-
-    if (__is_main_power_ok()) {
+    if (main_power_source.state == OK) {
         use_main_power();
         set_led_state(LED1, STEADY_DIM);
-        if (__is_stby_power_ok()) {
+        if (stby_power_source.state == OK) {
             set_led_state(LED2, OFF);
         } else {
             set_led_state(LED2, BLINK_FAST);
         }
     } else {        // MAIN PWR is not ok
-            set_led_state(LED1, BLINK_FAST);
-        if (__is_stby_power_ok()) {
+        if (stby_power_source.state == OK) {
             use_stby_power();
+            set_led_state(LED1, OFF);
             set_led_state(LED2, BLINK_SLOW);
         } else {
             let_LTCs_determine_power_source();
+            set_led_state(LED1, BLINK_FAST);
             set_led_state(LED2, BLINK_FAST);
         }
     }

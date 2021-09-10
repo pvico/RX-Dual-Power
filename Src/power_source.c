@@ -4,13 +4,13 @@
 Power_Source main_power_source = {0};
 Power_Source stby_power_source = {0};
 
-
 initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position) {
     power_source->source_type = BEC;
     // battery_type and battery_number_cells = 0 (undefined)
     power_source->position = position;
     power_source->minimum_voltage_ADC_value = BEC_MINIMUM_VOLTAGE_ADC_VALUE;
     power_source->critical_voltage_ADC_value = BEC_CRITICAL_VOLTAGE_ADC_VALUE;
+    power_source->state = OK;
     power_source->valid = true;
 
     return INITIALIZE_OK;
@@ -53,25 +53,33 @@ initialization_result initialize_Battery_power_source(Power_Source *power_source
     }
 
     power_source->position = position;
+    power_source->state = OK;
     power_source->valid = true;
 
     return INITIALIZE_OK;
 }
 
-bool is_power_source_valid(Power_Source *power_source) {
-    return power_source->valid;
+
+static uint16_t __first_16s__loop_counter = 0;
+
+inline static bool __is_in_16s_after_startup() {
+    return __first_16s__loop_counter <= 0x4000;
 }
 
-bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value) {
-    return last_16s_average_ADC_value < power_source->minimum_voltage_ADC_value;
+static bool __is_power_source_below_minimum_voltage(Power_Source *power_source) {
+    return !__is_in_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value < power_source->minimum_voltage_ADC_value;
 }
 
-bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value) {
-    return last_16ms_ADC_value < power_source->critical_voltage_ADC_value;
+static bool __is_power_source_below_critical_voltage(Power_Source *power_source) {
+    return power_source->last_16ms_average_voltage_ADC_value < power_source->critical_voltage_ADC_value;
 }
 
-bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_16ms_ADC_value) {
-    return last_16ms_ADC_value < DISCONNECTED_OR_SHORT_ADC_VALUE;
+static bool __is_power_source_disconnected_or_shorted(Power_Source *power_source) {
+    return power_source->last_16ms_average_voltage_ADC_value < DISCONNECTED_OR_SHORT_ADC_VALUE;
+}
+
+static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source){
+    return power_source->last_16s_average_voltage_ADC_value > (power_source->minimum_voltage_ADC_value + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE);
 }
 
 initialization_result init_power_sources() {
@@ -84,5 +92,41 @@ initialization_result init_power_sources() {
     } else {
         return INITIALIZE_NOT_OK;
     }
+}
 
+void power_source_loop() {
+    __first_16s__loop_counter++;
+    if (__first_16s__loop_counter == 0xffff) {
+        __first_16s__loop_counter = 0x4001;    // roll over the 16" value
+    }
+
+    // Power source is ok if
+    // - the 16s average voltage is above minimum voltage and the 16ms average is above critical voltage
+    //                          or
+    // - we are in the first 16 sec. after startup (the 16s average has not been computed yet) and
+    //   the 16ms average is above critical voltage
+    //                          or
+    // - the 16ms average is above the reinstate voltage (minimum voltage + hysteresis value)
+
+    if ((!__is_power_source_below_minimum_voltage(&main_power_source) && !__is_power_source_below_critical_voltage(&main_power_source)) ||
+        __is_power_source_above_reinstate_voltage(&main_power_source)) {
+        main_power_source.state = OK;
+    } else if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
+        main_power_source.state = DISCONNECTED_OR_SHORT;
+    } else {
+        main_power_source.state = LOW;
+    }
+
+    main_power_source.above_reinstate_voltage = __is_power_source_above_reinstate_voltage(&main_power_source);
+
+    if ((!__is_power_source_below_minimum_voltage(&stby_power_source) && !__is_power_source_below_critical_voltage(&stby_power_source)) ||
+        __is_power_source_above_reinstate_voltage(&stby_power_source)) {
+        stby_power_source.state = OK;
+    } else if (__is_power_source_disconnected_or_shorted(&stby_power_source)) {
+        stby_power_source.state = DISCONNECTED_OR_SHORT;
+    } else {
+        stby_power_source.state = LOW;
+    }
+
+    stby_power_source.above_reinstate_voltage = __is_power_source_above_reinstate_voltage(&stby_power_source);
 }
