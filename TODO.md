@@ -1,6 +1,5 @@
 # TODO
 
-- Brownout detection, set both CTL pins to high impedance
 - S.Port output
 - Configuration programming through usart
 - Stop mode
@@ -9,7 +8,6 @@
 
 ### Optional
 
-- Watchdog timer
 - SBUS2 (Futaba)
 - X-BUS (Spektrum)
 - Mlink (Multiplex)

@@ -10,6 +10,7 @@
 #include "power_source.h"
 #include "button.h"
 #include "switching_logic.h"
+#include <wwdg.h>
 
 extern bool timer_flag;
 
@@ -19,6 +20,8 @@ void main_loop() {
   if (timer_flag) {
 
     // ############## 1ms loop #################
+
+    HAL_WWDG_Refresh(&hwwdg);
 
     magnet_loop();
     button_loop();

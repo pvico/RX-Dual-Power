@@ -12,6 +12,7 @@
 // When DEBUG is defined, all code related to LED1 is deactivated
 // #define DEBUG
 
+
 // #define CONSOLE_OUTPUT
 
 // The following #defines are used if no config is stored in EEPROM

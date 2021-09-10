@@ -5,9 +5,15 @@
 #include "output_control.h"
 #include "debug_console.h"
 #include "power_source.h"
+#include <wwdg.h>
 
 
 void initialize() {
+
+  #ifdef DEBUG
+  __HAL_DBGMCU_FREEZE_WWDG();
+  __HAL_DBGMCU_FREEZE_IWDG();
+  #endif
 
   debug_console_print_splash();
 

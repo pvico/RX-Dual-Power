@@ -23,6 +23,7 @@
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
+#include "wwdg.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -94,6 +95,7 @@ int main(void)
   MX_ADC_Init();
   MX_USART2_UART_Init();
   MX_TIM21_Init();
+  MX_WWDG_Init();
   /* USER CODE BEGIN 2 */
   initialize();
   /* USER CODE END 2 */
