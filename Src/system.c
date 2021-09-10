@@ -32,12 +32,12 @@ static void __set_not_needed_gpio_pins_to_analog() {
 }
 
 static void __system_stop_mode() {
-    power_off();
     
     debug_console_print_entering_stop_mode();
 
     __set_not_needed_gpio_pins_to_analog();
 
+    power_off();
     HAL_SuspendTick();
     // Stop now
     HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);

@@ -55,14 +55,16 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 | --------------------------------------------- | :----------: | :-----------: |
 | Power off                                     |      OFF     |      OFF      |
 | Magnet detected                               |       x      |     BRIGHT    |
-| CRITICAL <sup>*</sup>                         |  BLINK FAST  |   BLINK FAST  |
+| Using MAIN PWR, STBY PWR is ok                |      DIM     |      OFF      |
 | Using STBY PWR                                |      OFF     |   BLINK SLOW  |
 | Using MAIN PWR, STBY PWR LOW or DISCONNECTED  |      DIM     |   BLINK FAST  |
-| Using MAIN PWR, STBY PWR is ok                |      DIM     |      OFF      |
+| CRITICAL, using MAIN PWR <sup>*</sup>         |  BLINK SLOW  |   BLINK FAST  |
+| CRITICAL, using STBY PWR <sup>*</sup>         |  BLINK FAST  |   BLINK SLOW  |
+
+<sub><sup>*</sup> Critical = both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit and the source with the highest voltage is used.</sub></br>
 
 An external LED can be connected to the PCB. It will illuminate together with the yellow led to indicate when the magnet is detected or if STBY PWR is being used.
 
-<sub><sup>*</sup> Both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit.</sub>
 
 ## Powering off the model
 

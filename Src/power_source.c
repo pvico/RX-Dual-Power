@@ -62,24 +62,74 @@ initialization_result initialize_Battery_power_source(Power_Source *power_source
 
 static uint16_t __first_16s__loop_counter = 0;
 
-inline static bool __is_in_16s_after_startup() {
+inline static bool __is_in_first_16s_after_startup() {
     return __first_16s__loop_counter <= 0x4000;
 }
 
-static bool __is_power_source_below_minimum_voltage(Power_Source *power_source) {
-    return !__is_in_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value < power_source->minimum_voltage_ADC_value;
+static bool __is_power_source_above_minimum_voltage(Power_Source *power_source) {
+    // This uses the 16 seconds average (long integration)
+    return !__is_in_first_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value > power_source->minimum_voltage_ADC_value;
 }
 
-static bool __is_power_source_below_critical_voltage(Power_Source *power_source) {
-    return power_source->last_16ms_average_voltage_ADC_value < power_source->critical_voltage_ADC_value;
+static bool __is_power_source_above_critical_voltage(Power_Source *power_source) {
+    // And that this uses the 16 milli-seconds average (short integration)
+    return power_source->last_16ms_average_voltage_ADC_value > power_source->critical_voltage_ADC_value;
 }
 
 static bool __is_power_source_disconnected_or_shorted(Power_Source *power_source) {
     return power_source->last_16ms_average_voltage_ADC_value < DISCONNECTED_OR_SHORT_ADC_VALUE;
 }
 
-static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source){
+static bool __is_power_source_constantly_above_reinstate_voltage(Power_Source *power_source){
     return power_source->last_16s_average_voltage_ADC_value > (power_source->minimum_voltage_ADC_value + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE);
+}
+
+static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source){
+    // We can reinstate the power source if:
+    // - after the first 16s after power up, the 16 seconds average is above the reinstate voltage (minimum voltage + hysteresis value)
+    //                          or
+    // - during the first 16s after power up, the 16 milli-seconds average is above the reinstate voltage (minimum voltage + hysteresis value)
+    //
+    // We do this so that if a fresh battery is connected just after power up, it is immediately indicated that the battery is present
+
+    if (__is_in_first_16s_after_startup()) {
+        return power_source->last_16ms_average_voltage_ADC_value > (power_source->minimum_voltage_ADC_value + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE);
+    } else {
+        return __is_power_source_constantly_above_reinstate_voltage(power_source);
+    }
+}
+
+void power_source_loop() {
+    __first_16s__loop_counter++;
+    if (__first_16s__loop_counter == 0xffff) {
+        __first_16s__loop_counter = 0x4001;    // roll over the 16" value
+    }
+
+    // Power source is ok if
+    // - the 16 seconds average voltage is above minimum voltage and the 16 milli-seconds average is above critical voltage
+    //                          or
+    // - during the first 16 seconds after power up (the 16 seconds average has not been computed yet), the 16 milli-seconds average
+    //   is above critical voltage
+    //                          or
+    // - the re-instate voltage conditions are met
+
+    if ((__is_power_source_above_minimum_voltage(&main_power_source) && __is_power_source_above_critical_voltage(&main_power_source)) ||
+        __is_power_source_above_reinstate_voltage(&main_power_source)) {
+        main_power_source.state = OK;
+    } else if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
+        main_power_source.state = DISCONNECTED_OR_SHORT;
+    } else {
+        main_power_source.state = LOW;
+    }
+
+    if ((__is_power_source_above_minimum_voltage(&stby_power_source) && __is_power_source_above_critical_voltage(&stby_power_source)) ||
+        __is_power_source_above_reinstate_voltage(&stby_power_source)) {
+        stby_power_source.state = OK;
+    } else if (__is_power_source_disconnected_or_shorted(&stby_power_source)) {
+        stby_power_source.state = DISCONNECTED_OR_SHORT;
+    } else {
+        stby_power_source.state = LOW;
+    }
 }
 
 initialization_result init_power_sources() {
@@ -92,41 +142,4 @@ initialization_result init_power_sources() {
     } else {
         return INITIALIZE_NOT_OK;
     }
-}
-
-void power_source_loop() {
-    __first_16s__loop_counter++;
-    if (__first_16s__loop_counter == 0xffff) {
-        __first_16s__loop_counter = 0x4001;    // roll over the 16" value
-    }
-
-    // Power source is ok if
-    // - the 16s average voltage is above minimum voltage and the 16ms average is above critical voltage
-    //                          or
-    // - we are in the first 16 sec. after startup (the 16s average has not been computed yet) and
-    //   the 16ms average is above critical voltage
-    //                          or
-    // - the 16ms average is above the reinstate voltage (minimum voltage + hysteresis value)
-
-    if ((!__is_power_source_below_minimum_voltage(&main_power_source) && !__is_power_source_below_critical_voltage(&main_power_source)) ||
-        __is_power_source_above_reinstate_voltage(&main_power_source)) {
-        main_power_source.state = OK;
-    } else if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
-        main_power_source.state = DISCONNECTED_OR_SHORT;
-    } else {
-        main_power_source.state = LOW;
-    }
-
-    main_power_source.above_reinstate_voltage = __is_power_source_above_reinstate_voltage(&main_power_source);
-
-    if ((!__is_power_source_below_minimum_voltage(&stby_power_source) && !__is_power_source_below_critical_voltage(&stby_power_source)) ||
-        __is_power_source_above_reinstate_voltage(&stby_power_source)) {
-        stby_power_source.state = OK;
-    } else if (__is_power_source_disconnected_or_shorted(&stby_power_source)) {
-        stby_power_source.state = DISCONNECTED_OR_SHORT;
-    } else {
-        stby_power_source.state = LOW;
-    }
-
-    stby_power_source.above_reinstate_voltage = __is_power_source_above_reinstate_voltage(&stby_power_source);
 }

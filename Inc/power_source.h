@@ -78,7 +78,6 @@ typedef struct {
     uint16_t last_16ms_average_voltage_ADC_value;
     uint16_t last_16s_average_voltage_ADC_value;
     power_state state;
-    bool above_reinstate_voltage;
     bool valid;
 } Power_Source;
 
