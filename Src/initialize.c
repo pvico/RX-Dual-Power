@@ -7,16 +7,15 @@
 #include "power_source.h"
 
 
-extern led_state led1_state;
-extern led_state led2_state;
-
 void initialize() {
 
   debug_console_print_splash();
 
   HAL_TIM_Base_Start_IT(&htim21);
 
-  if (init_voltage_sensors() == INITIALIZE_OK && init_power_sources() == INITIALIZE_OK) {
+  if (init_voltage_sensors() == INITIALIZE_OK && 
+      init_power_sources() == INITIALIZE_OK &&
+      init_leds() == INITIALIZE_OK) {
       power_on();
     } else {
       power_off();

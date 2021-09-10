@@ -29,9 +29,6 @@
 // function of power source type
 
 
-extern led_state led1_state;
-extern led_state led2_state;
-
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 
@@ -66,23 +63,24 @@ void switching_logic_loop() {
     }
     // TODO HYSTERESIS
 
+    // call functions in led.c instead of modifying global variables
 
     if (__is_main_power_ok()) {
         use_main_power();
-        led1_state = STEADY_DIM;
+        set_led_state(LED1, STEADY_DIM);
         if (__is_stby_power_ok()) {
-            led2_state = OFF;
+            set_led_state(LED2, OFF);
         } else {
-            led2_state = BLINK_FAST;
+            set_led_state(LED2, BLINK_FAST);
         }
     } else {        // MAIN PWR is not ok
-            led1_state = BLINK_FAST;
+            set_led_state(LED1, BLINK_FAST);
         if (__is_stby_power_ok()) {
             use_stby_power();
-            led2_state = BLINK_SLOW;
+            set_led_state(LED2, BLINK_SLOW);
         } else {
             let_LTCs_determine_power_source();
-            led2_state = BLINK_FAST;
+            set_led_state(LED2, BLINK_FAST);
         }
     }
 }

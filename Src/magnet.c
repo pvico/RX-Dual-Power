@@ -15,19 +15,17 @@ static bool __is_magnet_detected() {
     return HAL_GPIO_ReadPin(MAGNET_GPIO_Port, MAGNET_Pin) == MAGNET_PRESENT_PIN_STATE;
 }
 
-
-extern led_state led2_state;
 static led_state __led2_previous_state;
 void __show_magnet_presence() {
   if (magnet_debounced_state == MAGNET_PRESENT) {
-    if (led2_state != STEADY_BRIGHT) {
-      __led2_previous_state = led2_state;
+    if (get_led_state(LED2) != STEADY_BRIGHT) {
+      __led2_previous_state = get_led_state(LED2);
     }
-    led2_state = STEADY_BRIGHT;
+    set_led_state(LED2, STEADY_BRIGHT);
   } else {
     // magnet_debounced_state == MAGNET_NOT_PRESENT
-    if (led2_state == STEADY_BRIGHT) {
-      led2_state = __led2_previous_state;
+    if (get_led_state(LED2) == STEADY_BRIGHT) {
+      set_led_state(LED2, __led2_previous_state);
     }
   }
 }

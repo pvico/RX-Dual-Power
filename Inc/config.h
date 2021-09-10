@@ -9,6 +9,7 @@
 // DEBUG not defined:
 //      Set PA13 (label LED1) as GPIO output open drain no pullup no pulldown
 //      Set PA14 (label SW2) as GPIO input pullup
+// When DEBUG is defined, all code related to LED1 is deactivated
 // #define DEBUG
 
 // #define CONSOLE_OUTPUT

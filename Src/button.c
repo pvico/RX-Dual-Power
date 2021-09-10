@@ -7,7 +7,6 @@
 #include "led.h"
 #include "debug_console.h"
 
-extern led_state led1_state;
 
 static bool double_activation_state = false;
 
