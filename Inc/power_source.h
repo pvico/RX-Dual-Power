@@ -86,16 +86,6 @@ typedef struct {
 initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position);
 initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position);
 
-// // if source average voltage for the last 16" is below this value, will switch to the other source
-// bool is_power_source_below_minimum_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
-
-// // if source average voltage for the last 16ms is below this value, will immediately switch to the other source
-// bool is_power_source_below_critical_voltage(Power_Source *power_source, uint16_t last_16ms_ADC_value);
-
-// bool is_power_source_disconnected_or_shorted(Power_Source *power_source, uint16_t last_16ms_ADC_value);
-
-// bool is_power_source_above_reinstate_voltage(Power_Source *power_source, uint16_t last_16s_average_ADC_value);
-
 initialization_result init_power_sources();
 
 void power_source_loop();

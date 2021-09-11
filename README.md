@@ -48,8 +48,8 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 
 ## LED signalling
 
-| Condition                             | Green (LED1) | Yellow (LED2) |            Fix           |
-| ------------------------------------- | :----------: | :-----------: | :----------------------: |
+| Condition                             | Green (LED1) | Yellow (LED2) |           Fix            |
+| ------------------------------------- | :----------: | :-----------: | ------------------------ |
 | Power off                             |      OFF     |      OFF      |                          |
 | Magnet detected                       |       x      |     BRIGHT    |                          |
 | Using MAIN PWR, STBY PWR is ok        |      DIM     |      OFF      |                          |
@@ -58,6 +58,7 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 | Using MAIN PWR, STBY PWR LOW          |      DIM     |   BLINK SLOW  | Replace STBY PWR battery |
 | Using MAIN PWR, STBY PWR DISCONNECTED |      DIM     |   BLINK FAST  | Check STBY PWR battery   |
 | CRITICAL<sup>*</sup>                  |  BLINK SLOW  |   BLINK SLOW  | Replace both batteries   |
+| Software error or bad configuration   |    BRIGHT    |     BRIGHT    | Re-configure or flash new firmware |
 
 <sub><sup>*</sup> Critical = both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit and the source with the highest voltage is used.</sub></br>
 

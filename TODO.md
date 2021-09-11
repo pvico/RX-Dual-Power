@@ -1,6 +1,5 @@
 # TODO
 
-- Switching to LTC mode if disconnected or intermittent contact
 - S.Port output
 - Configuration programming through usart
 - Stop mode

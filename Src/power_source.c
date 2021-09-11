@@ -1,4 +1,5 @@
 #include "power_source.h"
+#include "system.h"
 
 
 Power_Source main_power_source = {0};
@@ -59,16 +60,9 @@ initialization_result initialize_Battery_power_source(Power_Source *power_source
     return INITIALIZE_OK;
 }
 
-
-static uint16_t __first_16s__loop_counter = 0;
-
-inline static bool __is_in_first_16s_after_startup() {
-    return __first_16s__loop_counter <= 0x4000;
-}
-
 static bool __is_power_source_above_minimum_voltage(Power_Source *power_source) {
     // This uses the 16 seconds average (long integration)
-    return !__is_in_first_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value > power_source->minimum_voltage_ADC_value;
+    return !is_in_first_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value > power_source->minimum_voltage_ADC_value;
 }
 
 static bool __is_power_source_above_critical_voltage(Power_Source *power_source) {
@@ -92,7 +86,7 @@ static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source
     //
     // We do this so that if a fresh battery is connected just after power up, it is immediately indicated that the battery is present
 
-    if (__is_in_first_16s_after_startup()) {
+    if (is_in_first_16s_after_startup()) {
         return power_source->last_16ms_average_voltage_ADC_value > (power_source->minimum_voltage_ADC_value + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE);
     } else {
         return __is_power_source_constantly_above_reinstate_voltage(power_source);
@@ -100,10 +94,6 @@ static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source
 }
 
 void power_source_loop() {
-    __first_16s__loop_counter++;
-    if (__first_16s__loop_counter == 0xffff) {
-        __first_16s__loop_counter = 0x4001;    // roll over the 16" value
-    }
 
     // Power source is ok if
     // - the 16 seconds average voltage is above minimum voltage and the 16 milli-seconds average is above critical voltage
