@@ -33,7 +33,7 @@
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 
-switching_states switching_state;
+extern switching_states switching_state;
 
 static bool __is_stby_powering_RX() {
     return HAL_GPIO_ReadPin(STAT_STBY_GPIO_Port, STAT_STBY_Pin) == GPIO_PIN_SET;

@@ -11,8 +11,6 @@
 
 extern UART_HandleTypeDef huart2;
 
-static uint16_t __first_32s__loop_counter = 0;
-
 static void __set_not_needed_gpio_pins_to_analog() {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
@@ -48,6 +46,8 @@ static void __system_stop_mode() {
     // Out of stop mode, restart the system
     NVIC_SystemReset();
 }
+
+static uint16_t __first_32s__loop_counter = 0;
 
 void system_loop() {
     __first_32s__loop_counter++;

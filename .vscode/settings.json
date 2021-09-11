@@ -6,6 +6,7 @@
         "initialize.h": "c",
         "random": "c",
         "limits": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "power_source.h": "c"
     }
 }

@@ -4,26 +4,25 @@
 #include <stdint.h>
 
 
-Power_Source main_power_source;
-Power_Source stby_power_source;
-
-extern uint32_t adc_values[2];
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
 extern ADC_HandleTypeDef hadc;
-uint32_t adc_values[2];
+
+static uint32_t __adc_values[2];
 
 initialization_result init_voltage_sensors() {
   HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc, adc_values, 2);
+  HAL_ADC_Start_DMA(&hadc, __adc_values, 2);
   
   return INITIALIZE_OK;
 }
 
 static uint16_t __main_voltage () {
-    return adc_values[0] + CORRECTION_VALUE;
+    return __adc_values[0] + CORRECTION_VALUE;
 }
 
 static uint16_t __stby_voltage () {
-    return adc_values[1] + CORRECTION_VALUE;
+    return __adc_values[1] + CORRECTION_VALUE;
 }
 
 void voltage_to_str(uint32_t voltage, uint8_t *buffer) {

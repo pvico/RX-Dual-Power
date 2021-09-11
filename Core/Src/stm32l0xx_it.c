@@ -43,7 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-volatile bool timer_flag = 0;
+extern volatile bool timer_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

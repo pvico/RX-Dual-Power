@@ -44,6 +44,7 @@ Core/Src/usart.c \
 Core/Src/stm32l0xx_it.c \
 Core/Src/stm32l0xx_hal_msp.c \
 Core/Src/system_stm32l0xx.c \
+Src/globals.c \
 Src/initialize.c \
 Src/main_loop.c \
 Src/led.c \

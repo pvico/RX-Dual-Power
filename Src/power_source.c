@@ -2,8 +2,8 @@
 #include "system.h"
 
 
-Power_Source main_power_source = {0};
-Power_Source stby_power_source = {0};
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
 
 initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position) {
     power_source->source_type = BEC;
