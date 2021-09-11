@@ -19,4 +19,6 @@ void magnet_loop();
 
 bool is_magnet_double_activation_active();
 
+bool is_magnet_present();
+
 #endif /* F70FDB9F_40FF_4C83_A6DE_912D82AD15A0 */

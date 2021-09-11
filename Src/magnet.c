@@ -1,5 +1,4 @@
 #include "magnet.h"
-#include "led.h"
 #include <stdint.h>
 #include "config.h"
 #include "debug_console.h"
@@ -9,25 +8,10 @@
 static bool double_activation_state = false;
 static bool single_activation_state = false;
 
-static magnet_state magnet_debounced_state = MAGNET_NOT_PRESENT;
+static magnet_state __magnet_debounced_state = MAGNET_NOT_PRESENT;
 
 static bool __is_magnet_detected() {
     return HAL_GPIO_ReadPin(MAGNET_GPIO_Port, MAGNET_Pin) == MAGNET_PRESENT_PIN_STATE;
-}
-
-static led_state __led2_previous_state;
-void __show_magnet_presence() {
-  if (magnet_debounced_state == MAGNET_PRESENT) {
-    if (get_led_state(LED2) != STEADY_BRIGHT) {
-      __led2_previous_state = get_led_state(LED2);
-    }
-    set_led_state(LED2, STEADY_BRIGHT);
-  } else {
-    // magnet_debounced_state == MAGNET_NOT_PRESENT
-    if (get_led_state(LED2) == STEADY_BRIGHT) {
-      set_led_state(LED2, __led2_previous_state);
-    }
-  }
 }
 
 static uint16_t __magnet_detected_loop_counter = 0;
@@ -35,10 +19,10 @@ static uint16_t __magnet_not_detected_loop_counter = 0;
 static uint16_t __after_activation_loop_counter = 0;
 void magnet_loop() {
     if (__is_magnet_detected()) {
-      if (magnet_debounced_state == MAGNET_NOT_PRESENT) { 
+      if (__magnet_debounced_state == MAGNET_NOT_PRESENT) { 
         __magnet_detected_loop_counter++;
         if (__magnet_detected_loop_counter > MAGNET_DEBOUNCE_DELAY_MILLIS) {      // > 1 sec.
-          magnet_debounced_state = MAGNET_PRESENT;
+          __magnet_debounced_state = MAGNET_PRESENT;
           __magnet_detected_loop_counter = 0;
 
           if (__after_activation_loop_counter > MAGNET_SECOND_DETECTION_MINIMUM_INTERVAL_MILLIS &&
@@ -57,15 +41,14 @@ void magnet_loop() {
       }
     } else {
       // magnet is not detected
-      if (magnet_debounced_state == MAGNET_PRESENT) {
+      if (__magnet_debounced_state == MAGNET_PRESENT) {
         __magnet_not_detected_loop_counter++;
         if (__magnet_not_detected_loop_counter > MAGNET_DEBOUNCE_DELAY_MILLIS) {      // > 1 sec.
-          magnet_debounced_state = MAGNET_NOT_PRESENT;
+          __magnet_debounced_state = MAGNET_NOT_PRESENT;
           __magnet_not_detected_loop_counter = 0;
         }               
       }
     }    
-    __show_magnet_presence();
 
     if (single_activation_state) {      
       if (__after_activation_loop_counter++ == 0xFFFF) {
@@ -78,4 +61,8 @@ void magnet_loop() {
 
 inline bool is_magnet_double_activation_active() {
   return double_activation_state;
+}
+
+bool is_magnet_present() {
+  return __magnet_debounced_state == MAGNET_PRESENT;
 }

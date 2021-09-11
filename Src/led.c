@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "main.h"
 #include "switching_logic.h"
+#include "magnet.h"
 
 extern switching_states switching_state;
 
@@ -99,6 +100,9 @@ static void __set_leds_state_in_function_of_switching_state() {
         break;
     default:
         break;
+    }
+    if (is_magnet_present()) {
+        set_led_state(LED2, STEADY_BRIGHT);
     }
 }
 
