@@ -6,11 +6,9 @@
 <p align="center"><sup>Click on the picture for a very high resolution image (7200x4900)</sup></p>
 
 
-The RX Dual Power is a safety device for RC models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
+The RX Dual Power is a safety device for radio controlled models allowing to power the radio system (receiver, servos, sensors, etc.) from either the normal electrical source or from a backup battery.
 
-Battery failures are one of the most common failures affecting radio controlled models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC<sup><a href="#note1">1</a></sup> present on the ESC<sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
-
-<!-- Commercial devices with this capability are available. Some are quite sophisticated but more bulky (and expensive!). Others are smaller and would flash a high power LED on the model when the backup battery is used but have no telemetry<sup><a href="#note4">4</a></sup>. -->
+Battery failures are one of the most common failures affecting RC models. When this happens, the model becomes uncontrollable resulting most of the time in its loss or destruction. For electric models, the radio system is often powered by the BEC<sup><a href="#note1">1</a></sup> present on the ESC<sup><a href="#note2">2</a></sup>. In this case, another relatively common failure is the destruction of the ESC due to overload<sup><a href="#note3">3</a></sup> or other reasons, resulting in the associated BEC being destroyed as well.
 
 The RX Dual Power:
 * Can use any electrical power source used in RC models both for normal and backup sources: BEC or battery (LiPo, LiFe, NiMh).
@@ -33,8 +31,7 @@ A transmitter using OpenTX is ideal but not mandatory.
 
 <sub><sup id="note1">1</sup> Battery Eliminator Circuit, a device reducing the battery voltage to a level acceptable by the radio system. Most of the time, the BEC is a buck converter: a switching mode step-down DC-DC converter.</sub><br/>
 <sub><sup id="note2">2</sup> Electronic Speed Controller. Electric motors used today on RC models are usually of the brushless type. Brushless motors need a specific speed controller called an ESC and generally use LiPo (lithium polymer) batteries consisting of 3 cells or more in series (labelled 3S, 4S, etc.). Very often, ESC's are equipped with a BEC on the same PCB. When they are not, they are usually labelled "opto"</sub><br/>
-<sub id="note3">3<sup></sup> Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use (although an excellent power drive calculator is available online here: [https://www.ecalc.ch](https://www.ecalc.ch)). Too often, I have heard modellers having a perfectly matched LiPo 3S power drive say "Oh, I will try this with a 4S to have more power". If have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
-<!-- <sub id="note4"> 4<sup></sup> I have seen a schematic on the web of a device using the same LTC4412 circuits as this project but it always uses the source with the highest voltage and has no telemetry.</sub><br/> -->
+<sub id="note3">3<sup></sup> Overloading the ESC can be due to motor/propeller mis-match, using an ESC of an insufficient current rating, using a battery with too many cells, etc. Sadly, many modellers have no real idea of what combination of motor, propeller and battery to use (although an excellent power drive calculator is available online here: [https://www.ecalc.ch](https://www.ecalc.ch)). Too often, I have heard modellers having a perfectly matched LiPo 3S power drive say "Oh, I will try this with a 4S to have more power". I have seen an ESC fail because the motor was inavertently controlled to run while the glider was on the ground and the propeller was blocked by contact with the ground.</sub><br/>
 
 ## Power source selection
 
@@ -51,15 +48,15 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 
 ## LED signalling
 
-| Condition                                     | Green (LED1) | Yellow (LED2) |
-| --------------------------------------------- | :----------: | :-----------: |
-| Power off                                     |      OFF     |      OFF      |
-| Magnet detected                               |       x      |     BRIGHT    |
-| Using MAIN PWR, STBY PWR is ok                |      DIM     |      OFF      |
-| Using STBY PWR                                |      OFF     |   BLINK SLOW  |
-| Using MAIN PWR, STBY PWR LOW or DISCONNECTED  |      DIM     |   BLINK FAST  |
-| CRITICAL, using MAIN PWR <sup>*</sup>         |  BLINK SLOW  |   BLINK FAST  |
-| CRITICAL, using STBY PWR <sup>*</sup>         |  BLINK FAST  |   BLINK SLOW  |
+| Condition                                    | Green (LED1) | Yellow (LED2) |            Fix           |
+| -------------------------------------------- | :----------: | :-----------: | :----------------------: |
+| Power off                                    |      OFF     |      OFF      |                          |
+| Magnet detected                              |       x      |     BRIGHT    |                          |
+| Using MAIN PWR, STBY PWR is ok               |      DIM     |      OFF      |                          |
+| Using STBY PWR, MAIN PWR LOW                 |      OFF     |   BLINK SLOW  | Replace MAIN PWR battery |
+| Using MAIN PWR, STBY PWR LOW or DISCONNECTED |      DIM     |   BLINK FAST  | Replace STBY PWR battery |
+| Using STBY PWR, MAIN PWR DISCONNECTED        |  BLINK FAST  |      DIM      | Check MAIN PWR battery   |
+| CRITICAL<sup>*</sup>                         |  BLINK SLOW  |   BLINK SLOW  | Replace both batteries   |
 
 <sub><sup>*</sup> Critical = both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit and the source with the highest voltage is used.</sub></br>
 
@@ -200,8 +197,8 @@ This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on 
 By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated MOSFET's off. If the MCU drives the CTL pin low - or put its corresponding GPIO pin to high impedance - the LTC4412 will open its associated MOSFET's but only if its source voltage is at least 20mV above the output voltage (which could be at a higher voltage if powered by the other source). 
 
 So, refering to the "Power source selection" section here above:
-* Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
-* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
+* Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. The MCU puts its PC14 pin (CTL1) to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
+* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. The MCU puts its PC15 pin (CTL2) to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
 * Step 3 (when both sources are below minimum voltage or if any one is disconnected<sup><a href="#note12">12</a></sup>  or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
 
 The STAT_STBY signals to the MCU when STBY PWR is powering the output.

@@ -12,7 +12,7 @@
 #include "switching_logic.h"
 #include <wwdg.h>
 
-extern bool timer_flag;
+extern volatile bool timer_flag;
 
 
 void main_loop() {
