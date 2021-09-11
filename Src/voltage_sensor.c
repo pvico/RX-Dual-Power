@@ -46,19 +46,15 @@ void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
 
 static uint16_t main_16ms_sum = 0;
 static uint8_t main_16ms_counter = 0;
-// static uint16_t main_last_16ms_average = 0;
 
 static uint16_t stby_16ms_sum = 0;
 static uint8_t stby_16ms_counter = 0;
-// static uint16_t stby_last_16ms_average = 0;
 
 static uint32_t main_16s_sum = 0;
 static uint16_t main_16s_counter = 0;
-// static uint16_t main_last_16s_average = 0;
 
 static uint32_t stby_16s_sum = 0;
 static uint16_t stby_16s_counter = 0;
-// static uint16_t stby_last_16s_average = 0;
 
 void voltage_sensor_loop() {
     uint16_t main_voltage = __main_voltage();
