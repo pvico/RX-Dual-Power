@@ -1,5 +1,6 @@
 # TODO
 
+- Switching to LTC mode if disconnected or intermittent contact
 - S.Port output
 - Configuration programming through usart
 - Stop mode
@@ -10,4 +11,4 @@
 
 - SBUS2 (Futaba)
 - X-BUS (Spektrum)
-- Mlink (Multiplex)
+- M-LINK (Multiplex)

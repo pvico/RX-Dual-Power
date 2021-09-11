@@ -29,5 +29,10 @@
 // #define DEFAULT_STBY_BATTERY_TYPE LIFE
 // #define DEFAULT_STBY_BATTERY_NUMBER_CELLS _2S
 
+#define S_PORT
+// #define SBUS2
+// #define X_BUS
+// #define M_LINK
+
 
 #endif /* C2381FDA_B024_449A_9DE0_A68DD172B266 */

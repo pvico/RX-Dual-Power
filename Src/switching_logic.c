@@ -40,6 +40,8 @@ static bool __is_stby_powering_RX() {
 }
 
 void switching_logic_loop() {
+    // TODO: disconnected source => LTC mode
+
     if (main_power_source.state == OK) {
         use_main_power();
         set_led_state(LED1, STEADY_DIM);

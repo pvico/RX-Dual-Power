@@ -25,8 +25,8 @@ The RX Dual Power will at first uses S.Port to communicate with the receiver and
 Future development: 
 
 - SBUS2 (Futaba)
-- X-bus (Spektrum)
-- Mlink (Multiplex)
+- X-BUS (Spektrum)
+- M-LINK (Multiplex)
 
 A transmitter using OpenTX is ideal but not mandatory.
 #
@@ -202,7 +202,7 @@ By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated
 So, refering to the "Power source selection" section here above:
 * Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. It puts its CTL1 pin to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
 * Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. It puts its CTL2 pin to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
-* Step 3 (when both sources are below minimum voltage or if any one is disconnected or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
+* Step 3 (when both sources are below minimum voltage or if any one is disconnected<sup><a href="#note12">12</a></sup>  or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
 
 The STAT_STBY signals to the MCU when STBY PWR is powering the output.
 
@@ -221,6 +221,7 @@ The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 
 <sub><sup id="note10">10</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
 <sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
+<sub><sup id="note12">12</sup> We do this if a battery is disconnected because it can be an intermittent bad contact and we don't want the MCU to constantly switch between step 1 and step 2 with annoying and confusing aural messages on the transmitter. Once a disconnect situation happens - past the first 30" after power up to allow for the 2nd battery connection by the user - the LTC4412's will automatically switch to the highest voltage source and, if it has a higher voltage, the intermittent contact one will be used whenever the contact is made.</sub><br/>
 
 ## Building and Flashing the firmware
 
