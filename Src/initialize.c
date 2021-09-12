@@ -31,12 +31,14 @@ void initialize() {
 
   HAL_TIM_Base_Start_IT(&htim21);
 
+  debug_console_print("Initialize\r\n", 12);
+
   if (init_voltage_sensors() == INITIALIZE_NOT_OK || 
       init_power_sources() == INITIALIZE_NOT_OK ||
       init_leds() == INITIALIZE_NOT_OK)
   {
     leds_show_error();
-    debug_console_print_initialization_error();
+    // debug_console_print_initialization_error();
     while(true) {}  // stop here
   }
 }

@@ -15,7 +15,7 @@
 #define LIPO_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE 186       // 3.7V, 15% capacity remaining at relatively low average discharge currents 
 #define LIPO_SINGLE_CELL_CRITICAL_VOLTAGE_ADC_VALUE 171       // 3.4V
 
-#define LIFE_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE 159       // 3.15V, 15% capacity remaining at relatively low average discharge currents 
+#define LIFE_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE 157       // 3.12V, 15% capacity remaining at relatively low average discharge currents 
 #define LIFE_SINGLE_CELL_CRITICAL_VOLTAGE_ADC_VALUE 146       // 2.9V
 
 #define NIMH_SINGLE_CELL_MINIMUM_VOLTAGE_ADC_VALUE 63       // 1.25V TO BE TESTED IN CONTROLLED DISCHARGE
@@ -58,7 +58,7 @@
 #define BEC_MINIMUM_VOLTAGE_ADC_VALUE 232       // 4.6V
 #define BEC_CRITICAL_VOLTAGE_ADC_VALUE 232       // 4.6V
 
-#define HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE  15   // 0.3V
+#define HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE  12   // 0.24V
 
 // typedef's
 typedef enum {BEC, BATTERY} source_type;

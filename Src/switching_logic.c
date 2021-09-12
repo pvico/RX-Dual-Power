@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "gpio.h"
 #include "system.h"
+#include "debug_console.h"
 
 
 // Minimum voltage is the voltage at which, if the average MAIN PWR measured
@@ -48,6 +49,49 @@ void switching_logic_loop() {
     static bool main_power_disconnect_flag = false;
     static bool stby_power_disconnect_flag = false;
 
+    if(rough_second_tick()) {
+        char text[] = "Main:       STBY:     \r\n";
+        switch (main_power_source.state) {
+        case OK:
+            text[6] = 'O';
+            text[7] = 'K';
+            break;        
+        case LOW:
+            text[6] = 'L';
+            text[7] = 'O';
+            text[8] = 'W';
+            break;        
+        case DISCONNECTED_OR_SHORT:
+            text[6] = 'D';
+            text[7] = 'I';
+            text[8] = 'S';
+            text[9] = 'C';
+            break;        
+        default:
+            break;
+        }
+        switch (stby_power_source.state) {
+        case OK:
+            text[18] = 'O';
+            text[19] = 'K';
+            break;        
+        case LOW:
+            text[18] = 'L';
+            text[19] = 'O';
+            text[20] = 'W';
+            break;        
+        case DISCONNECTED_OR_SHORT:
+            text[18] = 'D';
+            text[19] = 'I';
+            text[20] = 'S';
+            text[21] = 'C';
+            break;        
+        default:
+            break;
+        }
+        debug_console_print(text, 24);
+    }
+
     // Set the disconnect flags
     if (is_in_first_32s_after_startup()) {
         // In the first 32" since startup, the flags are reset if power connected again
@@ -64,7 +108,6 @@ void switching_logic_loop() {
         main_power_disconnect_flag = main_power_source.state == DISCONNECTED_OR_SHORT ? true : main_power_disconnect_flag;
         stby_power_disconnect_flag = stby_power_source.state == DISCONNECTED_OR_SHORT ? true : main_power_disconnect_flag;
     }
-
     // Set the switching state and switch sources
     if (main_power_disconnect_flag || stby_power_disconnect_flag) {
         // Whenever a disconnect has occurred, we let the LTC4412's manage the situation to avoid

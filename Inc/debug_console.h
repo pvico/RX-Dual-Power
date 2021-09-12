@@ -5,6 +5,7 @@
 
 void debug_console_print_splash();
 void debug_console_print_voltages();
+void debug_console_print(char *data, uint16_t size);
 void debug_console_print_system_status();
 void debug_console_print_magnet_present();
 void debug_console_print_initialization_error();

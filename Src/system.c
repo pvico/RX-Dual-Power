@@ -33,7 +33,7 @@ static void __set_not_needed_gpio_pins_to_analog() {
 
 static void __system_stop_mode() {
     
-    debug_console_print_entering_stop_mode();
+    // debug_console_print_entering_stop_mode();
 
     __set_not_needed_gpio_pins_to_analog();
 
@@ -52,7 +52,7 @@ static uint16_t __first_32s__loop_counter = 0;
 void system_loop() {
     __first_32s__loop_counter++;
     if (__first_32s__loop_counter == 0xffff) {
-        __first_32s__loop_counter = 0x8001;    // roll over the 32" value
+        __first_32s__loop_counter = 0x8000;    // roll over the 32" value
     }
 
     if (is_magnet_double_activation_active()) {
@@ -70,6 +70,10 @@ bool is_in_first_16s_after_startup() {
 
 bool is_in_first_32s_after_startup() {
     return __first_32s__loop_counter < 0x8000;
+}
+
+bool rough_second_tick() {
+    return (__first_32s__loop_counter & 0x3FF) == 0;
 }
 
 

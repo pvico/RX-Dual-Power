@@ -1,9 +1,6 @@
 # TODO
 
-- !!! Review C12 & C13 value !!!
-  The time constant is too long, this can cause de-powering
-  when source is disconnected and it was powering the model
-  Time constant is now 1uF * 110k // 560k = 
+- Switching logic bad: RX tempo unpowered if active source disconnected 
 - S.Port output
 - Configuration programming through usart
 - Stop mode

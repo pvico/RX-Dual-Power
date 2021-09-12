@@ -60,14 +60,14 @@ initialization_result initialize_Battery_power_source(Power_Source *power_source
     return INITIALIZE_OK;
 }
 
-static bool __is_power_source_above_minimum_voltage(Power_Source *power_source) {
+static bool __is_power_source_below_minimum_voltage(Power_Source *power_source) {
     // This uses the 16 seconds average (long integration)
-    return !is_in_first_16s_after_startup() && power_source->last_16s_average_voltage_ADC_value > power_source->minimum_voltage_ADC_value;
+    return (!is_in_first_32s_after_startup()) && power_source->last_16s_average_voltage_ADC_value < power_source->minimum_voltage_ADC_value;
 }
 
-static bool __is_power_source_above_critical_voltage(Power_Source *power_source) {
+static bool __is_power_source_below_critical_voltage(Power_Source *power_source) {
     // And that this uses the 16 milli-seconds average (short integration)
-    return power_source->last_16ms_average_voltage_ADC_value > power_source->critical_voltage_ADC_value;
+    return power_source->last_16ms_average_voltage_ADC_value < power_source->critical_voltage_ADC_value;
 }
 
 static bool __is_power_source_disconnected_or_shorted(Power_Source *power_source) {
@@ -86,7 +86,7 @@ static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source
     //
     // We do this so that if a fresh battery is connected just after power up, it is immediately indicated that the battery is present
 
-    if (is_in_first_16s_after_startup()) {
+    if (is_in_first_32s_after_startup()) {
         return power_source->last_16ms_average_voltage_ADC_value > (power_source->minimum_voltage_ADC_value + HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE);
     } else {
         return __is_power_source_constantly_above_reinstate_voltage(power_source);
@@ -103,22 +103,33 @@ void power_source_loop() {
     //                          or
     // - the re-instate voltage conditions are met
 
-    if ((__is_power_source_above_minimum_voltage(&main_power_source) && __is_power_source_above_critical_voltage(&main_power_source)) ||
-        __is_power_source_above_reinstate_voltage(&main_power_source)) {
-        main_power_source.state = OK;
-    } else if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
+    // TODO: BUG: if source connected late, it becomes low after 16"
+
+    static bool main_low_flag = false;
+    static bool stby_low_flag = false;
+
+    if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
         main_power_source.state = DISCONNECTED_OR_SHORT;
     } else {
-        main_power_source.state = LOW;
+        if (__is_power_source_below_minimum_voltage(&main_power_source) || __is_power_source_below_critical_voltage(&main_power_source)) {
+            main_low_flag = true;
+        }
+        if (__is_power_source_above_reinstate_voltage(&main_power_source)) {
+            main_low_flag = false;
+        }
+        main_power_source.state = main_low_flag ? LOW : OK;
     }
 
-    if ((__is_power_source_above_minimum_voltage(&stby_power_source) && __is_power_source_above_critical_voltage(&stby_power_source)) ||
-        __is_power_source_above_reinstate_voltage(&stby_power_source)) {
-        stby_power_source.state = OK;
-    } else if (__is_power_source_disconnected_or_shorted(&stby_power_source)) {
+    if (__is_power_source_disconnected_or_shorted(&stby_power_source)) {
         stby_power_source.state = DISCONNECTED_OR_SHORT;
     } else {
-        stby_power_source.state = LOW;
+        if (__is_power_source_below_minimum_voltage(&stby_power_source) || __is_power_source_below_critical_voltage(&stby_power_source)) {
+            stby_low_flag = true;
+        }
+        if (__is_power_source_above_reinstate_voltage(&stby_power_source)) {
+            stby_low_flag = false;
+        }
+        stby_power_source.state = stby_low_flag ? LOW : OK;
     }
 }
 

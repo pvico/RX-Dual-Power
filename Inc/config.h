@@ -13,7 +13,7 @@
 // #define DEBUG
 
 
-// #define CONSOLE_OUTPUT
+#define CONSOLE_OUTPUT
 
 // The following #defines are used if no config is stored in EEPROM
 // Both power sources being configured as BEC, it will work in all cases
