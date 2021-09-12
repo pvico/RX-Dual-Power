@@ -61,6 +61,8 @@ Yellow LED (LED2) = STBY PWR source
 
 <sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (intermittent bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge).</sub></br></br>
 
+**Note: whenever the two LED's blink simultaneously - fast or slow - it is a critical condition: a CRITICAL message is transmitted by telemetry. It is imperative to land as soon as possible.**
+
 ### Examples
 
 | Green (LED1) | Yellow (LED2) | Meaning                                              | Fix
@@ -68,7 +70,7 @@ Yellow LED (LED2) = STBY PWR source
 |      DIM     |      OFF      | Using MAIN PWR, STBY PWR is ok                       |                                             |
 |  BLINK SLOW  |      DIM      | Using STBY PWR, MAIN PWR LOW                         | Replace MAIN PWR battery                    |
 |  BLINK FAST  |      DIM      | Using STBY PWR, MAIN PWR disconnected or bad contact | Connect a battery or check MAIN PWR battery |
-|      OFF     |  BLINK FAST   | Using STBY PWR, but it was temporarily diconnected<sup>*</sup> | Check STBY PWR battery            |
+|      OFF     |  BLINK FAST   | Using STBY PWR, but it was temporarily disconnected<sup>*</sup> | Check STBY PWR battery            |
 |  BLINK SLOW  |   BLINK SLOW  | Critical condition, both batteries have a low voltage | Replace both batteries   |
 |  BLINK FAST  |   BLINK SLOW  | Critical condition, MAIN PWR disconnected or bad contact and STBY PWR low voltage | Replace STBY PWR battery and check MAIN PWR battery   |
 
