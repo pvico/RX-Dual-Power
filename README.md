@@ -52,12 +52,12 @@ Green LED (LED1) = MAIN PWR source
 
 Yellow LED (LED2) = STBY PWR source
 
-| LED (yellow or green) | Meaning                                                   |
-| :-------------------: | :-------------------------------------------------------- |
-|          OFF          | Source not used (power source isolated) and source is ok  |
-|          DIM          | Source is powering the model and source is ok             |
-|       BLINK SLOW      | Source below minimum voltage                              |
-|       BLINK FAST      | Source is disconnected or has a bad contact<sup>*</sup>   |
+| LED (yellow or green) | Meaning                                                |
+| :-------------------: | :----------------------------------------------------- |
+|          OFF          | Source is OK but not used (power source isolated)      |
+|          DIM          | Source is OK and powering the model                    |
+|       BLINK SLOW      | Source below minimum voltage                           |
+|       BLINK FAST      | Source is disconnected or has a bad contact<sup>*</sup>|
 
 <sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge).</sub></br></br>
 
