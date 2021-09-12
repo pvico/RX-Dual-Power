@@ -44,7 +44,7 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected<sup><a href="#note4">4</a></sup> or in short-circuit -  The source with the highest voltage powers the model, the other one is isolated from the system. The *available voltage* - the highest of MAIN PWR voltage and STBY PWR voltage - will further decrease due to the discharging batteries. However, the receiver and servos will remain powered until this voltage becomes so low that the receiver and/or servos fail.
 #
 
-<sub><sup id="note4">4</sup> This applies even **after** a temporary disconnect, i.e. in the case of an intermittent bad contact.</sub><br/>
+<sub><sup id="note4">4</sup> This continues to apply **after** a temporary disconnect, i.e. in the case of an intermittent bad contact.</sub><br/>
 
 ## LED's
 
