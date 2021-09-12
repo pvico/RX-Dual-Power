@@ -59,7 +59,7 @@ Yellow LED (LED2) = STBY PWR source
 |       BLINK SLOW      | Source below minimum voltage                              |
 |       BLINK FAST      | Source is disconnected or has a bad contact<sup>*</sup>   |
 
-<sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge). Note that the bad contact BEC/battery may still be powering the model if the contact is made again *and the associated BEC/battery has a higher voltage than the other source*</sub></br></br>
+<sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge).</sub></br></br>
 
 ### Examples
 
@@ -72,7 +72,7 @@ Yellow LED (LED2) = STBY PWR source
 |  BLINK SLOW  |   BLINK SLOW  | Critical condition, both batteries have a low voltage | Replace both batteries   |
 |  BLINK FAST  |   BLINK SLOW  | Critical condition, MAIN PWR disconnected or bad contact and STBY PWR low voltage | Replace STBY PWR battery and check MAIN PWR battery   |
 
-<sub><sup>*</sup> As explained in the note of the previous table, a source may have a bad contact but still power the model: if the bad contact did reconnect and the associated source has a higher voltage than the other source, it will be selected because we are now in Step 3 mode (the source with the highest voltage powers the model)</sub></br></br>
+<sub><sup>*</sup> A source may have a bad contact but still power the model: if the bad contact did reconnect and the associated source has a higher voltage than the other source, it will be selected because we are now in Step 3 mode (the source with the highest voltage powers the model)</sub></br></br>
 
 ### Special cases
 
