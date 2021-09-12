@@ -14,6 +14,5 @@ void debug_console_print_single_activation();
 void debug_console_print_double_activation();
 void debug_console_print_entering_stop_mode();
 void debug_console_print_exiting_stop_mode();
-void debug_console_display_loop();
 
 #endif /* A152A863_A8B8_49EB_9B77_0984DE3C3643 */

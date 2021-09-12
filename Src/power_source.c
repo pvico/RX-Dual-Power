@@ -1,6 +1,6 @@
 #include "power_source.h"
 #include "system.h"
-
+#include "debug_console.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -111,10 +111,9 @@ void power_source_loop() {
     if (__is_power_source_disconnected_or_shorted(&main_power_source)) {
         main_power_source.state = DISCONNECTED_OR_SHORT;
     } else {
-        if (__is_power_source_below_minimum_voltage(&main_power_source) || __is_power_source_below_critical_voltage(&main_power_source)) {
+        if ((__is_power_source_below_minimum_voltage(&main_power_source)) || (__is_power_source_below_critical_voltage(&main_power_source))) {
             main_low_flag = true;
-        }
-        if (__is_power_source_above_reinstate_voltage(&main_power_source)) {
+        } else if (__is_power_source_above_reinstate_voltage(&main_power_source)) {
             main_low_flag = false;
         }
         main_power_source.state = main_low_flag ? LOW : OK;
@@ -125,8 +124,7 @@ void power_source_loop() {
     } else {
         if (__is_power_source_below_minimum_voltage(&stby_power_source) || __is_power_source_below_critical_voltage(&stby_power_source)) {
             stby_low_flag = true;
-        }
-        if (__is_power_source_above_reinstate_voltage(&stby_power_source)) {
+        } else if (__is_power_source_above_reinstate_voltage(&stby_power_source)) {
             stby_low_flag = false;
         }
         stby_power_source.state = stby_low_flag ? LOW : OK;

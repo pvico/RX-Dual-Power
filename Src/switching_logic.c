@@ -47,7 +47,7 @@ static void __set_critical_state() {
 
 static void __print_source_state() {
     #ifdef CONSOLE_OUTPUT
-    if(rough_second_tick()) {
+    if(rough_quarter_second_tick()) {
         char text[] = "Main:       STBY:     \r\n";
         switch (main_power_source.state) {
         case OK:

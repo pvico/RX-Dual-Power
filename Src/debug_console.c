@@ -18,17 +18,6 @@ void debug_console_print_voltages() {
   // #endif
 }
 
-void debug_console_display_loop() {
-  #ifdef CONSOLE_OUTPUT
-  // static uint16_t __display_counter = 0;
-  if (rough_second_tick()) {
-  // if (__display_counter++ == 1000) {
-    debug_console_print_voltages();
-    // __display_counter = 0;
-  }
-  #endif
-}
-
 void debug_console_print(char *data, uint16_t size) {
   #ifdef CONSOLE_OUTPUT
   HAL_UART_Transmit (&huart2, (uint8_t*)data, size, 10);    

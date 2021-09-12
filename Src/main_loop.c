@@ -31,11 +31,15 @@ void main_loop() {
     switching_logic_loop();
     system_loop();
     
-    // debug_console display only if CONSOLE_OUTPUT is defined in config.h
-    debug_console_display_loop();   
 
     // ############ end 1ms loop ###############
 
     timer_flag = false;
   }
+
+  // debug_console display only if CONSOLE_OUTPUT is defined in config.h
+  if (rough_quarter_second_tick()) {
+    debug_console_print_voltages();   
+  }
+    
 }
