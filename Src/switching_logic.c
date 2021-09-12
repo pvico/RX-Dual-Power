@@ -8,6 +8,7 @@
 #include "gpio.h"
 #include "system.h"
 #include "debug_console.h"
+#include "config.h"
 
 
 // Minimum voltage is the voltage at which, if the average MAIN PWR measured
@@ -44,11 +45,8 @@ static void __set_critical_state() {
     switching_state = __is_stby_powering_RX() ? CRITICAL_STBY_POWERING : CRITICAL_MAIN_POWERING;
 }
 
-void switching_logic_loop() {
-
-    static bool main_power_disconnect_flag = false;
-    static bool stby_power_disconnect_flag = false;
-
+static void __print_source_state() {
+    #ifdef CONSOLE_OUTPUT
     if(rough_second_tick()) {
         char text[] = "Main:       STBY:     \r\n";
         switch (main_power_source.state) {
@@ -91,6 +89,15 @@ void switching_logic_loop() {
         }
         debug_console_print(text, 24);
     }
+    #endif
+}
+
+void switching_logic_loop() {
+
+    __print_source_state();
+
+    static bool main_power_disconnect_flag = false;
+    static bool stby_power_disconnect_flag = false;
 
     // Set the disconnect flags
     if (is_in_first_32s_after_startup()) {
@@ -106,7 +113,7 @@ void switching_logic_loop() {
         // source is considered disconnected for the remainder of the flight even though it
         // can still provide power if it is an intermittent connection due to bad contact
         main_power_disconnect_flag = main_power_source.state == DISCONNECTED_OR_SHORT ? true : main_power_disconnect_flag;
-        stby_power_disconnect_flag = stby_power_source.state == DISCONNECTED_OR_SHORT ? true : main_power_disconnect_flag;
+        stby_power_disconnect_flag = stby_power_source.state == DISCONNECTED_OR_SHORT ? true : stby_power_disconnect_flag;
     }
     // Set the switching state and switch sources
     if (main_power_disconnect_flag || stby_power_disconnect_flag) {

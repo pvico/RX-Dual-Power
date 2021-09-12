@@ -12,8 +12,13 @@
 // When DEBUG is defined, all code related to LED1 is deactivated
 // #define DEBUG
 
-
+// Undefine this one to activate the telemetry transmission
 #define CONSOLE_OUTPUT
+
+#ifndef CONSOLE_OUTPUT
+#define TELEMETRY_ENABLED
+#endif // 
+
 
 // The following #defines are used if no config is stored in EEPROM
 // Both power sources being configured as BEC, it will work in all cases
