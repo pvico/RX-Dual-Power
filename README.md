@@ -46,21 +46,43 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 
 <sub><sup id="note4">4</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 
-## LED signalling
+## LED's
 
-| Condition                             | Green (LED1) | Yellow (LED2) |           Fix            |
-| ------------------------------------- | :----------: | :-----------: | ------------------------ |
-| Power off                             |      OFF     |      OFF      |                          |
-| Magnet detected                       |       x      |     BRIGHT    |                          |
-| Using MAIN PWR, STBY PWR is ok        |      DIM     |      OFF      |                          |
-| Using STBY PWR, MAIN PWR LOW          |  BLINK SLOW  |      DIM      | Replace MAIN PWR battery |
-| Using STBY PWR, MAIN PWR DISCONNECTED |  BLINK FAST  |      DIM      | Check MAIN PWR battery   |
-| Using MAIN PWR, STBY PWR LOW          |      DIM     |   BLINK SLOW  | Replace STBY PWR battery |
-| Using MAIN PWR, STBY PWR DISCONNECTED |      DIM     |   BLINK FAST  | Check STBY PWR battery   |
-| CRITICAL<sup>*</sup>                  |  BLINK SLOW  |   BLINK SLOW  | Replace both batteries   |
-| Software error or bad configuration   |    BRIGHT    |     BRIGHT    | Re-configure or flash new firmware |
+Green LED (LED1) = MAIN PWR source
 
-<sub><sup>*</sup> Critical = both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit and the source with the highest voltage is used.</sub></br>
+Yellow LED (LED2) = STBY PWR source
+
+| LED (yellow or green) | Meaning                                                   |
+| :-------------------: | :-------------------------------------------------------- |
+|          OFF          | Source not used (power source isolated) and source is ok  |
+|          DIM          | Source is powering the model and source is ok             |
+|       BLINK SLOW      | Source below minimum voltage                              |
+|       BLINK FAST      | Source is disconnected or has a bad contact<sup>*</sup>   |
+
+<sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge). Note that the bad contact BEC/battery may still be powering the model if the contact is made again *and the associated BEC/battery has a higher voltage than the other source*</sub></br></br>
+
+### Examples
+
+| Green (LED1) | Yellow (LED2) | Meaning                                              | Fix
+| :----------: | :-----------: | ---------------------------------------------------- | ------------------------------------------- |
+|      DIM     |      OFF      | Using MAIN PWR, STBY PWR is ok                       |                                             |
+|  BLINK SLOW  |      DIM      | Using STBY PWR, MAIN PWR LOW                         | Replace MAIN PWR battery                    |
+|  BLINK FAST  |      DIM      | Using STBY PWR, MAIN PWR disconnected or bad contact | Connect a battery or check MAIN PWR battery |
+|      OFF     |  BLINK FAST   | Using STBY PWR, but it was temporarily diconnected<sup>*</sup> | Check STBY PWR battery            |
+|  BLINK SLOW  |   BLINK SLOW  | Critical condition, both batteries have a low voltage | Replace both batteries   |
+|  BLINK FAST  |   BLINK SLOW  | Critical condition, MAIN PWR disconnected or bad contact and STBY PWR low voltage | Replace STBY PWR battery and check MAIN PWR battery   |
+
+<sub><sup>*</sup> As explained in the note of the previous table, a source may have a bad contact but still power the model: if the bad contact did reconnect and the associated source has a higher voltage than the other source, it will be selected because we are now in Step 3 mode (the source with the highest voltage powers the model)</sub></br></br>
+
+### Special cases
+
+| Green (LED1) | Yellow (LED2) |           Meaning        |
+| :----------: | :-----------: | ------------------------ |
+|      OFF     |      OFF      | Power off                         |
+|       x      |     BRIGHT    | Magnet detected                |
+|    BRIGHT    |     BRIGHT    | Software error or bad configuration |
+
+<sub><sup>**</sup> Critical = both MAIN PWR and STBY PWR are below minimum voltage, disconnected or in short-circuit and the source with the highest voltage is used.</sub></br>
 
 An external LED can be connected to the PCB. It will illuminate together with the yellow led to indicate when the magnet is detected or if STBY PWR is being used.
 

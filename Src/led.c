@@ -71,7 +71,7 @@ inline void set_led_state(led the_led, led_state state) {
 
 static uint16_t __led_counters[2] = {0};
 
-static void __set_leds_alternate_blink_initial() {
+static void __set_leds_slow_alternate_blink_initial() {
     #ifndef DEBUG
         __leds[LED1].illuminated = true; 
         __leds[LED2].illuminated = false;
@@ -80,9 +80,19 @@ static void __set_leds_alternate_blink_initial() {
     #endif
 }
 
+static void __set_leds_fast_alternate_blink_initial() {
+    #ifndef DEBUG
+        __leds[LED1].illuminated = true; 
+        __leds[LED2].illuminated = false;
+        __led_counters[LED1] = LED_BLINK_FAST_PERIOD_MILLIS +1; 
+        __led_counters[LED2] = LED_BLINK_FAST_PERIOD_MILLIS+1; 
+    #endif
+}
+
 static void __set_leds_state_in_function_of_switching_state() {
     static  bool in_critical_state = false;
     switch (switching_state) {
+    // Non critical cases
     case MAIN_PWR_ON_STBY_OK:
         in_critical_state = false;
         set_led_state(LED1, STEADY_DIM);
@@ -93,33 +103,63 @@ static void __set_leds_state_in_function_of_switching_state() {
         set_led_state(LED1, STEADY_DIM);
         set_led_state(LED2, BLINK_SLOW);
         break;
-    case MAIN_PWR_ON_STBY_DISCONNECTED:
-        in_critical_state = false;
-        set_led_state(LED1, STEADY_DIM);
-        set_led_state(LED2, BLINK_FAST);
-        break;
     case STBY_PWR_ON_MAIN_LOW:
         in_critical_state = false;
         set_led_state(LED1, BLINK_SLOW);
         set_led_state(LED2, STEADY_DIM);
         break;
-    case STBY_PWR_ON_MAIN_DISCONNECTED:
+    case MAIN_PWR_ON_STBY_DISCONNECT_OR_BAD_CONTACT:
+        in_critical_state = false;
+        set_led_state(LED1, STEADY_DIM);
+        set_led_state(LED2, BLINK_FAST);
+        break;
+    case STBY_PWR_ON_MAIN_DISCONNECTED_OR_BAD_CONTACT:
         in_critical_state = false;
         set_led_state(LED1, BLINK_FAST);
         set_led_state(LED2, STEADY_DIM);
         break;
-    case CRITICAL_MAIN_POWERING:
-    case CRITICAL_STBY_POWERING:
-    if (!in_critical_state) {
-        __set_leds_alternate_blink_initial();
-        in_critical_state = true;
-    }
+    case MAIN_PWR_ON_MAIN_BAD_CONTACT:
+        in_critical_state = false;
+        set_led_state(LED1, BLINK_FAST);
+        set_led_state(LED2, OFF);
+        break;
+    case STBY_PWR_ON_STBY_BAD_CONTACT:
+        in_critical_state = false;
+        set_led_state(LED1, OFF);
+        set_led_state(LED2, BLINK_FAST);
+        break;
+    // CRITICAL cases
+    case CRITICAL_MAIN_LOW_STBY_LOW:
+        if (!in_critical_state) {
+            __set_leds_slow_alternate_blink_initial();
+            in_critical_state = true;
+        }
         set_led_state(LED1, BLINK_SLOW);
         set_led_state(LED2, BLINK_SLOW);
+        break;
+    case CRITICAL_MAIN_LOW_STBY_DISCONNECT_OR_BAD_CONTACT:
+        in_critical_state = true;
+        set_led_state(LED1, BLINK_SLOW);
+        set_led_state(LED2, BLINK_FAST);
+        break;
+    case CRITICAL_STBY_LOW_MAIN_DISCONNECT_OR_BAD_CONTACT:
+        in_critical_state = true;
+        set_led_state(LED1, BLINK_FAST);
+        set_led_state(LED2, BLINK_SLOW);
+        break;
+    case CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT:
+        if (!in_critical_state) {
+            __set_leds_fast_alternate_blink_initial();
+            in_critical_state = true;
+        }
+        set_led_state(LED1, BLINK_FAST);
+        set_led_state(LED2, BLINK_FAST);
         break;
     default:
         break;
     }
+
+    // This one overrides the above cases
     if (is_magnet_present()) {
         set_led_state(LED2, STEADY_BRIGHT);
     }

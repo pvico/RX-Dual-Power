@@ -41,10 +41,6 @@ static bool __is_stby_powering_RX() {
     return HAL_GPIO_ReadPin(STAT_STBY_GPIO_Port, STAT_STBY_Pin) == GPIO_PIN_SET;
 }
 
-static void __set_critical_state() {
-    switching_state = __is_stby_powering_RX() ? CRITICAL_STBY_POWERING : CRITICAL_MAIN_POWERING;
-}
-
 static void __print_source_state() {
     #ifdef CONSOLE_OUTPUT
     if(rough_quarter_second_tick()) {
@@ -92,6 +88,7 @@ static void __print_source_state() {
     #endif
 }
 
+
 void switching_logic_loop() {
 
     __print_source_state();
@@ -115,6 +112,7 @@ void switching_logic_loop() {
         main_power_disconnect_flag = main_power_source.state == DISCONNECTED_OR_SHORT ? true : main_power_disconnect_flag;
         stby_power_disconnect_flag = stby_power_source.state == DISCONNECTED_OR_SHORT ? true : stby_power_disconnect_flag;
     }
+
     // Set the switching state and switch sources
     if (main_power_disconnect_flag || stby_power_disconnect_flag) {
         // Whenever a disconnect has occurred, we let the LTC4412's manage the situation to avoid
@@ -123,21 +121,38 @@ void switching_logic_loop() {
         let_LTCs_determine_power_source();
 
         if (main_power_disconnect_flag) {
-            if (stby_power_disconnect_flag) {           // VERY BAD: one disconnected and the other had a bad contact ? 
-                __set_critical_state(); 
-            } else {                                    // MAIN PWR disconnected but not STBY PWR
-                if (stby_power_source.state == OK) {    // MAIN PWR disconnected and STBY PWR ok
-                    switching_state = STBY_PWR_ON_MAIN_DISCONNECTED;
-                } else {                                // MAIN PWR disconnected and STBY PWR low
-                    __set_critical_state(); 
+            if (stby_power_disconnect_flag) {           // VERY BAD: one disconnected or bad contact and the other had a bad contact ? 
+                switching_state = CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT;
+            } else {                                    // MAIN PWR  disconnected or bad contact but not STBY PWR
+                switch(stby_power_source.state) {       
+                case OK:                                // MAIN PWR disconnected or bad contact and STBY PWR ok
+                    if(__is_stby_powering_RX()) {
+                        switching_state = STBY_PWR_ON_MAIN_DISCONNECTED_OR_BAD_CONTACT;
+                    } else {
+                        switching_state = MAIN_PWR_ON_MAIN_BAD_CONTACT;
+                    }
+                    break;
+                case LOW:                                // MAIN PWR disconnected or bad contact and STBY PWR low
+                    switching_state = CRITICAL_STBY_LOW_MAIN_DISCONNECT_OR_BAD_CONTACT;
+                    break;
+                default:
+                    break;
                 }
             }
-        } else {        // STBY PWR disconnected but not MAIN PWR
-            let_LTCs_determine_power_source();
-            if (main_power_source.state == OK) {        // STBY PWR disconnected and MAIN PWR ok
-                switching_state = MAIN_PWR_ON_STBY_DISCONNECTED;
-            } else {                                    // STBY PWR disconnected and MAIN PWR low
-                __set_critical_state();
+        } else {        // STBY PWR disconnected or bad contact but not MAIN PWR
+            switch(main_power_source.state) {       
+            case OK:                                // STBY PWR disconnected or bad contact and MAIN PWR ok
+                if(__is_stby_powering_RX()) {
+                    switching_state = STBY_PWR_ON_STBY_BAD_CONTACT;
+                } else {
+                    switching_state = MAIN_PWR_ON_STBY_DISCONNECT_OR_BAD_CONTACT;
+                }
+                break;
+            case LOW:                                // MAIN PWR disconnected or bad contact and STBY PWR low
+                switching_state = CRITICAL_MAIN_LOW_STBY_DISCONNECT_OR_BAD_CONTACT;
+                break;
+            default:
+                break;
             }
         }
     } else {                                        
@@ -156,7 +171,7 @@ void switching_logic_loop() {
                 switching_state = STBY_PWR_ON_MAIN_LOW;
             } else {                                // CRITICAL: MAIN PWR and STBY PWR are low
                 let_LTCs_determine_power_source();
-                __set_critical_state();
+                switching_state = CRITICAL_MAIN_LOW_STBY_LOW;
             }
         }
     }

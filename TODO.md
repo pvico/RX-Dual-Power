@@ -1,6 +1,5 @@
 # TODO
 
-- Switching logic bad: RX tempo unpowered if active source disconnected 
 - S.Port output
 - Configuration programming through usart
 - Stop mode
