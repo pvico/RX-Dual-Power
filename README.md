@@ -139,7 +139,7 @@ If using a non-OpenTX transmitter, e.g., FrSky Tandem X20, an adequate audio and
 
 **TODO**
 
-## Mlink reporting
+## M-LINK reporting
 
 **TODO**
 
@@ -234,7 +234,7 @@ The HT7533 3.3V linear regulator will provide the 3.3V supplying the MCU, the Ha
 
 Powering off is achieved by the MCU setting both CTL1 and CTL2 lines to high so that all 4 MOSFET's will be closed and virtually no current will be drawn by the receiver and servos. The LED's are off. The STM32L021 will enter STOP mode drawing only a few micro-amps. The only remaining currents are due to the quiescent currents of the LTC4412's (about 20µA total), HT7533 regulator (< 5µA), AH180 hall effect sensor (< 15µA) and the high value resistances associated with the voltage sensors (about 10µA total).
 
-When the model is powered off, if the AH180 detects a magnet or if a button is depressed, the SW1, SW2 or MAGNET signals will trigger an interrupt that will awake the MCU from the STOP mode. The MCU will then simply perform a restart, like if a power source was first connected to the PCB.
+When the model is powered off, if the AH180 detects a magnet or if the SW2 button is depressed, the SW2 or MAGNET signals will trigger an interrupt that will awake the MCU from the STOP mode. The MCU will then simply perform a restart, like if a power source was first connected to the PCB.
 
 The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 ##  
