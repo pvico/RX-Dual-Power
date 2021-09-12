@@ -96,7 +96,7 @@ Approaching the magnet close to the hall effect sensor twice within 2 seconds wi
 
 Position the RX Dual Power PCB appropriately in the model to be able to power off/on without opening any canopy or cover. Using a stack of magnets allows to adjust the detection distance by adding or removing magnets<sup><a href="#note5">5</a></sup>.
 
-Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model <sup><a href="#note6">6</a></sup>. Press button SW2 to power it back on.
+Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model. Press button SW2 to power it back on. However, using those tiny buttons is not really convenient <sup><a href="#note6">6</a></sup> and must be considered exceptional, using the magnet is the normal way.
 
 When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note7">7</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
 #
