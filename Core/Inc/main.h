@@ -60,7 +60,6 @@ void SystemClock_Config();
 /* Private defines -----------------------------------------------------------*/
 #define SW1_Pin GPIO_PIN_9
 #define SW1_GPIO_Port GPIOB
-#define SW1_EXTI_IRQn EXTI4_15_IRQn
 #define CTL1_Pin GPIO_PIN_14
 #define CTL1_GPIO_Port GPIOC
 #define CTL2_Pin GPIO_PIN_15

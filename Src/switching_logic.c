@@ -141,7 +141,7 @@ void switching_logic_loop() {
             }
         }
     } else {                                        
-        // No source disconnection occurred so both are OK or LOW 
+        // No source disconnection occurred so both are OK or LOW              
         if (main_power_source.state == OK) {        // MAIN PWR is ok
             use_main_power();
 

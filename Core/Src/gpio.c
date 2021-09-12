@@ -29,6 +29,10 @@
 /*----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
 
+// Configuring SW1_Pin for GPIO_MODE_IT_FALLING will cause spurious re-power on
+// after power off
+// So only SW2 (or magnet) can be used to power on afer power off 
+
 /* USER CODE END 1 */
 
 /** Configure pins
@@ -51,7 +55,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = SW1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
 

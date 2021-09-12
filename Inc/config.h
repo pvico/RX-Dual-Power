@@ -13,7 +13,7 @@
 // #define DEBUG
 
 // Undefine this one to activate the telemetry transmission
-#define CONSOLE_OUTPUT
+// #define CONSOLE_OUTPUT
 
 #ifndef CONSOLE_OUTPUT
 #define TELEMETRY_ENABLED
