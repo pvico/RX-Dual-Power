@@ -39,12 +39,10 @@ The normal primary power source is labelled MAIN PWR on the back of the PCB and 
 
 1. As long as MAIN PWR is above its minimum voltage (according to the type of power source), MAIN PWR is selected and STBY PWR is isolated from the system.
 
-2. When MAIN PWR is *below its minimum voltage*<sup><a href="#note4">4</a></sup> - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
+2. When MAIN PWR is below its minimum voltage - but **not** disconnected or in short-circuit - STBY PWR is selected and MAIN PWR is isolated from the system.
 
 3. If MAIN PWR and STBY PWR are **both** below minimum voltage  - or if **any one** is disconnected or in short-circuit -  The source with the highest voltage powers the model, the other one is isolated from the system. The *available voltage* - the highest of MAIN PWR voltage and STBY PWR voltage - will further decrease due to the discharging batteries. However, the receiver and servos will remain powered until this voltage becomes so low that the receiver and/or servos fail.
 #
-
-<sub><sup id="note4">4</sup> Below minimum voltage only applies to a battery. A BEC is never below minimum voltage: it is either above minimum voltage (> 4.8V) or considered disconnected (< 4.8V).</sub><br/>
 
 ## LED's
 
