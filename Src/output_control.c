@@ -31,28 +31,28 @@ static void __set_CTL_pin_GPIO_output(GPIO_TypeDef *gpio, uint16_t pin) {
     HAL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
-inline static void __put_CTL1_pin_high_impedance() {    
+static void __put_CTL1_pin_high_impedance() {    
     __set_CTL_pin_analog(CTL1_GPIO_Port, CTL1_Pin);
 }
 
-inline static void __put_CTL2_pin_high_impedance() {    
+static void __put_CTL2_pin_high_impedance() {    
     __set_CTL_pin_analog(CTL2_GPIO_Port, CTL2_Pin);
 }
 
-inline static void __put_CTL1_pin_GPIO_output() {    
+static void __put_CTL1_pin_GPIO_output() {    
     __set_CTL_pin_GPIO_output(CTL1_GPIO_Port, CTL1_Pin);
 }
 
-inline static void __put_CTL2_pin_GPIO_output() {    
+static void __put_CTL2_pin_GPIO_output() {    
     __set_CTL_pin_GPIO_output(CTL2_GPIO_Port, CTL2_Pin);
 }
 
-inline static void __force_main_power_off() {
+static void __force_main_power_off() {
     __put_CTL1_pin_GPIO_output();
     HAL_GPIO_WritePin(CTL1_GPIO_Port, CTL1_Pin, GPIO_PIN_SET);
 }
 
-inline static void __force_stdby_power_off() {
+static void __force_stdby_power_off() {
     __put_CTL2_pin_GPIO_output();
     HAL_GPIO_WritePin(CTL2_GPIO_Port, CTL2_Pin, GPIO_PIN_SET);
 }
@@ -61,27 +61,27 @@ inline static void __force_stdby_power_off() {
 
 // See README for electronic circuit explanation
 
-inline void use_main_power() {
+void use_main_power() {
     __put_CTL1_pin_high_impedance();
     __force_stdby_power_off();
 }
 
-inline void use_stby_power() {
+void use_stby_power() {
     __put_CTL2_pin_high_impedance();
     __force_main_power_off();
 }
 
-inline void let_LTCs_determine_power_source() {
+void let_LTCs_determine_power_source() {
     __put_CTL1_pin_high_impedance();
     __put_CTL2_pin_high_impedance();
 }
 
-inline void power_off() {
+void power_off() {
     __force_main_power_off();
     __force_stdby_power_off();
 }
 
-inline void power_on() {
+void power_on() {
     // Initially, let the LTCs do their magic 
     // power_source_loop() will further take
     // control of power source selection

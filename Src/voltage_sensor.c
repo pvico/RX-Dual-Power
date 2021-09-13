@@ -25,24 +25,24 @@ static uint16_t __stby_voltage () {
     return __adc_values[1] + CORRECTION_VALUE;
 }
 
-void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
-    uint8_t units;
-    uint8_t decimals;
+// void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+//     uint8_t units;
+//     uint8_t decimals;
 
-    // Real conversion ratio is 0.0198840816
-    // Rounded to 0.02  = 1/50 because we don't want any floating point
-    // calculation as this would significantly increase the hex file size
-    // and flash memory use
-    units = voltage / 50;
-    decimals = (voltage % 50) * 2;
+//     // Real conversion ratio is 0.0198840816
+//     // Rounded to 0.02  = 1/50 because we don't want any floating point
+//     // calculation as this would significantly increase the hex file size
+//     // and flash memory use
+//     units = voltage / 50;
+//     decimals = (voltage % 50) * 2;
 
-    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
-    buffer[1] = 48 + units % 10;
-    buffer[2] = '.';
-    buffer[3] = 48 + decimals / 10;
-    buffer[4] = 48 + decimals % 10;
-    buffer[5] = 'V';
-}
+//     buffer[0] = units < 10 ? ' ' : 48 + units / 10;
+//     buffer[1] = 48 + units % 10;
+//     buffer[2] = '.';
+//     buffer[3] = 48 + decimals / 10;
+//     buffer[4] = 48 + decimals % 10;
+//     buffer[5] = 'V';
+// }
 
 static uint16_t main_16ms_sum = 0;
 static uint8_t main_16ms_counter = 0;

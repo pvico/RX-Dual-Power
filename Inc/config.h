@@ -4,7 +4,7 @@
 #include "power_source.h"
 
 
-// When DEBUG_SWD_ENABLED is defined, all code related to LED1 is deactivated
+// When DEBUG_SWD_ENABLED is defined, all code related to LED1 and SW2 is deactivated
 #define DEBUG_SWD_ENABLED
 
 // Undefine this one to activate the telemetry transmission

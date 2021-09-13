@@ -10,6 +10,7 @@
 #include "power_source.h"
 #include "button.h"
 #include "switching_logic.h"
+#include "telemetry.h"
 #include <wwdg.h>
 
 extern volatile bool timer_flag;
@@ -29,8 +30,8 @@ void main_loop() {
     voltage_sensor_loop();
     power_source_loop();
     switching_logic_loop();
+    telemetry_loop();
     system_loop();
-    
 
     // ############ end 1ms loop ###############
 
@@ -38,8 +39,8 @@ void main_loop() {
   }
 
   // debug_console display only if CONSOLE_OUTPUT is defined in config.h
-  if (rough_quarter_second_tick()) {
-    debug_console_print_voltages();   
-  }
+  // if (rough_quarter_second_tick()) {
+  //   debug_console_print_voltages();   
+  // }
     
 }

@@ -46,11 +46,13 @@ initialization_result init_leds() {
     __leds[LED1].pin = LED1_Pin;
     __leds[LED1].state = OFF;
     __leds[LED1].illuminated = false;
+    __extinguish_led(LED1);
 #endif
     __leds[LED2].gpio_port = LED2_GPIO_Port;
     __leds[LED2].pin = LED2_Pin;
     __leds[LED2].state = OFF;
     __leds[LED2].illuminated = false;
+    __extinguish_led(LED2);
 
     return INITIALIZE_OK;
 }
@@ -62,11 +64,11 @@ void leds_show_error() {
     __illuminate_led(LED2);
 }
 
-inline led_state get_led_state(led the_led) {
+led_state get_led_state(led the_led) {
     return __leds[the_led].state;
 }
 
-inline void set_led_state(led the_led, led_state state) {
+void set_led_state(led the_led, led_state state) {
     __leds[the_led].state = state;
 }
 
@@ -239,5 +241,5 @@ static void __set_leds_in_function_of_leds_state() {
 
 void leds_loop() {
     __set_leds_state_in_function_of_switching_state();
-    __set_leds_in_function_of_leds_state();
+    // __set_leds_in_function_of_leds_state();
 }

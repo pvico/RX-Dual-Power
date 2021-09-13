@@ -1,5 +1,6 @@
 # TODO
 
+- Save space in flash
 - S.Port output
 - Configuration programming through usart
 - Stop mode

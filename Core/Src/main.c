@@ -39,6 +39,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+// extern uint8_t* receive_buffer;
+// extern uint8_t* transmit_buffer;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/

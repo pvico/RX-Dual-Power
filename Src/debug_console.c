@@ -9,20 +9,20 @@
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 
-void debug_console_print_voltages() {
-  // #ifdef CONSOLE_OUTPUT
-  uint8_t data[] = "MAIN: ______\tSTBY: ______\r\n";
-  voltage_to_str(main_power_source.last_16ms_average_voltage_ADC_value, data+6);
-  voltage_to_str(stby_power_source.last_16ms_average_voltage_ADC_value, data+19);
-  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10); 
-  // #endif
-}
+// void debug_console_print_voltages() {
+//   // #ifdef CONSOLE_OUTPUT
+//   uint8_t data[] = "MAIN: ______\tSTBY: ______\r\n";
+//   voltage_to_str(main_power_source.last_16ms_average_voltage_ADC_value, data+6);
+//   voltage_to_str(stby_power_source.last_16ms_average_voltage_ADC_value, data+19);
+//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10); 
+//   // #endif
+// }
 
-void debug_console_print(char *data, uint16_t size) {
-  #ifdef CONSOLE_OUTPUT
-  HAL_UART_Transmit (&huart2, (uint8_t*)data, size, 10);    
-  #endif
-}
+// void debug_console_print(char *data, uint16_t size) {
+//   #ifdef CONSOLE_OUTPUT
+//   HAL_UART_Transmit (&huart2, (uint8_t*)data, size, 10);    
+//   #endif
+// }
 
 // void debug_console_print_magnet_present() {
 //   #ifdef CONSOLE_OUTPUT
@@ -73,9 +73,9 @@ void debug_console_print(char *data, uint16_t size) {
 //   #endif
 // }
 
-void debug_console_print_splash() {
-  #ifdef CONSOLE_OUTPUT
-  uint8_t data[] = "\r\nRX Dual Power\r\nPhilippe Vico - 2021\r\n";
-  HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
-  #endif
-}
+// void debug_console_print_splash() {
+//   #ifdef CONSOLE_OUTPUT
+//   uint8_t data[] = "\r\nRX Dual Power\r\nPhilippe Vico - 2021\r\n";
+//   HAL_UART_Transmit (&huart2, data, sizeof (data) -1, 10);    
+//   #endif
+// }

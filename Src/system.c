@@ -67,19 +67,19 @@ void system_loop() {
     }
 }
 
-inline bool is_in_first_16s_after_startup() {
+bool is_in_first_16s_after_startup() {
     return __first_32s__loop_counter < 0x4000;
 }
 
-inline bool is_in_first_32s_after_startup() {
+bool is_in_first_32s_after_startup() {
     return __first_32s__loop_counter < 0x8000;
 }
 
-inline bool rough_second_tick() {
+bool rough_second_tick() {
     return (__first_32s__loop_counter & 0x3FF) == 0;
 }
 
-inline bool rough_quarter_second_tick() {
+bool rough_quarter_second_tick() {
     return (__first_32s__loop_counter & 0xFF) == 0;
 }
 

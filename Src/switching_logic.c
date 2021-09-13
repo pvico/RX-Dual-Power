@@ -41,57 +41,57 @@ static bool __is_stby_powering_RX() {
     return HAL_GPIO_ReadPin(STAT_STBY_GPIO_Port, STAT_STBY_Pin) == GPIO_PIN_SET;
 }
 
-static void __print_source_state() {
-    #ifdef CONSOLE_OUTPUT
-    if(rough_quarter_second_tick()) {
-        char text[] = "Main:       STBY:     \r\n";
-        switch (main_power_source.state) {
-        case OK:
-            text[6] = 'O';
-            text[7] = 'K';
-            break;        
-        case LOW:
-            text[6] = 'L';
-            text[7] = 'O';
-            text[8] = 'W';
-            break;        
-        case DISCONNECTED_OR_SHORT:
-            text[6] = 'D';
-            text[7] = 'I';
-            text[8] = 'S';
-            text[9] = 'C';
-            break;        
-        default:
-            break;
-        }
-        switch (stby_power_source.state) {
-        case OK:
-            text[18] = 'O';
-            text[19] = 'K';
-            break;        
-        case LOW:
-            text[18] = 'L';
-            text[19] = 'O';
-            text[20] = 'W';
-            break;        
-        case DISCONNECTED_OR_SHORT:
-            text[18] = 'D';
-            text[19] = 'I';
-            text[20] = 'S';
-            text[21] = 'C';
-            break;        
-        default:
-            break;
-        }
-        debug_console_print(text, 24);
-    }
-    #endif
-}
+// static void __print_source_state() {
+//     #ifdef CONSOLE_OUTPUT
+//     if(rough_quarter_second_tick()) {
+//         char text[] = "Main:       STBY:     \r\n";
+//         switch (main_power_source.state) {
+//         case OK:
+//             text[6] = 'O';
+//             text[7] = 'K';
+//             break;        
+//         case LOW:
+//             text[6] = 'L';
+//             text[7] = 'O';
+//             text[8] = 'W';
+//             break;        
+//         case DISCONNECTED_OR_SHORT:
+//             text[6] = 'D';
+//             text[7] = 'I';
+//             text[8] = 'S';
+//             text[9] = 'C';
+//             break;        
+//         default:
+//             break;
+//         }
+//         switch (stby_power_source.state) {
+//         case OK:
+//             text[18] = 'O';
+//             text[19] = 'K';
+//             break;        
+//         case LOW:
+//             text[18] = 'L';
+//             text[19] = 'O';
+//             text[20] = 'W';
+//             break;        
+//         case DISCONNECTED_OR_SHORT:
+//             text[18] = 'D';
+//             text[19] = 'I';
+//             text[20] = 'S';
+//             text[21] = 'C';
+//             break;        
+//         default:
+//             break;
+//         }
+//         debug_console_print(text, 24);
+//     }
+//     #endif
+// }
 
 
 void switching_logic_loop() {
 
-    __print_source_state();
+    // __print_source_state();
 
     static bool main_power_disconnect_flag = false;
     static bool stby_power_disconnect_flag = false;

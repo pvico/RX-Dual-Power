@@ -6,12 +6,15 @@
 #include "debug_console.h"
 #include "power_source.h"
 #include "switching_logic.h"
+#include "telemetry.h"
 #include <wwdg.h>
 #include "config.h"
+#include <usart.h>
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 extern switching_states switching_state;
+extern volatile uint32_t IDLE_counter;
 
 
   // Re-configure SWD pins if not in debug mode
@@ -24,8 +27,6 @@ static void __normal_SWD_pins_GPIO_init() {
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
-
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 
   GPIO_InitStruct.Pin = SW2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
@@ -43,6 +44,8 @@ void initialize() {
 
   main_power_source.state = MAIN_PWR_ON_STBY_OK;
 
+  IDLE_counter = 0;
+
   // Whatever event brings us here, normal power on, wathchdog reset or spurious reset due to low voltage,
   // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
   // the model is powered up
@@ -51,18 +54,20 @@ void initialize() {
   
   __normal_SWD_pins_GPIO_init();
   
-  debug_console_print_splash();
+  // debug_console_print_splash();
 
   HAL_TIM_Base_Start_IT(&htim21);
 
-  debug_console_print("Initialize\r\n", 12);
 
   if (init_voltage_sensors() == INITIALIZE_NOT_OK || 
       init_power_sources() == INITIALIZE_NOT_OK ||
-      init_leds() == INITIALIZE_NOT_OK)
+      init_leds() == INITIALIZE_NOT_OK ||
+      init_telemetry() == INITIALIZE_NOT_OK)
   {
     leds_show_error();
     // debug_console_print_initialization_error();
     while(true) {}  // stop here
   }
+  
+  // debug_console_print("Initialize\r\n", 12);
 }

@@ -60,7 +60,7 @@ void magnet_loop() {
 }
 
 
-inline bool is_magnet_double_activation_active() {
+bool is_magnet_double_activation_active() {
   return double_activation_state;
 }
 
