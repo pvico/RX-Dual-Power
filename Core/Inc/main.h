@@ -81,7 +81,6 @@ void SystemClock_Config();
 #define LED1_GPIO_Port GPIOA
 #define SW2_Pin GPIO_PIN_14
 #define SW2_GPIO_Port GPIOA
-#define SW2_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

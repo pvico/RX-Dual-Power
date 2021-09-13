@@ -17,7 +17,7 @@ typedef struct {
     bool illuminated;
 } __Led_Hardware;
 
-#ifndef DEBUG
+#ifndef DEBUG_SWD_ENABLED
 static __Led_Hardware __leds[2];
 #else
 static __Led_Hardware __leds[1];
@@ -25,28 +25,28 @@ static __Led_Hardware __leds[1];
 
 
 static void __illuminate_led(led the_led) {
-    #ifdef DEBUG
+#ifdef DEBUG_SWD_ENABLED
     if (the_led != LED2) return;
-    #endif
+#endif
     HAL_GPIO_WritePin(__leds[the_led].gpio_port, __leds[the_led].pin, GPIO_PIN_RESET);
     __leds[the_led].illuminated = true;
 }
 
 static void __extinguish_led(led the_led) {
-    #ifdef DEBUG
+#ifdef DEBUG_SWD_ENABLED
     if (the_led != LED2) return;
-    #endif
+#endif
     HAL_GPIO_WritePin(__leds[the_led].gpio_port, __leds[the_led].pin, GPIO_PIN_SET);
     __leds[the_led].illuminated = false;
 }
 
 initialization_result init_leds() {
-    #ifndef DEBUG
+#ifndef DEBUG_SWD_ENABLED
     __leds[LED1].gpio_port = LED1_GPIO_Port;
     __leds[LED1].pin = LED1_Pin;
     __leds[LED1].state = OFF;
     __leds[LED1].illuminated = false;
-    #endif
+#endif
     __leds[LED2].gpio_port = LED2_GPIO_Port;
     __leds[LED2].pin = LED2_Pin;
     __leds[LED2].state = OFF;
@@ -56,7 +56,9 @@ initialization_result init_leds() {
 }
 
 void leds_show_error() {
+#ifndef DEBUG_SWD_ENABLED
     __illuminate_led(LED1);
+#endif
     __illuminate_led(LED2);
 }
 
@@ -72,21 +74,21 @@ inline void set_led_state(led the_led, led_state state) {
 static uint16_t __led_counters[2] = {0};
 
 static void __set_leds_slow_alternate_blink_initial() {
-    #ifndef DEBUG
-        __leds[LED1].illuminated = true; 
-        __leds[LED2].illuminated = false;
-        __led_counters[LED1] = LED_BLINK_SLOW_PERIOD_MILLIS +1; 
-        __led_counters[LED2] = LED_BLINK_SLOW_PERIOD_MILLIS+1; 
-    #endif
+#ifndef DEBUG_SWD_ENABLED
+    __leds[LED1].illuminated = true; 
+    __leds[LED2].illuminated = false;
+    __led_counters[LED1] = LED_BLINK_SLOW_PERIOD_MILLIS +1; 
+    __led_counters[LED2] = LED_BLINK_SLOW_PERIOD_MILLIS+1; 
+#endif
 }
 
 static void __set_leds_fast_alternate_blink_initial() {
-    #ifndef DEBUG
-        __leds[LED1].illuminated = true; 
-        __leds[LED2].illuminated = false;
-        __led_counters[LED1] = LED_BLINK_FAST_PERIOD_MILLIS +1; 
-        __led_counters[LED2] = LED_BLINK_FAST_PERIOD_MILLIS+1; 
-    #endif
+#ifndef DEBUG_SWD_ENABLED
+    __leds[LED1].illuminated = true; 
+    __leds[LED2].illuminated = false;
+    __led_counters[LED1] = LED_BLINK_FAST_PERIOD_MILLIS +1; 
+    __led_counters[LED2] = LED_BLINK_FAST_PERIOD_MILLIS+1; 
+#endif
 }
 
 static void __set_leds_state_in_function_of_switching_state() {
@@ -95,37 +97,51 @@ static void __set_leds_state_in_function_of_switching_state() {
     // Non critical cases
     case MAIN_PWR_ON_STBY_OK:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, STEADY_DIM);
+#endif
         set_led_state(LED2, OFF);
         break;
     case MAIN_PWR_ON_STBY_LOW:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, STEADY_DIM);
+#endif
         set_led_state(LED2, BLINK_SLOW);
         break;
     case STBY_PWR_ON_MAIN_LOW:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_SLOW);
+#endif
         set_led_state(LED2, STEADY_DIM);
         break;
     case MAIN_PWR_ON_STBY_DISCONNECT_OR_BAD_CONTACT:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, STEADY_DIM);
+#endif
         set_led_state(LED2, BLINK_FAST);
         break;
     case STBY_PWR_ON_MAIN_DISCONNECTED_OR_BAD_CONTACT:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_FAST);
+#endif
         set_led_state(LED2, STEADY_DIM);
         break;
     case MAIN_PWR_ON_MAIN_BAD_CONTACT:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_FAST);
+#endif
         set_led_state(LED2, OFF);
         break;
     case STBY_PWR_ON_STBY_BAD_CONTACT:
         in_critical_state = false;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, OFF);
+#endif
         set_led_state(LED2, BLINK_FAST);
         break;
     // CRITICAL cases
@@ -134,17 +150,23 @@ static void __set_leds_state_in_function_of_switching_state() {
             __set_leds_slow_alternate_blink_initial();
             in_critical_state = true;
         }
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_SLOW);
+#endif
         set_led_state(LED2, BLINK_SLOW);
         break;
     case CRITICAL_MAIN_LOW_STBY_DISCONNECT_OR_BAD_CONTACT:
         in_critical_state = true;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_SLOW);
+#endif
         set_led_state(LED2, BLINK_FAST);
         break;
     case CRITICAL_STBY_LOW_MAIN_DISCONNECT_OR_BAD_CONTACT:
         in_critical_state = true;
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_FAST);
+#endif
         set_led_state(LED2, BLINK_SLOW);
         break;
     case CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT:
@@ -152,7 +174,9 @@ static void __set_leds_state_in_function_of_switching_state() {
             __set_leds_fast_alternate_blink_initial();
             in_critical_state = true;
         }
+#ifndef DEBUG_SWD_ENABLED
         set_led_state(LED1, BLINK_FAST);
+#endif
         set_led_state(LED2, BLINK_FAST);
         break;
     default:
@@ -166,11 +190,11 @@ static void __set_leds_state_in_function_of_switching_state() {
 }
 
 static void __set_leds_in_function_of_leds_state() {
-    #ifdef DEBUG
+#ifdef DEBUG_SWD_ENABLED
     for (led the_led = LED2; the_led <= LED2; the_led++) {
-    #else
+#else
     for (led the_led = LED1; the_led <= LED2; the_led++) {
-    #endif
+#endif
         switch (__leds[the_led].state) {
         case OFF:
             __extinguish_led(the_led);

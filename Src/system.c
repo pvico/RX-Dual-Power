@@ -25,8 +25,10 @@ static void __set_not_needed_gpio_pins_to_analog() {
     GPIO_InitStruct.Pin = STAT_STBY_Pin;
     HAL_GPIO_Init(STAT_STBY_GPIO_Port, &GPIO_InitStruct);    
 
+#ifndef DEBUG_SWD_ENABLED
     GPIO_InitStruct.Pin = LED1_Pin;
     HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);      
+#endif
 
     HAL_UART_MspDeInit(&huart2);
 }
@@ -35,9 +37,10 @@ static void __system_stop_mode() {
     
     // debug_console_print_entering_stop_mode();
 
-    __set_not_needed_gpio_pins_to_analog();
-
     power_off();
+
+    __set_not_needed_gpio_pins_to_analog();
+    
     HAL_SuspendTick();
     // Stop now
     HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);

@@ -11,7 +11,7 @@
 
 typedef enum led_states {OFF, STEADY_DIM, STEADY_BRIGHT, BLINK_SLOW, BLINK_FAST} led_state;
 
-#ifndef DEBUG
+#ifndef DEBUG_SWD_ENABLED
 typedef enum leds {LED1, LED2} led;
 #else
 typedef enum leds {LED2} led;

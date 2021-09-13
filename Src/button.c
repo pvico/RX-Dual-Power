@@ -18,7 +18,7 @@ static bool __is_sw1_depressed() {
 }
 
 static bool __is_sw2_depressed() {
-#ifndef DEBUG
+#ifndef DEBUG_SWD_ENABLED
     return HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) == GPIO_PIN_RESET;
 #else
     return false;

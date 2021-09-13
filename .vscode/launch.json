@@ -10,7 +10,7 @@
             "request": "launch",
             "servertype": "openocd",
             "cwd": "${workspaceFolder}",
-            "executable": "build/RX_Dual_Battery_Switch.elf",
+            "executable": "build/RX-Dual-Power.elf",
             "svdFile": ".vscode/STM32L0x1.svd",
             "configFiles": [
                 ".vscode/stlink.cfg",
