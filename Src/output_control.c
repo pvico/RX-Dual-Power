@@ -13,22 +13,25 @@
 
 // ########################## Local Helper functions ##########################
 
-static void __set_CTL_pin_analog(GPIO_TypeDef *gpio, uint16_t pin) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+static void __set_CTL_pin_analog(GPIO_TypeDef *gpio, uint32_t pin) {
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
     GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    // other struct members remain at 0:
-    // GPIO_InitStruct.Pull = GPIO_NOPULL;
-    // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    // GPIO_InitStruct.Alternate
-    HAL_GPIO_Init(gpio, &GPIO_InitStruct);
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(gpio, &GPIO_InitStruct);
 }
 
-static void __set_CTL_pin_GPIO_output(GPIO_TypeDef *gpio, uint16_t pin) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+static void __set_CTL_pin_GPIO_output(GPIO_TypeDef *gpio, uint32_t pin) {
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
     GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(gpio, &GPIO_InitStruct);
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(gpio, &GPIO_InitStruct);
+
 }
 
 static void __put_CTL1_pin_high_impedance() {    
@@ -49,12 +52,12 @@ static void __put_CTL2_pin_GPIO_output() {
 
 static void __force_main_power_off() {
     __put_CTL1_pin_GPIO_output();
-    HAL_GPIO_WritePin(CTL1_GPIO_Port, CTL1_Pin, GPIO_PIN_SET);
+    CTL1_GPIO_Port->ODR |= CTL1_Pin;
 }
 
 static void __force_stdby_power_off() {
     __put_CTL2_pin_GPIO_output();
-    HAL_GPIO_WritePin(CTL2_GPIO_Port, CTL2_Pin, GPIO_PIN_SET);
+    CTL1_GPIO_Port->ODR |= CTL2_Pin;
 }
 
 // ########################## Public functions ##########################

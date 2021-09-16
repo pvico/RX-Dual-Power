@@ -1,7 +1,7 @@
-
+#include "debug_console.h"
+#include "system.h"
 #include "gpio.h"
 #include "led.h"
-#include "config.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include "main.h"
@@ -12,7 +12,7 @@ extern switching_states switching_state;
 
 typedef struct {
     GPIO_TypeDef *gpio_port;
-    uint16_t pin;
+    uint32_t pin;
     led_state state;
     bool illuminated;
 } __Led_Hardware;
@@ -28,7 +28,7 @@ static void __illuminate_led(led the_led) {
 #ifdef DEBUG_SWD_ENABLED
     if (the_led != LED2) return;
 #endif
-    HAL_GPIO_WritePin(__leds[the_led].gpio_port, __leds[the_led].pin, GPIO_PIN_RESET);
+    CLEAR_BIT((__leds[the_led].gpio_port->ODR), (__leds[the_led].pin));
     __leds[the_led].illuminated = true;
 }
 
@@ -36,7 +36,7 @@ static void __extinguish_led(led the_led) {
 #ifdef DEBUG_SWD_ENABLED
     if (the_led != LED2) return;
 #endif
-    HAL_GPIO_WritePin(__leds[the_led].gpio_port, __leds[the_led].pin, GPIO_PIN_SET);
+    SET_BIT(__leds[the_led].gpio_port->ODR, __leds[the_led].pin);
     __leds[the_led].illuminated = false;
 }
 
@@ -63,6 +63,12 @@ void leds_show_error() {
 #endif
     __illuminate_led(LED2);
 }
+
+void leds_show_error_infinite_loop() {
+    leds_show_error();
+    while(1);
+}
+
 
 led_state get_led_state(led the_led) {
     return __leds[the_led].state;
@@ -215,10 +221,10 @@ static void __set_leds_in_function_of_leds_state() {
             __led_counters[the_led] = 0;        
             break;
         case BLINK_SLOW:
-            if (!__leds[the_led].illuminated && __led_counters[the_led] > LED_BLINK_SLOW_PERIOD_MILLIS) {
+            if (!(__leds[the_led].illuminated) && (__led_counters[the_led] > LED_BLINK_SLOW_PERIOD_MILLIS)) {
                 __illuminate_led(the_led);
                 __led_counters[the_led] = 0;
-            } else if (__leds[the_led].illuminated && __led_counters[the_led] > LED_BLINK_SLOW_PERIOD_MILLIS) {
+            } else if (__leds[the_led].illuminated && (__led_counters[the_led] > LED_BLINK_SLOW_PERIOD_MILLIS)) {
                 __extinguish_led(the_led);
                 __led_counters[the_led] = 0;
             }                
@@ -241,5 +247,12 @@ static void __set_leds_in_function_of_leds_state() {
 
 void leds_loop() {
     __set_leds_state_in_function_of_switching_state();
-    // __set_leds_in_function_of_leds_state();
+    __set_leds_in_function_of_leds_state();
+
+    // if (rough_quarter_second_tick()) {
+    //     char text[] = "   \r\n";
+    //     text[0] = 48 + __leds[LED1].illuminated;
+    //     text[2] = 48 + __leds[LED2].illuminated;;
+    //     debug_console_print(text, sizeof(text));
+    // }
 }

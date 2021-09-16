@@ -11,7 +11,7 @@ static bool single_activation_state = false;
 static magnet_state __magnet_debounced_state = MAGNET_NOT_PRESENT;
 
 static bool __is_magnet_detected() {
-    return HAL_GPIO_ReadPin(MAGNET_GPIO_Port, MAGNET_Pin) == MAGNET_PRESENT_PIN_STATE;
+  return !(MAGNET_GPIO_Port->IDR & MAGNET_Pin);
 }
 
 void magnet_loop() {

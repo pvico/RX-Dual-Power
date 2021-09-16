@@ -24,8 +24,6 @@
 
 /* USER CODE END 0 */
 
-WWDG_HandleTypeDef hwwdg;
-
 /* WWDG init function */
 void MX_WWDG_Init(void)
 {
@@ -34,38 +32,20 @@ void MX_WWDG_Init(void)
 
   /* USER CODE END WWDG_Init 0 */
 
+  /* Peripheral clock enable */
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_WWDG);
+
   /* USER CODE BEGIN WWDG_Init 1 */
 
   /* USER CODE END WWDG_Init 1 */
-  hwwdg.Instance = WWDG;
-  hwwdg.Init.Prescaler = WWDG_PRESCALER_4;
-  hwwdg.Init.Window = 0x7F;
-  hwwdg.Init.Counter = 0x7F;
-  hwwdg.Init.EWIMode = WWDG_EWI_DISABLE;
-  if (HAL_WWDG_Init(&hwwdg) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  LL_WWDG_SetCounter(WWDG, 0x7F);
+  LL_WWDG_Enable(WWDG);
+  LL_WWDG_SetPrescaler(WWDG, LL_WWDG_PRESCALER_4);
+  LL_WWDG_SetWindow(WWDG, 0x7F);
   /* USER CODE BEGIN WWDG_Init 2 */
 
   /* USER CODE END WWDG_Init 2 */
 
-}
-
-void HAL_WWDG_MspInit(WWDG_HandleTypeDef* wwdgHandle)
-{
-
-  if(wwdgHandle->Instance==WWDG)
-  {
-  /* USER CODE BEGIN WWDG_MspInit 0 */
-
-  /* USER CODE END WWDG_MspInit 0 */
-    /* WWDG clock enable */
-    __HAL_RCC_WWDG_CLK_ENABLE();
-  /* USER CODE BEGIN WWDG_MspInit 1 */
-
-  /* USER CODE END WWDG_MspInit 1 */
-  }
 }
 
 /* USER CODE BEGIN 1 */

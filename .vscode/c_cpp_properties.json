@@ -10,7 +10,9 @@
             "defines": [
                 "GPIOA",
                 "GPIOB",
-                "EXTI"
+                "EXTI",
+                "USART2",
+                "USE_HAL_UART_REGISTER_CALLBACKS"
             ],
             "macFrameworkPath": [],
             "compilerPath": "/usr/local/bin/gcc-11",

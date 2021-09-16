@@ -6,74 +6,71 @@
 #include "config.h"
 #include "led.h"
 #include "debug_console.h"
+#include <stdlib.h>
 
 
+extern button *buttons;
 static bool __dual_activation_state = false;
 
-static button_state __sw1_debounced_state = BUTTON_NOT_DEPRESSED;
-static button_state __sw2_debounced_state = BUTTON_NOT_DEPRESSED;
+bool is_button_dual_activation_active() {
+    return __dual_activation_state;
+}
 
 static bool __is_sw1_depressed() {
-    return HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin) == GPIO_PIN_RESET;
+    return !(SW1_GPIO_Port->IDR & SW1_Pin);
 }
 
 static bool __is_sw2_depressed() {
 #ifndef DEBUG_SWD_ENABLED
-    return HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin) == GPIO_PIN_RESET;
+    return !(SW2_GPIO_Port->IDR & SW2_Pin);
 #else
     return false;
 #endif
 }
 
-static uint16_t __sw1_depressed__loop_counter = 0;
-static uint16_t __sw1_not_depressed__loop_counter = 0;
-static uint16_t __sw2_depressed__loop_counter = 0;
-static uint16_t __sw2_not_depressed__loop_counter = 0;
-static uint16_t __double_activation__loop_counter = 0;
-void button_loop() {
-    if (__is_sw1_depressed()) {
-        __sw1_not_depressed__loop_counter = 0;
-        if (__sw1_debounced_state == BUTTON_NOT_DEPRESSED) {
-            __sw1_depressed__loop_counter++;
-            if (__sw1_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
-                __sw1_debounced_state = BUTTON_DEPRESSED;
-                __sw1_depressed__loop_counter = 0;
-            }
-        }
-    } else {
-        // not depressed
-        __sw1_depressed__loop_counter = 0;
-        if (__sw1_debounced_state == BUTTON_DEPRESSED) {
-            __sw1_not_depressed__loop_counter++;
-            if (__sw1_not_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
-                __sw1_debounced_state = BUTTON_NOT_DEPRESSED;
-                __sw1_not_depressed__loop_counter = 0;
-            }
-        }
+initialization_result init_buttons() {
+    buttons = malloc(2 * sizeof(button));
+    if (buttons == NULL) {
+        return INITIALIZE_NOT_OK;
     }
-    if (__is_sw2_depressed()) {
-        __sw2_not_depressed__loop_counter = 0;
-        if (__sw2_debounced_state == BUTTON_NOT_DEPRESSED) {
-            __sw2_depressed__loop_counter++;
-            if (__sw2_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
-                __sw2_debounced_state = BUTTON_DEPRESSED;
-                __sw2_depressed__loop_counter = 0;
+    for (button_name name = SW1; name <= SW2; name++) {
+        buttons[name].debounced_state = BUTTON_NOT_DEPRESSED;
+        buttons[name].depressed_loop_counter = 0;
+        buttons[name].not_depressed_loop_counter = 0;
+    }
+    buttons[SW1].is_depressed = __is_sw1_depressed;
+    buttons[SW2].is_depressed = __is_sw2_depressed;
+    
+    return INITIALIZE_OK;
+}
+
+void button_loop() {
+    for (button_name name = SW1; name <= SW2; name++) {
+        if (buttons[name].is_depressed()) {
+            buttons[name].not_depressed_loop_counter = 0;
+            if (buttons[name].debounced_state == BUTTON_NOT_DEPRESSED) {
+                buttons[name].depressed_loop_counter++;
+                if (buttons[name].depressed_loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
+                    buttons[name].debounced_state = BUTTON_DEPRESSED;
+                    buttons[name].depressed_loop_counter = 0;
+                }
             }
-        }
-    } else {
-        // not depressed
-        __sw2_depressed__loop_counter = 0;
-        if (__sw2_debounced_state == BUTTON_DEPRESSED) {
-            __sw2_not_depressed__loop_counter++;
-            if (__sw2_not_depressed__loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
-                __sw2_debounced_state = BUTTON_NOT_DEPRESSED;
-                __sw2_not_depressed__loop_counter = 0;
+        } else {                // not depressed            
+            buttons[name].depressed_loop_counter = 0;
+            if (buttons[name].debounced_state == BUTTON_DEPRESSED) {
+                buttons[name].not_depressed_loop_counter++;
+                if (buttons[name].not_depressed_loop_counter > BUTTON_DEBOUNCE_DELAY_MILLIS) {
+                    buttons[name].debounced_state = BUTTON_NOT_DEPRESSED;
+                    buttons[name].not_depressed_loop_counter = 0;
+                }
             }
         }
     }
 
-    if (__sw1_debounced_state == BUTTON_DEPRESSED && 
-            __sw2_debounced_state == BUTTON_DEPRESSED) {
+    static uint16_t __double_activation__loop_counter = 0;
+
+    if (buttons[SW1].debounced_state == BUTTON_DEPRESSED &&
+        buttons[SW2].debounced_state == BUTTON_DEPRESSED) {
         __double_activation__loop_counter++;
         if (__double_activation__loop_counter > BUTTON_DOUBLE_ACTIVATION_MILLIS) {
             __dual_activation_state = true;
@@ -81,10 +78,6 @@ void button_loop() {
     } else {
         __double_activation__loop_counter = 0; 
         __dual_activation_state = false;       
-    }
+    } 
 }
 
-
-bool is_button_dual_activation_active() {
-    return __dual_activation_state;
-}

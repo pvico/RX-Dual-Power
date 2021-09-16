@@ -38,7 +38,7 @@ extern Power_Source stby_power_source;
 extern switching_states switching_state;
 
 static bool __is_stby_powering_RX() {
-    return HAL_GPIO_ReadPin(STAT_STBY_GPIO_Port, STAT_STBY_Pin) == GPIO_PIN_SET;
+    return STAT_STBY_GPIO_Port->IDR & STAT_STBY_Pin;
 }
 
 // static void __print_source_state() {
@@ -91,7 +91,12 @@ static bool __is_stby_powering_RX() {
 
 void switching_logic_loop() {
 
-    // __print_source_state();
+    // if (rough_second_tick()) {
+    //     __print_source_state();
+    //     char text[] = " \r\n";
+    //     text[0] = 48 + switching_state;
+    //     debug_console_print(text, 3);
+    // }
 
     static bool main_power_disconnect_flag = false;
     static bool stby_power_disconnect_flag = false;

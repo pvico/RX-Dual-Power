@@ -1,20 +1,26 @@
 #include "voltage_sensor.h"
 #include "power_source.h"
+#include "led.h"
 #include "adc.h"
+// #include <stm32l0xx_ll_adc.h>
+#include <stm32l0xx_ll_dma.h>
+#include <stm32l0xx_ll_bus.h>
 #include <stdint.h>
+
 
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
-extern ADC_HandleTypeDef hadc;
 
-static uint32_t __adc_values[2];
+
+static uint32_t __adc_values[2] = {0};
+
 
 initialization_result init_voltage_sensors() {
-  HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc, __adc_values, 2);
+    HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
+    HAL_ADC_Start_DMA(&hadc, __adc_values, 2);
   
-  return INITIALIZE_OK;
+    return INITIALIZE_OK;
 }
 
 static uint16_t __main_voltage () {
@@ -25,24 +31,24 @@ static uint16_t __stby_voltage () {
     return __adc_values[1] + CORRECTION_VALUE;
 }
 
-// void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
-//     uint8_t units;
-//     uint8_t decimals;
+void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+    uint8_t units;
+    uint8_t decimals;
 
-//     // Real conversion ratio is 0.0198840816
-//     // Rounded to 0.02  = 1/50 because we don't want any floating point
-//     // calculation as this would significantly increase the hex file size
-//     // and flash memory use
-//     units = voltage / 50;
-//     decimals = (voltage % 50) * 2;
+    // Real conversion ratio is 0.0198840816
+    // Rounded to 0.02  = 1/50 because we don't want any floating point
+    // calculation as this would significantly increase the hex file size
+    // and flash memory use
+    units = voltage / 50;
+    decimals = (voltage % 50) * 2;
 
-//     buffer[0] = units < 10 ? ' ' : 48 + units / 10;
-//     buffer[1] = 48 + units % 10;
-//     buffer[2] = '.';
-//     buffer[3] = 48 + decimals / 10;
-//     buffer[4] = 48 + decimals % 10;
-//     buffer[5] = 'V';
-// }
+    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
+    buffer[1] = 48 + units % 10;
+    buffer[2] = '.';
+    buffer[3] = 48 + decimals / 10;
+    buffer[4] = 48 + decimals % 10;
+    buffer[5] = 'V';
+}
 
 static uint16_t main_16ms_sum = 0;
 static uint8_t main_16ms_counter = 0;

@@ -1,0 +1,447 @@
+#include "voltage_sensor.h"
+#include "power_source.h"
+#include "led.h"
+#include <stm32l0xx_ll_adc.h>
+#include <stm32l0xx_ll_dma.h>
+#include <stm32l0xx_ll_bus.h>
+#include <stdint.h>
+
+
+#define ADC_CONVERTED_DATA_BUFFER_SIZE   ((uint32_t)   2)
+#define ADC_DELAY_CALIB_ENABLE_CPU_CYCLES  (LL_ADC_DELAY_CALIB_ENABLE_ADC_CYCLES * 32)
+
+
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
+
+typedef enum {DMA_TRANSFER_NOT_COMPLETED, DMA_TRANSFER_COMPLETED, DMA_TRANSFER_NOT_STARTED} dma_transfer_status;
+typedef enum {ADC_SEQ_CONV_NOT_COMPLETED, ADC_SEQ_CONV_COMPLETED} adc_sequence_conversion_status;
+
+static __IO dma_transfer_status __DMA_transfer_status = DMA_TRANSFER_NOT_STARTED;
+static __IO adc_sequence_conversion_status __ADC_group_regular_sequence_conversion_status = ADC_SEQ_CONV_NOT_COMPLETED;
+static __IO uint32_t __ADC_group_regular_sequence_conversion_count = 0;
+
+static __IO uint32_t __adc_values[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};
+
+
+static void __configure_DMA() {
+    NVIC_SetPriority(DMA1_Channel1_IRQn, 1);  /* DMA IRQ lower priority than ADC IRQ */
+    NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
+
+    LL_DMA_ConfigTransfer(DMA1,
+                        LL_DMA_CHANNEL_1,
+                        LL_DMA_DIRECTION_PERIPH_TO_MEMORY |
+                        LL_DMA_MODE_CIRCULAR              |
+                        LL_DMA_PERIPH_NOINCREMENT         |
+                        LL_DMA_MEMORY_INCREMENT           |
+                        LL_DMA_PDATAALIGN_WORD        |
+                        LL_DMA_PDATAALIGN_WORD        |
+                        LL_DMA_PRIORITY_LOW               );
+
+    LL_DMA_SetPeriphRequest(DMA1, 
+                            LL_DMA_CHANNEL_1,
+                            LL_DMA_REQUEST_0);       
+
+    LL_DMA_ConfigAddresses(DMA1,
+                            LL_DMA_CHANNEL_1,
+                            LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
+                            (uint32_t)&__adc_values,
+                            LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
+
+    LL_DMA_SetDataLength(DMA1,
+                        LL_DMA_CHANNEL_1,
+                        ADC_CONVERTED_DATA_BUFFER_SIZE);
+
+    LL_DMA_EnableIT_TC(DMA1,
+                        LL_DMA_CHANNEL_1);
+    
+    LL_DMA_EnableIT_TE(DMA1,
+                        LL_DMA_CHANNEL_1);
+
+    LL_DMA_EnableChannel(DMA1,
+                        LL_DMA_CHANNEL_1);                                                                                                                      
+
+}
+
+static void __configure_ADC() {
+    __IO uint32_t wait_loop_index = 0;
+    
+    NVIC_SetPriority(ADC1_COMP_IRQn, 0); /* ADC IRQ greater priority than DMA IRQ */
+    NVIC_EnableIRQ(ADC1_COMP_IRQn);
+
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
+
+    if(__LL_ADC_IS_ENABLED_ALL_COMMON_INSTANCE() == 0) {
+        /* Note: Call of the functions below are commented because they are       */
+        /*       useless in this example:                                         */
+        /*       setting corresponding to default configuration from reset state. */
+        
+        /* Set ADC clock (conversion clock) common to several ADC instances */
+        /* Note: On this STM32 serie, ADC common clock asynchonous prescaler      */
+        /*       is applied to each ADC instance if ADC instance clock is         */
+        /*       set to clock source asynchronous                                 */
+        /*       (refer to function "LL_ADC_SetClock()" below).                   */
+        // LL_ADC_SetCommonClock(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_CLOCK_ASYNC_DIV1);
+        
+        /* Set ADC measurement path to internal channels */
+        LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
+        
+        /* Delay for ADC temperature sensor stabilization time.                   */
+        /* Compute number of CPU cycles to wait for, from delay in us.            */
+        /* Note: Variable divided by 2 to compensate partially                    */
+        /*       CPU processing cycles (depends on compilation optimization).     */
+        /* Note: If system core clock frequency is below 200kHz, wait time        */
+        /*       is only a few CPU processing cycles.                             */
+        /* Note: This delay is implemented here for the purpose in this example.  */
+        /*       It can be optimized if merged with other delays                  */
+        /*       during ADC activation or if other actions are performed          */
+        /*       in the meantime.                                                 */
+        wait_loop_index = ((LL_ADC_DELAY_TEMPSENSOR_STAB_US * (SystemCoreClock / (100000 * 2))) / 10);
+        while(wait_loop_index != 0) {
+            wait_loop_index--;
+        }
+    }
+    
+    /*## Configuration of ADC hierarchical scope: ADC instance #################*/
+    
+    /* Note: Hardware constraint (refer to description of the functions         */
+    /*       below):                                                            */
+    /*       On this STM32 serie, setting of these features is conditioned to   */
+    /*       ADC state:                                                         */
+    /*       ADC must be disabled.                                              */
+    if (LL_ADC_IsEnabled(ADC1) == 0) {
+        /* Note: Call of the functions below are commented because they are       */
+        /*       useless in this example:                                         */
+        /*       setting corresponding to default configuration from reset state. */
+        
+        /* Set ADC clock (conversion clock) */
+        LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
+        
+        /* Set ADC data resolution */
+        LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_10B);
+        
+
+        /* Set ADC conversion data alignment */
+        // LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_LEFT);
+        LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
+        
+        /* Set ADC low power mode */
+        LL_ADC_SetLowPowerMode(ADC1, LL_ADC_LP_MODE_NONE);
+        
+        /* Set ADC channels sampling time */
+        /* Note: On this STM32 serie, sampling time is common to all channels     */
+        /*       of the entire ADC instance.                                      */
+        /*       Therefore, sampling time is configured here under ADC instance   */
+        /*       scope (not under channel scope as on some other STM32 devices    */
+        /*       on which sampling time is channel wise).                         */
+        /* Note: Considering interruption occurring after each ADC group          */
+        /*       regular sequence conversions                                     */
+        /*       (IT from DMA transfer complete),                                 */
+        /*       select sampling time and ADC clock with sufficient               */
+        /*       duration to not create an overhead situation in IRQHandler.      */
+        LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_160CYCLES_5);
+    
+    }
+
+    /*## Configuration of ADC hierarchical scope: ADC group regular ############*/
+    
+    /* Note: Hardware constraint (refer to description of the functions         */
+    /*       below):                                                            */
+    /*       On this STM32 serie, setting of these features is conditioned to   */
+    /*       ADC state:                                                         */
+    /*       ADC must be disabled or enabled without conversion on going        */
+    /*       on group regular.                                                  */
+    if ((LL_ADC_IsEnabled(ADC1) == 0)               ||
+        (LL_ADC_REG_IsConversionOngoing(ADC1) == 0)   )  {
+        /* Set ADC group regular trigger source */
+        LL_ADC_REG_SetTriggerSource(ADC1, LL_ADC_REG_TRIG_SOFTWARE);
+        
+        /* Set ADC group regular trigger polarity */
+        // LL_ADC_REG_SetTriggerEdge(ADC1, LL_ADC_REG_TRIG_EXT_RISING);
+        
+        /* Set ADC group regular continuous mode */
+        // LL_ADC_REG_SetContinuousMode(ADC1, LL_ADC_REG_CONV_SINGLE);
+        LL_ADC_REG_SetContinuousMode(ADC1, LL_ADC_REG_CONV_CONTINUOUS);
+        
+        
+        /* Set ADC group regular conversion data transfer */
+        LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_UNLIMITED);
+        
+        /* Set ADC group regular overrun behavior */
+        // LL_ADC_REG_SetOverrun(ADC1, LL_ADC_REG_OVR_DATA_OVERWRITTEN);
+        LL_ADC_REG_SetOverrun(ADC1, LL_ADC_REG_OVR_DATA_PRESERVED);
+        
+        LL_ADC_REG_SetSequencerScanDirection(ADC1, LL_ADC_REG_SEQ_SCAN_DIR_FORWARD);
+
+        /* Set ADC group regular sequencer */
+        /* Note: On this STM32 serie, ADC group regular sequencer is              */
+        /*       not fully configurable: sequencer length and each rank           */
+        /*       affectation to a channel are fixed by channel HW number.         */
+        /*       Refer to description of function                                 */
+        /*       "LL_ADC_REG_SetSequencerChannels()".                             */
+        /*       Case of STM32L0xx:                                               */
+        /*       ADC Channel ADC_CHANNEL_VREFINT is on ADC channel 17,            */
+        /*       there is 1 other channel enabled with lower channel number.      */
+        /*       Therefore, ADC_CHANNEL_VREFINT will be converted by the          */
+        /*       sequencer as the 2nd rank.                                       */
+        /*       ADC Channel ADC_CHANNEL_TEMPSENSOR is on ADC channel 18,         */
+        /*       there are 2 other channels enabled with lower channel number.    */
+        /*       Therefore, ADC_CHANNEL_TEMPSENSOR will be converted by the       */
+        /*       sequencer as the 3rd rank.                                       */
+        /* Set ADC group regular sequencer discontinuous mode */
+        LL_ADC_REG_SetSequencerDiscont(ADC1, LL_ADC_REG_SEQ_DISCONT_DISABLE);
+        
+        /* Set ADC group regular sequence: channel on rank corresponding to       */
+        /* channel number.                                                        */
+        LL_ADC_REG_SetSequencerChannels(ADC1, LL_ADC_CHANNEL_1);
+
+    }    
+        
+    /*## Configuration of ADC hierarchical scope: channels #####################*/
+    
+    /* Note: Hardware constraint (refer to description of the functions         */
+    /*       below):                                                            */
+    /*       On this STM32 serie, setting of these features is conditioned to   */
+    /*       ADC state:                                                         */
+    /*       ADC must be disabled or enabled without conversion on going        */
+    /*       on either groups regular or injected.                              */
+    if ((LL_ADC_IsEnabled(ADC1) == 0)               ||
+        (LL_ADC_REG_IsConversionOngoing(ADC1) == 0)   ) {
+        /* Set ADC channels sampling time */
+        /* Note: On this STM32 serie, sampling time is common to all channels     */
+        /*       of the entire ADC instance.                                      */
+        /*       See sampling time configured above, at ADC instance scope.       */
+        
+    }
+
+    /*## Configuration of ADC interruptions ####################################*/
+    /* Enable interruption ADC group regular end of sequence conversions */
+    LL_ADC_EnableIT_EOS(ADC1);
+    
+    /* Enable interruption ADC group regular overrun */
+    LL_ADC_EnableIT_OVR(ADC1);
+
+}
+
+static void __activate_ADC() {
+    __IO uint32_t wait_loop_index = 0;
+    __IO uint32_t backup_setting_adc_dma_transfer = 0;
+    
+    /*## Operation on ADC hierarchical scope: ADC instance #####################*/
+    
+    /* Note: Hardware constraint (refer to description of the functions         */
+    /*       below):                                                            */
+    /*       On this STM32 serie, setting of these features is conditioned to   */
+    /*       ADC state:                                                         */
+    /*       ADC must be disabled.                                              */
+    /* Note: In this example, all these checks are not necessary but are        */
+    /*       implemented anyway to show the best practice usages                */
+    /*       corresponding to reference manual procedure.                       */
+    /*       Software can be optimized by removing some of these checks, if     */
+    /*       they are not relevant considering previous settings and actions    */
+    /*       in user application.                                               */
+    if (LL_ADC_IsEnabled(ADC1) == 0) {
+        /* Disable ADC DMA transfer request during calibration */
+        /* Note: Specificity of this STM32 serie: Calibration factor is           */
+        /*       available in data register and also transfered by DMA.           */
+        /*       To not insert ADC calibration factor among ADC conversion data   */
+        /*       in array variable, DMA transfer must be disabled during          */
+        /*       calibration.                                                     */
+        backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
+        LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
+        
+        /* Run ADC self calibration */
+        LL_ADC_StartCalibration(ADC1);
+        
+
+        
+        while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0);
+        
+        /* Delay between ADC end of calibration and ADC enable.                   */
+        /* Note: Variable divided by 2 to compensate partially                    */
+        /*       CPU processing cycles (depends on compilation optimization).     */
+        wait_loop_index = (ADC_DELAY_CALIB_ENABLE_CPU_CYCLES >> 1);
+        while(wait_loop_index != 0) {
+            wait_loop_index--;
+        }
+        
+        /* Restore ADC DMA transfer request after calibration */
+        LL_ADC_REG_SetDMATransfer(ADC1, backup_setting_adc_dma_transfer);
+        
+        /* Enable ADC */
+        LL_ADC_Enable(ADC1);
+ 
+        
+        while (LL_ADC_IsActiveFlag_ADRDY(ADC1) == 0);
+        
+        /* Note: ADC flag ADRDY is not cleared here to be able to check ADC       */
+        /*       status afterwards.                                               */
+        /*       This flag should be cleared at ADC Deactivation, before a new    */
+        /*       ADC activation, using function "LL_ADC_ClearFlag_ADRDY()".       */
+    }
+    
+    /*## Operation on ADC hierarchical scope: ADC group regular ################*/
+    /* Note: No operation on ADC group regular performed here.                  */
+    /*       ADC group regular conversions to be performed after this function  */
+    /*       using function:                                                    */
+    /*       "LL_ADC_REG_StartConversion();"                                    */
+    
+    /*## Operation on ADC hierarchical scope: ADC group injected ###############*/
+    /* Note: Feature not available on this STM32 serie */ 
+}
+
+
+initialization_result init_voltage_sensors() {
+    __configure_DMA();
+    __configure_ADC();
+    __activate_ADC();
+
+    __DMA_transfer_status = DMA_TRANSFER_NOT_STARTED;
+
+    if ((LL_ADC_IsEnabled(ADC1) == 1)               &&
+        (LL_ADC_IsDisableOngoing(ADC1) == 0)        &&
+        (LL_ADC_REG_IsConversionOngoing(ADC1) == 0)   ) {
+        LL_ADC_REG_StartConversion(ADC1);
+    }
+  
+  return INITIALIZE_OK;
+}
+
+static uint16_t __main_voltage () {
+    return __adc_values[0] + CORRECTION_VALUE;
+}
+
+static uint16_t __stby_voltage () {
+    return __adc_values[1] + CORRECTION_VALUE;
+}
+
+void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+    uint8_t units;
+    uint8_t decimals;
+
+    // Real conversion ratio is 0.0198840816
+    // Rounded to 0.02  = 1/50 because we don't want any floating point
+    // calculation as this would significantly increase the hex file size
+    // and flash memory use
+    units = voltage / 50;
+    decimals = (voltage % 50) * 2;
+
+    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
+    buffer[1] = 48 + units % 10;
+    buffer[2] = '.';
+    buffer[3] = 48 + decimals / 10;
+    buffer[4] = 48 + decimals % 10;
+    buffer[5] = 'V';
+}
+
+static uint16_t main_16ms_sum = 0;
+static uint8_t main_16ms_counter = 0;
+
+static uint16_t stby_16ms_sum = 0;
+static uint8_t stby_16ms_counter = 0;
+
+static uint32_t main_16s_sum = 0;
+static uint16_t main_16s_counter = 0;
+
+static uint32_t stby_16s_sum = 0;
+static uint16_t stby_16s_counter = 0;
+
+void voltage_sensor_loop() {
+    uint16_t main_voltage = __main_voltage();
+    uint16_t stby_voltage = __stby_voltage();
+    // uint16_t main_voltage = 332;
+    // uint16_t stby_voltage = 200;
+
+    main_power_source.current_voltage_ADC_value = main_voltage;
+    stby_power_source.current_voltage_ADC_value = stby_voltage;
+
+    main_16ms_sum += main_voltage;
+    main_16ms_counter++;
+    if (main_16ms_counter == 16) {
+        main_16ms_counter = 0;
+        main_power_source.last_16ms_average_voltage_ADC_value = main_16ms_sum >> 4;    // divide by 16
+        main_16ms_sum = 0;
+    }
+    
+    stby_16ms_sum += stby_voltage;
+    stby_16ms_counter++;
+    if (stby_16ms_counter == 16) {
+        stby_16ms_counter = 0;
+        stby_power_source.last_16ms_average_voltage_ADC_value = stby_16ms_sum >> 4;
+        stby_16ms_sum = 0;
+    }
+    main_16s_sum += main_voltage;
+    main_16s_counter++;
+    if (main_16s_counter == 0x4000) {       // = 16384 => 16.384 sec.
+        main_16s_counter = 0;
+        main_power_source.last_16s_average_voltage_ADC_value = main_16s_sum >> 14;      // divide by 16384
+        main_16s_sum = 0;
+    }
+    
+    stby_16s_sum += stby_voltage;
+    stby_16s_counter++;
+    if (stby_16s_counter == 0x4000) {
+        stby_16s_counter = 0;
+        stby_power_source.last_16s_average_voltage_ADC_value = stby_16s_sum >> 14;
+        stby_16s_sum = 0;
+    }
+}
+
+uint16_t ADCxConvertedData;
+
+// void AdcGrpRegularUnitaryConvComplete_Callback()
+// {
+//   /* Retrieve ADC conversion data */
+//   /* (data maximum amplitude corresponds to ADC resolution: 12 bits) */
+// //   __adc_values[0] = LL_ADC_REG_ReadConversionData12(ADC1);
+  
+//   /* Computation of ADC conversions raw data to physical values               */
+//   /* using LL ADC driver helper macro.                                        */
+// //   uhADCxConvertedData_Voltage_mVolt = __LL_ADC_CALC_DATA_TO_VOLTAGE(VDDA_APPLI, uhADCxConvertedData, LL_ADC_RESOLUTION_10B);
+  
+//   /* Update status variable of ADC unitary conversion */
+// //   ubAdcGrpRegularUnitaryConvStatus = 1;
+  
+// }
+
+void AdcGrpRegularOverrunError_Callback() {
+  /* Note: Disable ADC interruption that caused this error before entering in */
+  /*       infinite loop below.                                               */
+  
+  /* Disable ADC group regular overrun interruption */
+    // LL_ADC_DisableIT_OVR(ADC1);
+  
+  /* Error from ADC */
+      LL_ADC_DisableIT_OVR(ADC1);
+    // leds_show_error();  
+}
+
+void AdcDmaTransferComplete_Callback() {
+    __DMA_transfer_status = DMA_TRANSFER_COMPLETED;
+    /* For this example purpose, check that DMA transfer status is matching     */
+    /* ADC group regular sequence status:                                       */
+    if (__ADC_group_regular_sequence_conversion_status != ADC_SEQ_CONV_COMPLETED) {
+        AdcDmaTransferError_Callback();
+    }
+    
+    /* Reset status variable of ADC group regular sequence */
+    __ADC_group_regular_sequence_conversion_status = ADC_SEQ_CONV_NOT_COMPLETED;
+}
+
+void AdcDmaTransferError_Callback() {
+    // leds_show_error();
+}
+
+/**
+  * @brief  ADC group regular end of sequence conversions interruption callback
+  * @note   This function is executed when the ADC group regular 
+  *         sequencer has converted all ranks of the sequence.
+  * @retval None
+  */
+void AdcGrpRegularSequenceConvComplete_Callback() {
+  /* Update status variable of ADC group regular sequence */
+  __ADC_group_regular_sequence_conversion_status = 1;
+  __ADC_group_regular_sequence_conversion_count++;
+}

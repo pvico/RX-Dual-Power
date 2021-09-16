@@ -1,5 +1,6 @@
 #include "main_loop.h"
 #include "led.h"
+#include "button.h"
 #include "magnet.h"
 #include "gpio.h"
 #include <stm32l021xx.h>
@@ -19,19 +20,22 @@ extern volatile bool timer_flag;
 void main_loop() {
 
   if (timer_flag) {
-
+    
     // ############## 1ms loop #################
 
-    HAL_WWDG_Refresh(&hwwdg);
-
+    // refresh Watchdog
+    LL_WWDG_SetCounter(WWDG, 0x7F);
+    button_loop();
     magnet_loop();
     button_loop();
     leds_loop();
     voltage_sensor_loop();
     power_source_loop();
     switching_logic_loop();
-    telemetry_loop();
     system_loop();
+#ifdef TELEMETRY_ENABLED
+    telemetry_loop();
+#endif
 
     // ############ end 1ms loop ###############
 
@@ -39,7 +43,7 @@ void main_loop() {
   }
 
   // debug_console display only if CONSOLE_OUTPUT is defined in config.h
-  // if (rough_quarter_second_tick()) {
+  // if (rough_second_tick()) {
   //   debug_console_print_voltages();   
   // }
     

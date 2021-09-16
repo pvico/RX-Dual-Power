@@ -7,6 +7,13 @@
         "random": "c",
         "limits": "c",
         "algorithm": "c",
-        "power_source.h": "c"
+        "power_source.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "stm32l0xx_ll_tim.h": "c",
+        "telemetry.h": "c",
+        "s_port.h": "c",
+        "button.h": "c"
     }
 }

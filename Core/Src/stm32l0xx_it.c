@@ -24,7 +24,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "voltage_sensor.h"
 #include "telemetry.h"
+#include "s_port.h"
+#include "led.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,8 +49,6 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern volatile bool timer_flag;
-extern volatile uint32_t IDLE_counter;
-extern uint8_t* receive_buffer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,8 +63,6 @@ extern uint8_t* receive_buffer;
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc;
-extern TIM_HandleTypeDef htim21;
-extern DMA_HandleTypeDef hdma_usart2_rx;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
@@ -133,7 +133,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+  timer_flag = true;
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -156,8 +156,17 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
 
   /* USER CODE END EXTI0_1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_0) != RESET)
+  {
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_0);
+    /* USER CODE BEGIN LL_EXTI_LINE_0 */
+    /* USER CODE END LL_EXTI_LINE_0 */
+  }
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
+
+  //DEBUG
+  // CLEAR_BIT((LED2_GPIO_Port->ODR), (LED2_Pin));
+  // for (size_t i = 0; i < 32000; i++);
 
   /* USER CODE END EXTI0_1_IRQn 1 */
 }
@@ -177,40 +186,20 @@ void DMA1_Channel1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles DMA1 channel 2 and channel 3 interrupts.
-  */
-void DMA1_Channel2_3_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
-
-  /* USER CODE END DMA1_Channel2_3_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart2_rx);
-  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
-
-  /* USER CODE END DMA1_Channel2_3_IRQn 1 */
-}
-
-/**
-  * @brief This function handles TIM21 global interrupt.
-  */
-void TIM21_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM21_IRQn 0 */
-  timer_flag = 1;
-  /* USER CODE END TIM21_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim21);
-  /* USER CODE BEGIN TIM21_IRQn 1 */
-
-  /* USER CODE END TIM21_IRQn 1 */
-}
-
-/**
   * @brief This function handles USART2 global interrupt / USART2 wake-up interrupt through EXTI line 26.
   */
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-
+  // if(LL_USART_IsActiveFlag_RXNE(USART2) && LL_USART_IsEnabledIT_RXNE(USART2)) {
+  //   /* RXNE flag will be cleared by reading of RDR register (done in call) */
+  //   /* Call function in charge of handling Character reception */
+  //   USART_CharReception_Callback();
+  // } else {
+  //   /* Call Error function */
+  //   Error_Callback();
+  // }
+  uart_receive_byte_callback();
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */

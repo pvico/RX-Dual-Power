@@ -9,28 +9,32 @@
 #include "button.h"
 
 
-extern UART_HandleTypeDef huart2;
+// extern UART_HandleTypeDef huart2;
 
 static void __set_not_needed_gpio_pins_to_analog() {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 
     GPIO_InitStruct.Pin = SW1_Pin;
-    HAL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);    
-
+    LL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
+    
     GPIO_InitStruct.Pin = LED2_Pin;
-    HAL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);    
+    LL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = STAT_STBY_Pin;
-    HAL_GPIO_Init(STAT_STBY_GPIO_Port, &GPIO_InitStruct);    
+    LL_GPIO_Init(STAT_STBY_GPIO_Port, &GPIO_InitStruct);
+
+
 
 #ifndef DEBUG_SWD_ENABLED
     GPIO_InitStruct.Pin = LED1_Pin;
-    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);      
+    LL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);         
 #endif
 
-    HAL_UART_MspDeInit(&huart2);
+    // HAL_UART_MspDeInit(&huart2);
+    // TODO in LL ?
 }
 
 static void __system_stop_mode() {
@@ -41,9 +45,14 @@ static void __system_stop_mode() {
 
     __set_not_needed_gpio_pins_to_analog();
     
-    HAL_SuspendTick();
+    LL_SYSTICK_DisableIT();
+
     // Stop now
-    HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+    LL_PWR_EnableUltraLowPower();
+    LL_PWR_SetRegulModeLP(LL_PWR_REGU_LPMODES_LOW_POWER);
+    LL_PWR_SetPowerMode(LL_PWR_MODE_STOP);
+    LL_LPM_EnableDeepSleep(); 
+    __WFI();
     // in stop mode here, will resume below when EXTI interrupt
 
     // Out of stop mode, restart the system

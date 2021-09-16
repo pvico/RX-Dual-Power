@@ -1,7 +1,7 @@
 #include "initialize.h"
 #include "led.h"
+#include "button.h"
 #include "voltage_sensor.h"
-#include "tim.h"
 #include "output_control.h"
 #include "debug_console.h"
 #include "power_source.h"
@@ -10,59 +10,73 @@
 #include <wwdg.h>
 #include "config.h"
 #include <usart.h>
+#include <gpio.h>
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 extern switching_states switching_state;
-extern volatile uint32_t IDLE_counter;
 
 
   // Re-configure SWD pins if not in debug mode
 static void __normal_SWD_pins_GPIO_init() {
 #ifndef DEBUG_SWD_ENABLED
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  
-  GPIO_InitStruct.Pin = LED1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = SW2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(SW2_GPIO_Port, &GPIO_InitStruct);
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  GPIO_InitStruct.Pin = LED1_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+
+  LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE14);
+  LL_GPIO_SetPinPull(SW2_GPIO_Port, SW2_Pin, LL_GPIO_PULL_UP);
+  LL_GPIO_SetPinMode(SW2_GPIO_Port, SW2_Pin, LL_GPIO_MODE_INPUT);
+
+  // Set interrupt for SW2 pin
+  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_14;
+  EXTI_InitStruct.LineCommand = ENABLE;
+  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
+  LL_EXTI_Init(&EXTI_InitStruct);
+  NVIC_SetPriority(EXTI4_15_IRQn, 0);
+  NVIC_EnableIRQ(EXTI4_15_IRQn);
+
 #endif // DEBUG_SWD_ENABLED
 }
 
 void initialize() {
 
 #ifdef DEBUG_SWD_ENABLED
-  __HAL_DBGMCU_FREEZE_WWDG();
-  __HAL_DBGMCU_FREEZE_IWDG();
+  // Disable watchdog timer for debugging
+  SET_BIT(DBGMCU->APB1FZ, DBGMCU_APB1_FZ_DBG_WWDG_STOP);
 #endif
 
-  main_power_source.state = MAIN_PWR_ON_STBY_OK;
+  // Enable the Systick interrupt
+  LL_SYSTICK_EnableIT();
 
-  IDLE_counter = 0;
+  main_power_source.state = MAIN_PWR_ON_STBY_OK;
 
   // Whatever event brings us here, normal power on, wathchdog reset or spurious reset due to low voltage,
   // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
   // the model is powered up
-
   power_on();
   
+  // Configure the SWD GPIO pin in function of debug state
   __normal_SWD_pins_GPIO_init();
   
   // debug_console_print_splash();
 
-  HAL_TIM_Base_Start_IT(&htim21);
-
-
-  if (init_voltage_sensors() == INITIALIZE_NOT_OK || 
+  if (init_buttons() == INITIALIZE_NOT_OK ||
+      init_voltage_sensors() == INITIALIZE_NOT_OK || 
       init_power_sources() == INITIALIZE_NOT_OK ||
-      init_leds() == INITIALIZE_NOT_OK ||
-      init_telemetry() == INITIALIZE_NOT_OK)
+      init_leds() == INITIALIZE_NOT_OK
+#ifdef TELEMETRY_ENABLED
+      || init_telemetry() == INITIALIZE_NOT_OK
+#endif                                          
+      )
   {
     leds_show_error();
     // debug_console_print_initialization_error();

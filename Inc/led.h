@@ -3,6 +3,7 @@
 
 #include <stm32l021xx.h>
 #include "initialize.h"
+#include "config.h"
 
 #define LED_BLINK_SLOW_PERIOD_MILLIS    1000
 #define LED_BLINK_FAST_PERIOD_MILLIS    50
@@ -20,6 +21,7 @@ typedef enum leds {LED2} led;
 initialization_result init_leds();
 
 void leds_show_error();
+void leds_show_error_infinite_loop();
 
 void leds_loop();
 
