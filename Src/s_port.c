@@ -17,7 +17,6 @@ extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 extern switching_states switching_state;
 extern uint8_t* transmit_buffer;
-extern UART_HandleTypeDef huart2;
 extern volatile bool requested_to_transmit_data ;
 
 
@@ -35,37 +34,13 @@ static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
 
 initialization_result init_s_port() {
 
-    // LL_TIM_EnableIT_CC1(TIM21);
-
-    // receive_buffer = malloc(S_PORT_RECEIVE_BUFFER_SIZE);
     transmit_buffer = malloc(S_PORT_TRANSMIT_BUFFER_SIZE);
-    // if (receive_buffer == NULL || transmit_buffer == NULL) {
     if (transmit_buffer == NULL) {
         return INITIALIZE_NOT_OK;
     }
-    // Invert signal level§
-    // LL_USART_Disable(USART2);
-    // LL_USART_SetRXPinLevel(USART2, LL_USART_RXPIN_LEVEL_INVERTED);
-    // LL_USART_SetTXPinLevel(USART2, LL_USART_TXPIN_LEVEL_INVERTED);
-    // LL_USART_Enable(USART2);
-    // LL_USART_EnableHalfDuplex(USART2);
 
-    // while((!(LL_USART_IsActiveFlag_TEACK(USART2))) || (!(LL_USART_IsActiveFlag_REACK(USART2))));
-
-    // LL_USART_EnableIT_RXNE(USART2);
-    // LL_USART_EnableIT_ERROR(USART2);
-
-    // huart2.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
-    // huart2.AdvancedInit.TxPinLevelInvert = UART_ADVFEATURE_TXINV_ENABLE;
-    // if (HAL_HalfDuplex_Init(&huart2) != HAL_OK) {
-    //     Error_Handler();
-    // }
-    HAL_HalfDuplex_EnableReceiver(&huart2);
-    // s_port_receive();
-    // TODO: in LL
-    // HAL_UART_Receive_DMA(&huart2, receive_buffer, S_PORT_RECEIVE_BUFFER_SIZE); 
-    // HAL_UART_Receive_IT(&huart2, receive_buffer, 2);
-    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+    LL_USART_EnableHalfDuplex(USART2);
+    LL_USART_EnableIT_RXNE(USART2);
 
     return INITIALIZE_OK;
 }
@@ -113,9 +88,16 @@ void s_port_loop() {
             data_type = SPORT_DATA_BATT1_MILLIVOLTS;
         }
 
-        HAL_HalfDuplex_EnableTransmitter(&huart2);
-        HAL_UART_Transmit(&huart2, transmit_buffer, S_PORT_TRANSMIT_BUFFER_SIZE, 10);
-        HAL_HalfDuplex_EnableReceiver(&huart2);
+        LL_USART_DisableDirectionRx(USART2);
+        LL_USART_EnableDirectionTx(USART2);
+        
+        for (size_t i = 0; i < S_PORT_TRANSMIT_BUFFER_SIZE; i++) {
+            LL_USART_TransmitData8(USART2, transmit_buffer[i]);
+            while (!LL_USART_IsActiveFlag_TXE(USART2));
+        }
+
+        LL_USART_DisableDirectionTx(USART2);
+        LL_USART_EnableDirectionRx(USART2);
     }
 }
 
@@ -123,9 +105,8 @@ void s_port_uart_receive_byte_callback() {
     static bool poll_first_byte_detected = false;
     uint8_t byte;
 
-    if (huart2.Instance->ISR & UART_FLAG_RXNE) {
-        byte = huart2.Instance->RDR;
-
+    if (LL_USART_IsActiveFlag_RXNE(USART2)) {
+        byte = LL_USART_ReceiveData8(USART2);
         if (byte == 0x7E) {
             poll_first_byte_detected = true;
         } else if (poll_first_byte_detected) {

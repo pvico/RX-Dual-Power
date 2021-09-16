@@ -63,7 +63,6 @@ extern volatile bool timer_flag;
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc;
-extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -204,17 +203,8 @@ void TIM21_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-  // if(LL_USART_IsActiveFlag_RXNE(USART2) && LL_USART_IsEnabledIT_RXNE(USART2)) {
-  //   /* RXNE flag will be cleared by reading of RDR register (done in call) */
-  //   /* Call function in charge of handling Character reception */
-  //   USART_CharReception_Callback();
-  // } else {
-  //   /* Call Error function */
-  //   Error_Callback();
-  // }
   uart_receive_byte_callback();
   /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */
