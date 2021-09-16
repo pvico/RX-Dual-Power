@@ -25,6 +25,9 @@ void main_loop() {
 
     // refresh Watchdog
     LL_WWDG_SetCounter(WWDG, 0x7F);
+#ifdef TELEMETRY_ENABLED
+    telemetry_loop();
+#endif
     button_loop();
     magnet_loop();
     button_loop();
@@ -33,9 +36,6 @@ void main_loop() {
     power_source_loop();
     switching_logic_loop();
     system_loop();
-#ifdef TELEMETRY_ENABLED
-    telemetry_loop();
-#endif
 
     // ############ end 1ms loop ###############
 

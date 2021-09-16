@@ -6,13 +6,12 @@
 
 #define S_PORT_TRANSMIT_BUFFER_SIZE 8
 
-#define S_PORT_DEVICE_ID_WITH_CRC 0xBA
+// FrSky Redundancy Box id
+#define S_PORT_DEVICE_ID_WITH_CRC 0x39
 
 initialization_result init_s_port();
 
 void s_port_loop();
-
-void s_port_receive();
 
 void s_port_uart_receive_byte_callback();
 

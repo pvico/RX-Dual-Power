@@ -11,8 +11,6 @@ void telemetry_loop();
 
 void Error_Callback();
 
-// void telemetry_receive();
-
 void uart_receive_byte_callback();
 
 #endif /* AC7A9D5F_7A56_4238_9A65_B68D910343AB */
