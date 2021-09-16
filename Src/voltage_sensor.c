@@ -23,12 +23,16 @@ initialization_result init_voltage_sensors() {
     return INITIALIZE_OK;
 }
 
-static uint16_t __main_voltage () {
+static uint16_t __main_voltage() {
     return __adc_values[0] + CORRECTION_VALUE;
 }
 
-static uint16_t __stby_voltage () {
+static uint16_t __stby_voltage() {
     return __adc_values[1] + CORRECTION_VALUE;
+}
+
+uint16_t voltage_ADC_to_millivolts(uint16_t adc_value) {
+    return  20 * adc_value;
 }
 
 void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
@@ -50,17 +54,6 @@ void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
     buffer[5] = 'V';
 }
 
-static uint16_t main_16ms_sum = 0;
-static uint8_t main_16ms_counter = 0;
-
-static uint16_t stby_16ms_sum = 0;
-static uint8_t stby_16ms_counter = 0;
-
-static uint32_t main_16s_sum = 0;
-static uint16_t main_16s_counter = 0;
-
-static uint32_t stby_16s_sum = 0;
-static uint16_t stby_16s_counter = 0;
 
 void voltage_sensor_loop() {
     uint16_t main_voltage = __main_voltage();
@@ -69,6 +62,9 @@ void voltage_sensor_loop() {
     main_power_source.current_voltage_ADC_value = main_voltage;
     stby_power_source.current_voltage_ADC_value = stby_voltage;
 
+    static uint16_t main_16ms_sum = 0;
+    static uint8_t main_16ms_counter = 0;
+
     main_16ms_sum += main_voltage;
     main_16ms_counter++;
     if (main_16ms_counter == 16) {
@@ -76,7 +72,10 @@ void voltage_sensor_loop() {
         main_power_source.last_16ms_average_voltage_ADC_value = main_16ms_sum >> 4;    // divide by 16
         main_16ms_sum = 0;
     }
-    
+
+    static uint16_t stby_16ms_sum = 0;
+    static uint8_t stby_16ms_counter = 0;
+
     stby_16ms_sum += stby_voltage;
     stby_16ms_counter++;
     if (stby_16ms_counter == 16) {
@@ -84,6 +83,10 @@ void voltage_sensor_loop() {
         stby_power_source.last_16ms_average_voltage_ADC_value = stby_16ms_sum >> 4;
         stby_16ms_sum = 0;
     }
+    
+    static uint32_t main_16s_sum = 0;
+    static uint16_t main_16s_counter = 0;
+
     main_16s_sum += main_voltage;
     main_16s_counter++;
     if (main_16s_counter == 0x4000) {       // = 16384 => 16.384 sec.
@@ -91,6 +94,9 @@ void voltage_sensor_loop() {
         main_power_source.last_16s_average_voltage_ADC_value = main_16s_sum >> 14;      // divide by 16384
         main_16s_sum = 0;
     }
+
+    static uint32_t stby_16s_sum = 0;
+    static uint16_t stby_16s_counter = 0;
     
     stby_16s_sum += stby_voltage;
     stby_16s_counter++;

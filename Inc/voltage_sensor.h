@@ -21,6 +21,7 @@ initialization_result init_voltage_sensors();
 // In continuous conversion with DMA, we will have multiple conversions performed
 // between each 1ms loop iteration
 
+uint16_t voltage_ADC_to_millivolts(uint16_t adc_value);
 void voltage_to_str(uint32_t voltage, uint8_t *buffer);
 
 void voltage_sensor_loop();

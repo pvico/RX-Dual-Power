@@ -19,15 +19,16 @@ extern volatile bool timer_flag;
 
 void main_loop() {
 
+#ifdef TELEMETRY_ENABLED
+  telemetry_loop();
+#endif
+
   if (timer_flag) {
     
     // ############## 1ms loop #################
 
     // refresh Watchdog
     LL_WWDG_SetCounter(WWDG, 0x7F);
-#ifdef TELEMETRY_ENABLED
-    telemetry_loop();
-#endif
     button_loop();
     magnet_loop();
     button_loop();

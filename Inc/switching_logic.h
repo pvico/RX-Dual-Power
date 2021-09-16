@@ -3,17 +3,17 @@
 
 
 
-typedef enum { MAIN_PWR_ON_STBY_OK,
-               MAIN_PWR_ON_STBY_LOW,
-               STBY_PWR_ON_MAIN_LOW,
-               MAIN_PWR_ON_STBY_DISCONNECT_OR_BAD_CONTACT,
-               STBY_PWR_ON_MAIN_DISCONNECTED_OR_BAD_CONTACT,
-               MAIN_PWR_ON_MAIN_BAD_CONTACT,
-               STBY_PWR_ON_STBY_BAD_CONTACT,
-               CRITICAL_MAIN_LOW_STBY_LOW,
-               CRITICAL_MAIN_LOW_STBY_DISCONNECT_OR_BAD_CONTACT,
-               CRITICAL_STBY_LOW_MAIN_DISCONNECT_OR_BAD_CONTACT,
-               CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT
+typedef enum { MAIN_PWR_ON_STBY_OK,                                                     // RBOX RBCS CH01
+               MAIN_PWR_ON_STBY_LOW,                                                    // RBOX RBCS CH02
+               STBY_PWR_ON_MAIN_LOW,                                                    // RBOX RBCS CH03
+               MAIN_PWR_ON_STBY_DISCONNECT_OR_BAD_CONTACT,                              // RBOX RBCS CH04
+               STBY_PWR_ON_MAIN_DISCONNECTED_OR_BAD_CONTACT,                            // RBOX RBCS CH05
+               MAIN_PWR_ON_MAIN_BAD_CONTACT,                                            // RBOX RBCS CH06
+               STBY_PWR_ON_STBY_BAD_CONTACT,                                            // RBOX RBCS CH07
+               CRITICAL_MAIN_LOW_STBY_LOW,                                              // RBOX RBCS CH08
+               CRITICAL_MAIN_LOW_STBY_DISCONNECT_OR_BAD_CONTACT,                        // RBOX RBCS CH09
+               CRITICAL_STBY_LOW_MAIN_DISCONNECT_OR_BAD_CONTACT,                        // RBOX RBCS CH10
+               CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT   // RBOX RBCS CH11
                } switching_states;
 
 void switching_logic_loop();

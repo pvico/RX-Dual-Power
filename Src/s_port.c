@@ -3,12 +3,18 @@
 #include <usart.h>
 #include <stm32l0xx.h>
 // #include <stm32l0xx_ll_usart.h>
+// #include <stm32l0xx_ll_tim.h>
 #include "usart.h"
 #include <string.h>
 #include "led.h"
+#include "power_source.h"
+#include "voltage_sensor.h"
+#include "switching_logic.h"
+#include "tim.h"
 
-
-// extern uint8_t* receive_buffer;
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
+extern switching_states switching_state;
 extern uint8_t* transmit_buffer;
 extern UART_HandleTypeDef huart2;
 extern volatile bool requested_to_transmit_data ;
@@ -27,6 +33,9 @@ static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
 }
 
 initialization_result init_s_port() {
+
+    // LL_TIM_EnableIT_CC1(TIM21);
+
     // receive_buffer = malloc(S_PORT_RECEIVE_BUFFER_SIZE);
     transmit_buffer = malloc(S_PORT_TRANSMIT_BUFFER_SIZE);
     // if (receive_buffer == NULL || transmit_buffer == NULL) {
@@ -61,41 +70,51 @@ initialization_result init_s_port() {
 }
 
 void s_port_loop() {
-    static bool flipflop = false;
+    static s_port_data_type data_type = SPORT_DATA_BATT1_MILLIVOLTS;
+    uint16_t milliV;
+    uint16_t state;
     
-    memset(transmit_buffer, 0, S_PORT_TRANSMIT_BUFFER_SIZE);
-
-    if (flipflop) {
-        transmit_buffer[0] = 0x10;       
-        transmit_buffer[1] = 0x00;      // first ID
-        transmit_buffer[2] = 0x0B;      // RBOX BATT1
-        // The voltage value is in mV
-        transmit_buffer[3] = 0x00;      // Voltage LSB
-        transmit_buffer[4] = 0x20;      // Voltage MSB
-        // leave the following current bytes at 0
-        // transmit_buffer[5] = 0x00;      // Current LSB
-        // transmit_buffer[6] = 0x00;      // Current MSB
-
-    } else {
-        transmit_buffer[0] = 0x10;
-        transmit_buffer[1] = 0x10;      // first ID
-        transmit_buffer[2] = 0x0B;      // RBOX BATT2
-        transmit_buffer[3] = 0xC0;
-        transmit_buffer[4] = 0x00;
-        // transmit_buffer[5] = 0x00;
-        // transmit_buffer[6] = 0x00;
-    }
-    transmit_buffer[7] = __compute_FrSky_CRC(transmit_buffer);
-    flipflop = !flipflop;
-
     if (requested_to_transmit_data) {
         requested_to_transmit_data = false;
-        // transmit LSB first
-        // 
+
+        memset(transmit_buffer, 0, S_PORT_TRANSMIT_BUFFER_SIZE);
+
+        switch (data_type++) {
+        case SPORT_DATA_BATT1_MILLIVOLTS:
+            milliV = voltage_ADC_to_millivolts(main_power_source.last_16ms_average_voltage_ADC_value);
+            transmit_buffer[0] = 0x10;       
+            transmit_buffer[1] = 0x00;      // first ID
+            transmit_buffer[2] = 0x0B;      // RBOX BATT1
+            memcpy(transmit_buffer+3, &milliV, 2);  // bytes 3 & 4 are the voltage in mV
+            // leave the bytes 5 & 6 at 0 (current bytes)
+            break;
+        case SPORT_DATA_BATT2_MILLIVOLTS:
+            milliV = voltage_ADC_to_millivolts(stby_power_source.last_16ms_average_voltage_ADC_value);
+            transmit_buffer[0] = 0x10;
+            transmit_buffer[1] = 0x10;      // first ID
+            transmit_buffer[2] = 0x0B;      // RBOX BATT2
+            memcpy(transmit_buffer+3, &milliV, 2);
+            break;
+        case SPORT_DATA_STATE:
+            // state = switching_state;
+            state = 1 << switching_state;   // switching state appears as CH01..CH11 in OpenTX telemetry screen
+            transmit_buffer[0] = 0x10;
+            transmit_buffer[1] = 0x20;      // first ID
+            transmit_buffer[2] = 0x0B;      // RBOX STATE
+            memcpy(transmit_buffer+3, &state, 2);
+            break;
+        default:
+            break;
+        }
+        transmit_buffer[7] = __compute_FrSky_CRC(transmit_buffer);
+
+        if (data_type > SPORT_DATA_STATE) {
+            data_type = SPORT_DATA_BATT1_MILLIVOLTS;
+        }
+
         HAL_HalfDuplex_EnableTransmitter(&huart2);
         HAL_UART_Transmit(&huart2, transmit_buffer, S_PORT_TRANSMIT_BUFFER_SIZE, 10);
         HAL_HalfDuplex_EnableReceiver(&huart2);
-        __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
     }
 }
 
@@ -111,8 +130,24 @@ void s_port_uart_receive_byte_callback() {
         } else if (poll_first_byte_detected) {
             poll_first_byte_detected = false;
             if (byte == S_PORT_DEVICE_ID_WITH_CRC) {
-                requested_to_transmit_data = true;
+                HAL_TIM_Base_Start_IT(&htim21);
+                // LL_TIM_EnableCounter(TIM21);
             }
         }        
+    }
+}
+
+// void s_port_response_timer_callback() {
+//     // LL_TIM_DisableCounter(TIM21);
+//     // LL_TIM_SetCounter(TIM21, 400);
+//     requested_to_transmit_data = true;
+//     // HAL_TIM_Base_Stop_IT(%htim21);
+//     // HAL_TIM_
+// }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim == &htim21) {
+        HAL_TIM_Base_Stop_IT(&htim21);
+        requested_to_transmit_data = true;
     }
 }

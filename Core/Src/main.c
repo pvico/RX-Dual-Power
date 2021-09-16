@@ -21,6 +21,7 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "tim.h"
 #include "usart.h"
 #include "wwdg.h"
 #include "gpio.h"
@@ -95,6 +96,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_WWDG_Init();
   MX_ADC_Init();
+  MX_TIM21_Init();
   /* USER CODE BEGIN 2 */
   initialize();
   /* USER CODE END 2 */
@@ -139,7 +141,7 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_2);
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
@@ -149,7 +151,7 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_SetSystemCoreClock(8000000);
+  LL_SetSystemCoreClock(16000000);
 
    /* Update the time base */
   if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
