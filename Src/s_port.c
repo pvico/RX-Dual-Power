@@ -3,7 +3,8 @@
 #include <usart.h>
 #include <stm32l0xx.h>
 // #include <stm32l0xx_ll_usart.h>
-// #include <stm32l0xx_ll_tim.h>
+#include <stm32l0xx_ll_tim.h>
+#include <stm32l021xx.h>
 #include "usart.h"
 #include <string.h>
 #include "led.h"
@@ -130,24 +131,19 @@ void s_port_uart_receive_byte_callback() {
         } else if (poll_first_byte_detected) {
             poll_first_byte_detected = false;
             if (byte == S_PORT_DEVICE_ID_WITH_CRC) {
-                HAL_TIM_Base_Start_IT(&htim21);
-                // LL_TIM_EnableCounter(TIM21);
+                LL_TIM_ClearFlag_UPDATE(TIM21);
+                LL_TIM_EnableIT_UPDATE(TIM21);
+                LL_TIM_SetCounter(TIM21, 0);
+                LL_TIM_EnableCounter(TIM21);
+
             }
         }        
     }
 }
 
-// void s_port_response_timer_callback() {
-//     // LL_TIM_DisableCounter(TIM21);
-//     // LL_TIM_SetCounter(TIM21, 400);
-//     requested_to_transmit_data = true;
-//     // HAL_TIM_Base_Stop_IT(%htim21);
-//     // HAL_TIM_
-// }
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    if (htim == &htim21) {
-        HAL_TIM_Base_Stop_IT(&htim21);
-        requested_to_transmit_data = true;
-    }
+void s_port_response_timer_callback() {
+    requested_to_transmit_data = true;
+    LL_TIM_DisableIT_UPDATE(TIM21);
+    LL_TIM_DisableCounter(TIM21);
 }
+

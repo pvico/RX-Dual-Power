@@ -12,8 +12,7 @@
                 "GPIOB",
                 "EXTI",
                 "USART2",
-                "USE_HAL_UART_REGISTER_CALLBACKS",
-                "USE_HAL_TIM_REGISTER_CALLBACKS"
+                "USE_HAL_UART_REGISTER_CALLBACKS"
             ],
             "macFrameworkPath": [],
             "compilerPath": "/usr/local/bin/gcc-11",
