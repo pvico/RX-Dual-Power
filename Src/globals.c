@@ -14,3 +14,4 @@ telemetry_types telemetry_type;
 uint8_t* receive_buffer = NULL;
 uint8_t* transmit_buffer = NULL;
 button *buttons;
+uint32_t adc_values[2] = {0};

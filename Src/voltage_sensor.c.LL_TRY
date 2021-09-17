@@ -21,7 +21,7 @@ static __IO dma_transfer_status __DMA_transfer_status = DMA_TRANSFER_NOT_STARTED
 static __IO adc_sequence_conversion_status __ADC_group_regular_sequence_conversion_status = ADC_SEQ_CONV_NOT_COMPLETED;
 static __IO uint32_t __ADC_group_regular_sequence_conversion_count = 0;
 
-static __IO uint32_t __adc_values[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};
+static __IO uint32_t adc_values[ADC_CONVERTED_DATA_BUFFER_SIZE] = {0};
 
 
 static void __configure_DMA() {
@@ -47,7 +47,7 @@ static void __configure_DMA() {
     LL_DMA_ConfigAddresses(DMA1,
                             LL_DMA_CHANNEL_1,
                             LL_ADC_DMA_GetRegAddr(ADC1, LL_ADC_DMA_REG_REGULAR_DATA),
-                            (uint32_t)&__adc_values,
+                            (uint32_t)&adc_values,
                             LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
 
     LL_DMA_SetDataLength(DMA1,
@@ -310,11 +310,11 @@ initialization_result init_voltage_sensors() {
 }
 
 static uint16_t __main_voltage () {
-    return __adc_values[0] + CORRECTION_VALUE;
+    return adc_values[0] + CORRECTION_VALUE;
 }
 
 static uint16_t __stby_voltage () {
-    return __adc_values[1] + CORRECTION_VALUE;
+    return adc_values[1] + CORRECTION_VALUE;
 }
 
 void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
@@ -395,7 +395,7 @@ uint16_t ADCxConvertedData;
 // {
 //   /* Retrieve ADC conversion data */
 //   /* (data maximum amplitude corresponds to ADC resolution: 12 bits) */
-// //   __adc_values[0] = LL_ADC_REG_ReadConversionData12(ADC1);
+// //   adc_values[0] = LL_ADC_REG_ReadConversionData12(ADC1);
   
 //   /* Computation of ADC conversions raw data to physical values               */
 //   /* using LL ADC driver helper macro.                                        */

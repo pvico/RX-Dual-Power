@@ -11,6 +11,7 @@
 #include "config.h"
 #include <usart.h>
 #include <gpio.h>
+#include "adc_dma.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -49,6 +50,8 @@ static void __normal_SWD_pins_GPIO_init() {
 
 void initialize() {
 
+init_adc_dma();
+
 #ifdef DEBUG_SWD_ENABLED
   // Disable watchdog timer for debugging
   SET_BIT(DBGMCU->APB1FZ, DBGMCU_APB1_FZ_DBG_WWDG_STOP);
@@ -70,7 +73,6 @@ void initialize() {
   // debug_console_print_splash();
 
   if (init_buttons() == INITIALIZE_NOT_OK ||
-      init_voltage_sensors() == INITIALIZE_NOT_OK || 
       init_power_sources() == INITIALIZE_NOT_OK ||
       init_leds() == INITIALIZE_NOT_OK
 #ifdef TELEMETRY_ENABLED

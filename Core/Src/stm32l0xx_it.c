@@ -28,6 +28,7 @@
 #include "telemetry.h"
 #include "s_port.h"
 #include "led.h"
+#include "adc_dma.h"
 
 /* USER CODE END Includes */
 
@@ -177,9 +178,9 @@ void EXTI0_1_IRQHandler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-  // dma_callback();
+  dma_callback();
   /* USER CODE END DMA1_Channel1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc);
+  // HAL_DMA_IRQHandler(&hdma_adc);
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
 
   /* USER CODE END DMA1_Channel1_IRQn 1 */
@@ -191,9 +192,9 @@ void DMA1_Channel1_IRQHandler(void)
 void ADC1_COMP_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC1_COMP_IRQn 0 */
-
+  adc_callback();
   /* USER CODE END ADC1_COMP_IRQn 0 */
-  HAL_ADC_IRQHandler(&hadc);
+  // HAL_ADC_IRQHandler(&hadc);
   /* USER CODE BEGIN ADC1_COMP_IRQn 1 */
 
   /* USER CODE END ADC1_COMP_IRQn 1 */

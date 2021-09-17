@@ -48,6 +48,7 @@ Src/main_loop.c \
 Src/led.c \
 Src/magnet.c \
 Src/voltage_sensor.c \
+Src/adc_dma.c \
 Src/debug_console.c \
 Src/output_control.c \
 Src/button.c \

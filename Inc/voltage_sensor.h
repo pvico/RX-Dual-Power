@@ -12,7 +12,6 @@
 
 #define CORRECTION_VALUE -2;
 
-initialization_result init_voltage_sensors();
 
 // ADC frequency is 4Mhz (HSI 16MHz, prescaler /4), period 0.25µs
 // ADC conversion time: 43µs

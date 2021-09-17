@@ -95,7 +95,6 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_WWDG_Init();
-  MX_ADC_Init();
   MX_TIM21_Init();
   /* USER CODE BEGIN 2 */
   initialize();
