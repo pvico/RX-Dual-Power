@@ -1,47 +1,174 @@
-/**
-  ******************************************************************************
-  * @file    adc.c
-  * @brief   This file provides code for the configuration
-  *          of the ADC instances.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
 #include "adc.h"
 
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
 
-/* ADC init function */
-void MX_ADC_Init(void)
+static void __DMA_Init(DMA_HandleTypeDef *hdma) {
+  uint32_t tmp;
+  /* Compute the channel index */
+  /* Only one DMA: DMA1 */
+  // hdma->ChannelIndex = (((uint32_t)DMA1_Channel1 - (uint32_t)DMA1_Channel1) / ((uint32_t)DMA1_Channel2 - (uint32_t)DMA1_Channel1)) << 2;
+  hdma->ChannelIndex = 0;
+  hdma->DmaBaseAddress = DMA1;
+  // /* Change DMA peripheral state */
+  // hdma->State = HAL_DMA_STATE_BUSY;
+  /* Get the CR register value */
+  // tmp = hdma->Instance->CCR;
+  tmp = DMA1_Channel1->CCR;
+  /* Clear PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR and MEM2MEM bits */
+  tmp &= ((uint32_t)~(DMA_CCR_PL    | DMA_CCR_MSIZE  | DMA_CCR_PSIZE  |
+                      DMA_CCR_MINC  | DMA_CCR_PINC   | DMA_CCR_CIRC   |
+                      DMA_CCR_DIR   | DMA_CCR_MEM2MEM));
+  /* Prepare the DMA Channel configuration */
+  tmp |=  DMA_PERIPH_TO_MEMORY |
+          DMA_PINC_DISABLE     |
+          DMA_MINC_ENABLE      |
+          DMA_PDATAALIGN_WORD  | 
+          DMA_MDATAALIGN_WORD  |
+          DMA_CIRCULAR         |
+          DMA_PRIORITY_LOW;
+
+  /* Write to DMA Channel CR register */
+  DMA1_Channel1->CCR = tmp;
+  /* Set request selection */
+  if(hdma->Init.Direction != DMA_MEMORY_TO_MEMORY) {
+    /* Write to DMA channel selection register */
+    /* Reset request selection for DMA1 Channelx */
+    DMA1_CSELR->CSELR &= ~(DMA_CSELR_C1S << (0 & 0x1cU));
+    /* Configure request selection for DMA1 Channelx */
+    DMA1_CSELR->CSELR |= (uint32_t) (DMA_REQUEST_0 << (0 & 0x1cU));
+  }
+}
+
+static void __HAL_DMA_DeInit(DMA_HandleTypeDef *hdma)
 {
 
-  /* USER CODE BEGIN ADC_Init 0 */
+  /* Disable the selected DMA Channelx */
+  ((hdma)->Instance->CCR &= ~DMA_CCR_EN);
 
-  /* USER CODE END ADC_Init 0 */
+  /* Compute the channel index */
+  /* DMA1 */
+  hdma->ChannelIndex = (((uint32_t)hdma->Instance - (uint32_t)DMA1_Channel1) / ((uint32_t)DMA1_Channel2 - (uint32_t)DMA1_Channel1)) << 2;
+  hdma->DmaBaseAddress = DMA1;
 
-  ADC_ChannelConfTypeDef sConfig = {0};
+  /* Reset DMA Channel control register */
+  hdma->Instance->CCR  = 0U;
 
-  /* USER CODE BEGIN ADC_Init 1 */
+  /* Clear all flags */
+  hdma->DmaBaseAddress->IFCR = (DMA_ISR_GIF1 << (hdma->ChannelIndex & 0x1cU));
 
-  /* USER CODE END ADC_Init 1 */
-  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  */
+  /* Reset DMA channel selection register */
+  /* DMA1 */
+  DMA1_CSELR->CSELR &= ~(DMA_CSELR_C1S << (hdma->ChannelIndex & 0x1cU));
+
+}
+
+
+// void __HAL_ADC_MspInit() {
+
+//   GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+//     /* ADC1 clock enable */
+//     __HAL_RCC_ADC1_CLK_ENABLE();
+
+//     __HAL_RCC_GPIOA_CLK_ENABLE();
+//     /**ADC GPIO Configuration
+//     PA1     ------> ADC_IN1
+//     PA4     ------> ADC_IN4
+//     */
+//     GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_4;
+//     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+//     GPIO_InitStruct.Pull = GPIO_NOPULL;
+//     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+//     /* ADC1 DMA Init */
+//     /* ADC Init */
+//     hdma_adc.Instance = DMA1_Channel1;
+//     hdma_adc.Init.Request = DMA_REQUEST_0;
+//     hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
+//     hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
+//     hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
+//     hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+//     hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+//     hdma_adc.Init.Mode = DMA_CIRCULAR;
+//     hdma_adc.Init.Priority = DMA_PRIORITY_LOW;
+//     if (HAL_DMA_Init(&hdma_adc) != HAL_OK) {
+//       Error_Handler();
+//     }
+
+//     __HAL_LINKDMA(adcHandle,DMA_Handle,hdma_adc);
+
+//     /* ADC1 interrupt Init */
+//     HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 0, 0);
+//     HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
+
+// }
+
+
+// void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
+// {
+
+//   if(adcHandle->Instance==ADC1)
+//   {
+//   /* USER CODE BEGIN ADC1_MspDeInit 0 */
+
+//   /* USER CODE END ADC1_MspDeInit 0 */
+//     /* Peripheral clock disable */
+//     __HAL_RCC_ADC1_CLK_DISABLE();
+
+//     /**ADC GPIO Configuration
+//     PA1     ------> ADC_IN1
+//     PA4     ------> ADC_IN4
+//     */
+//     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1|GPIO_PIN_4);
+
+//     /* ADC1 DMA DeInit */
+//     HAL_DMA_DeInit(adcHandle->DMA_Handle);
+
+//     /* ADC1 interrupt Deinit */
+//     HAL_NVIC_DisableIRQ(ADC1_COMP_IRQn);
+//   /* USER CODE BEGIN ADC1_MspDeInit 1 */
+
+//   /* USER CODE END ADC1_MspDeInit 1 */
+//   }
+// }
+
+
+void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle) {
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  __HAL_RCC_ADC1_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* ADC1 DMA Init */
+  /* ADC Init */
+  hdma_adc.Instance = DMA1_Channel1;
+  hdma_adc.Init.Request = DMA_REQUEST_0;
+  hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+  hdma_adc.Init.Mode = DMA_CIRCULAR;
+  hdma_adc.Init.Priority = DMA_PRIORITY_LOW;
+  __DMA_Init(&hdma_adc);
+
+  (&hadc)->DMA_Handle = &(hdma_adc);
+  (hdma_adc).Parent = (&hadc);
+
+  NVIC_SetPriority(ADC1_COMP_IRQn, 0);
+  NVIC_EnableIRQ(ADC1_COMP_IRQn);
+}
+
+
+void MX_ADC_Init(void) {
   hadc.Instance = ADC1;
   hadc.Init.OversamplingMode = DISABLE;
   hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
@@ -58,111 +185,51 @@ void MX_ADC_Init(void)
   hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc.Init.LowPowerAutoWait = DISABLE;
   hadc.Init.LowPowerFrequencyMode = DISABLE;
-  hadc.Init.LowPowerAutoPowerOff = DISABLE;
-  if (HAL_ADC_Init(&hadc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel to be converted.
-  */
-  sConfig.Channel = ADC_CHANNEL_1;
-  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
-  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel to be converted.
-  */
-  sConfig.Channel = ADC_CHANNEL_4;
-  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC_Init 2 */
+  hadc.Init.LowPowerAutoPowerOff = DISABLE;     // ENABLE ?
 
-  /* USER CODE END ADC_Init 2 */
+  HAL_ADC_MspInit(&hadc);
+
+  __HAL_ADC_CLOCK_PRESCALER(&hadc);
+  ADC1->CFGR1 &= ~( ADC_CFGR1_RES);
+  ADC1->CFGR1 |= ADC_RESOLUTION_10B;    
+  ADC->CCR &= (uint32_t)~ADC_CCR_LFMEN;
+  ADC->CCR |=__HAL_ADC_CCR_LOWFREQUENCY(DISABLE);  
+  if (HAL_IS_BIT_CLR(ADC1->CR, ADC_CR_ADVREGEN)) {
+    /* Set ADVREGEN bit */
+    ADC1->CR |= ADC_CR_ADVREGEN;
+  }
+  ADC1->CFGR1 &= ~(ADC_CFGR1_ALIGN   |
+                              ADC_CFGR1_SCANDIR |
+                              ADC_CFGR1_EXTSEL  |
+                              ADC_CFGR1_EXTEN   |
+                              ADC_CFGR1_CONT    |
+                              ADC_CFGR1_DMACFG  |
+                              ADC_CFGR1_OVRMOD  |
+                              ADC_CFGR1_AUTDLY  |
+                              ADC_CFGR1_AUTOFF  |
+                              ADC_CFGR1_DISCEN   );
+
+  ADC1->CFGR1 |= (ADC_DATAALIGN_RIGHT                         |
+                  ADC_SCANDIR(ADC_SCAN_DIRECTION_FORWARD)     |
+                  ADC_CONTINUOUS((uint32_t)ENABLE)            |
+                  ADC_DMACONTREQ((uint32_t)ENABLE)            |
+                  ADC_OVR_DATA_PRESERVED                      |
+                  __HAL_ADC_CFGR1_AutoDelay(DISABLE)          |
+                  __HAL_ADC_CFGR1_AUTOFF(DISABLE));   // ENABLE ?
+
+  if(HAL_IS_BIT_SET(ADC1->CFGR2, ADC_CFGR2_OVSE)) {
+    /* Disable OverSampling mode if needed */
+    ADC1->CFGR2 &= ~ADC_CFGR2_OVSE;
+  }
+
+  /* Clear the old sampling time */
+  ADC1->SMPR &= (uint32_t)(~ADC_SMPR_SMPR);
+  /* Set the new sample time */
+  ADC1->SMPR |= ADC_SAMPLETIME_160CYCLES_5;
+
+  ADC1->CHSELR |= (uint32_t)(ADC_CHANNEL_1 & ADC_CHANNEL_MASK);
+  ADC1->CHSELR |= (uint32_t)(ADC_CHANNEL_4 & ADC_CHANNEL_MASK);
 
 }
 
-void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
-{
 
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if(adcHandle->Instance==ADC1)
-  {
-  /* USER CODE BEGIN ADC1_MspInit 0 */
-
-  /* USER CODE END ADC1_MspInit 0 */
-    /* ADC1 clock enable */
-    __HAL_RCC_ADC1_CLK_ENABLE();
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**ADC GPIO Configuration
-    PA1     ------> ADC_IN1
-    PA4     ------> ADC_IN4
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_4;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    /* ADC1 DMA Init */
-    /* ADC Init */
-    hdma_adc.Instance = DMA1_Channel1;
-    hdma_adc.Init.Request = DMA_REQUEST_0;
-    hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-    hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
-    hdma_adc.Init.Mode = DMA_CIRCULAR;
-    hdma_adc.Init.Priority = DMA_PRIORITY_LOW;
-    if (HAL_DMA_Init(&hdma_adc) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    __HAL_LINKDMA(adcHandle,DMA_Handle,hdma_adc);
-
-    /* ADC1 interrupt Init */
-    HAL_NVIC_SetPriority(ADC1_COMP_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(ADC1_COMP_IRQn);
-  /* USER CODE BEGIN ADC1_MspInit 1 */
-
-  /* USER CODE END ADC1_MspInit 1 */
-  }
-}
-
-void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
-{
-
-  if(adcHandle->Instance==ADC1)
-  {
-  /* USER CODE BEGIN ADC1_MspDeInit 0 */
-
-  /* USER CODE END ADC1_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_ADC1_CLK_DISABLE();
-
-    /**ADC GPIO Configuration
-    PA1     ------> ADC_IN1
-    PA4     ------> ADC_IN4
-    */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1|GPIO_PIN_4);
-
-    /* ADC1 DMA DeInit */
-    HAL_DMA_DeInit(adcHandle->DMA_Handle);
-
-    /* ADC1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(ADC1_COMP_IRQn);
-  /* USER CODE BEGIN ADC1_MspDeInit 1 */
-
-  /* USER CODE END ADC1_MspDeInit 1 */
-  }
-}
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
