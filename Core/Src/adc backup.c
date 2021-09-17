@@ -6,10 +6,15 @@ DMA_HandleTypeDef hdma_adc;
 
 static void __DMA_Init(DMA_HandleTypeDef *hdma) {
   uint32_t tmp;
-
+  /* Compute the channel index */
+  /* Only one DMA: DMA1 */
+  // hdma->ChannelIndex = (((uint32_t)DMA1_Channel1 - (uint32_t)DMA1_Channel1) / ((uint32_t)DMA1_Channel2 - (uint32_t)DMA1_Channel1)) << 2;
   hdma->ChannelIndex = 0;
   hdma->DmaBaseAddress = DMA1;
-
+  // /* Change DMA peripheral state */
+  // hdma->State = HAL_DMA_STATE_BUSY;
+  /* Get the CR register value */
+  // tmp = hdma->Instance->CCR;
   tmp = DMA1_Channel1->CCR;
   /* Clear PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR and MEM2MEM bits */
   tmp &= ((uint32_t)~(DMA_CCR_PL    | DMA_CCR_MSIZE  | DMA_CCR_PSIZE  |
@@ -26,13 +31,14 @@ static void __DMA_Init(DMA_HandleTypeDef *hdma) {
 
   /* Write to DMA Channel CR register */
   DMA1_Channel1->CCR = tmp;
-
-  /* Write to DMA channel selection register */
-  /* Reset request selection for DMA1 Channel1 */
-  DMA1_CSELR->CSELR &= ~(DMA_CSELR_C1S << (0 & 0x1cU));
-  /* Configure request selection for DMA1 Channel1 */
-  DMA1_CSELR->CSELR |= (uint32_t) (DMA_REQUEST_0 << (0 & 0x1cU));
-
+  /* Set request selection */
+  if(hdma->Init.Direction != DMA_MEMORY_TO_MEMORY) {
+    /* Write to DMA channel selection register */
+    /* Reset request selection for DMA1 Channelx */
+    DMA1_CSELR->CSELR &= ~(DMA_CSELR_C1S << (0 & 0x1cU));
+    /* Configure request selection for DMA1 Channelx */
+    DMA1_CSELR->CSELR |= (uint32_t) (DMA_REQUEST_0 << (0 & 0x1cU));
+  }
 }
 
 static void __HAL_DMA_DeInit(DMA_HandleTypeDef *hdma)
