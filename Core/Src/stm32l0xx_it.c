@@ -63,8 +63,7 @@ extern volatile bool timer_flag;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_adc;
-extern ADC_HandleTypeDef hadc;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -136,7 +135,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
   timer_flag = true;
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -180,7 +179,7 @@ void DMA1_Channel1_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
   dma_callback();
   /* USER CODE END DMA1_Channel1_IRQn 0 */
-  // HAL_DMA_IRQHandler(&hdma_adc);
+
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
 
   /* USER CODE END DMA1_Channel1_IRQn 1 */
@@ -194,7 +193,7 @@ void ADC1_COMP_IRQHandler(void)
   /* USER CODE BEGIN ADC1_COMP_IRQn 0 */
   adc_callback();
   /* USER CODE END ADC1_COMP_IRQn 0 */
-  // HAL_ADC_IRQHandler(&hadc);
+
   /* USER CODE BEGIN ADC1_COMP_IRQn 1 */
 
   /* USER CODE END ADC1_COMP_IRQn 1 */

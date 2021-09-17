@@ -10,8 +10,7 @@ void init_adc_dma() {
     // Enable clocks
     SET_BIT(RCC->APB2ENR, (0x1UL << 9U));
     SET_BIT(RCC->IOPENR, (0x1UL << 0U));
-    __IO uint32_t tmpreg = READ_BIT(RCC->IOPENR, (0x1UL << 0U));
-    UNUSED(tmpreg); 
+    // READ_BIT(RCC->IOPENR, (0x1UL << 0U));
 
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
