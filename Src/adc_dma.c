@@ -1,32 +1,10 @@
 #include "adc_dma.h"
-#include "adc.h"
 #include "main.h"
 
 
-ADC_HandleTypeDef hadc;
-DMA_HandleTypeDef hdma_adc;
 extern uint32_t adc_values[];
 
 void init_adc_dma() {
-    hadc.Instance = ADC1;
-    hadc.Init.OversamplingMode = DISABLE;
-    hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-    hadc.Init.Resolution = ADC_RESOLUTION_10B;
-    hadc.Init.SamplingTime = ADC_SAMPLETIME_160CYCLES_5;
-    hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
-    hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-    hadc.Init.ContinuousConvMode = ENABLE;
-    hadc.Init.DiscontinuousConvMode = DISABLE;
-    hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    hadc.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    hadc.Init.DMAContinuousRequests = ENABLE;
-    hadc.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-    hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-    hadc.Init.LowPowerAutoWait = DISABLE;
-    hadc.Init.LowPowerFrequencyMode = DISABLE;
-    hadc.Init.LowPowerAutoPowerOff = DISABLE;     // ENABLE ?
-
-
     //########################## BEGIN HAL_ADC_MspInit(&hadc);
     // Enable clocks
     SET_BIT(RCC->APB2ENR, (RCC_APB2ENR_ADC1EN));
@@ -41,22 +19,11 @@ void init_adc_dma() {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    hdma_adc.Instance = DMA1_Channel1;
-    hdma_adc.Init.Request = DMA_REQUEST_0;
-    hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-    hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
-    hdma_adc.Init.Mode = DMA_CIRCULAR;
-    hdma_adc.Init.Priority = DMA_PRIORITY_LOW;
-
-
     //################## BEGIN HAL_DMA_Init(&hdma_adc);
     uint32_t tmp;
 
-    hdma_adc.ChannelIndex = 0;
-    hdma_adc.DmaBaseAddress = DMA1;
+    // hdma_adc.ChannelIndex = 0;
+    // hdma_adc.DmaBaseAddress = DMA1;
 
     tmp = DMA1_Channel1->CCR;
     /* Clear PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR and MEM2MEM bits */
@@ -78,9 +45,6 @@ void init_adc_dma() {
     /* Configure request selection for DMA1 Channel1 */
     SET_BIT(DMA1_CSELR->CSELR, (uint32_t)DMA_REQUEST_0);
     //################## END HAL_DMA_Init(&hdma_adc);
-
-
-    hdma_adc.Parent = &hadc;
 
     NVIC_SetPriority(ADC1_COMP_IRQn, 0);
     NVIC_EnableIRQ(ADC1_COMP_IRQn);
@@ -193,8 +157,8 @@ void dma_callback() {
 
 void adc_callback() {
   /* ========== Check End of Conversion flag for regular group ========== */
-  if( READ_BIT(ADC1->ISR, ADC_FLAG_EOC) && READ_BIT(ADC1->IER, ADC_IT_EOC) || 
-      READ_BIT(ADC1->ISR, ADC_FLAG_EOS) && READ_BIT(ADC1->IER, ADC_IT_EOS)) {
+  if( (READ_BIT(ADC1->ISR, ADC_FLAG_EOC) && READ_BIT(ADC1->IER, ADC_IT_EOC)) || 
+      (READ_BIT(ADC1->ISR, ADC_FLAG_EOS) && READ_BIT(ADC1->IER, ADC_IT_EOS))) {
     
       ADC1->ISR = (ADC_FLAG_EOC | ADC_FLAG_EOS);
   }

@@ -1,7 +1,6 @@
 #include "voltage_sensor.h"
 #include "power_source.h"
 #include "led.h"
-#include "adc.h"
 #include "dma.h"
 // #include <stm32l0xx_ll_adc.h>
 #include <stm32l0xx_ll_dma.h>
