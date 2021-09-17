@@ -189,39 +189,36 @@ void MX_ADC_Init(void) {
 
   HAL_ADC_MspInit(&hadc);
 
-  __HAL_ADC_CLOCK_PRESCALER(&hadc);
+  // Prescaler
+  ADC1->CFGR2 &= ~(ADC_CFGR2_CKMODE); 
+  ADC1->CFGR2 |= ADC_CLOCK_SYNC_PCLK_DIV4; 
+
   ADC1->CFGR1 &= ~( ADC_CFGR1_RES);
   ADC1->CFGR1 |= ADC_RESOLUTION_10B;    
   ADC->CCR &= (uint32_t)~ADC_CCR_LFMEN;
-  ADC->CCR |=__HAL_ADC_CCR_LOWFREQUENCY(DISABLE);  
-  if (HAL_IS_BIT_CLR(ADC1->CR, ADC_CR_ADVREGEN)) {
-    /* Set ADVREGEN bit */
-    ADC1->CR |= ADC_CR_ADVREGEN;
-  }
-  ADC1->CFGR1 &= ~(ADC_CFGR1_ALIGN   |
-                              ADC_CFGR1_SCANDIR |
-                              ADC_CFGR1_EXTSEL  |
-                              ADC_CFGR1_EXTEN   |
-                              ADC_CFGR1_CONT    |
-                              ADC_CFGR1_DMACFG  |
-                              ADC_CFGR1_OVRMOD  |
-                              ADC_CFGR1_AUTDLY  |
-                              ADC_CFGR1_AUTOFF  |
-                              ADC_CFGR1_DISCEN   );
+  ADC->CCR |= 0;                          // LowPowerFrequencyMode ENABLE? then  1 << 25U
+  ADC1->CR |= ADC_CR_ADVREGEN;
+  ADC1->CFGR1 &= ~( ADC_CFGR1_ALIGN   |
+                    ADC_CFGR1_SCANDIR |
+                    ADC_CFGR1_EXTSEL  |
+                    ADC_CFGR1_EXTEN   |
+                    ADC_CFGR1_CONT    |
+                    ADC_CFGR1_DMACFG  |
+                    ADC_CFGR1_OVRMOD  |
+                    ADC_CFGR1_AUTDLY  |
+                    ADC_CFGR1_AUTOFF  |
+                    ADC_CFGR1_DISCEN );
 
-  ADC1->CFGR1 |= (ADC_DATAALIGN_RIGHT                         |
-                  ADC_SCANDIR(ADC_SCAN_DIRECTION_FORWARD)     |
-                  ADC_CONTINUOUS((uint32_t)ENABLE)            |
-                  ADC_DMACONTREQ((uint32_t)ENABLE)            |
-                  ADC_OVR_DATA_PRESERVED                      |
-                  __HAL_ADC_CFGR1_AutoDelay(DISABLE)          |
-                  __HAL_ADC_CFGR1_AUTOFF(DISABLE));   // ENABLE ?
+  ADC1->CFGR1 |= (ADC_DATAALIGN_RIGHT                     |
+                  0                                       |   // ScanConvMode ADC_SCAN_DIRECTION_BACKWARD ?  then 1UL << 2U
+                  (1U << 13U)                             |   // ContinuousConvMode DISABLE ? then 0
+                  (1U << 1U)                              |   // DMAContinuousRequests DISABLE ? 0
+                  ADC_OVR_DATA_PRESERVED                  |
+                  0                                       |   // AutoDelay		ENABLE ?  then 1 << 14U
+                  0);                                          // LowPowerAutoPowerOff ENABLE ?  then 1 << 15U
 
-  if(HAL_IS_BIT_SET(ADC1->CFGR2, ADC_CFGR2_OVSE)) {
-    /* Disable OverSampling mode if needed */
-    ADC1->CFGR2 &= ~ADC_CFGR2_OVSE;
-  }
-
+  // Disable OverSampling mode
+  ADC1->CFGR2 &= ~ADC_CFGR2_OVSE;
   /* Clear the old sampling time */
   ADC1->SMPR &= (uint32_t)(~ADC_SMPR_SMPR);
   /* Set the new sample time */
