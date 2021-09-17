@@ -1,6 +1,5 @@
 # TODO
 
-- Save space in flash: UART code in LL iso HAL
 - Configuration programming through usart
 - Stop mode
     - Disable ADC voltage regulator before entering stop mode ?
@@ -9,6 +8,7 @@
 
 ### Optional
 
+- Save space in flash: ADC code in LL iso HAL
 - SBUS2 (Futaba)
 - X-BUS (Spektrum)
 - M-LINK (Multiplex)

@@ -26,10 +26,8 @@ void voltage_to_str(uint32_t voltage, uint8_t *buffer);
 
 void voltage_sensor_loop();
 
-void AdcGrpRegularSequenceConvComplete_Callback();
-void AdcGrpRegularOverrunError_Callback();
-void AdcDmaTransferComplete_Callback();
-void AdcDmaTransferError_Callback();
+void dma_callback();
+void adc_callback();
 
 #endif /* B99D9472_C491_40AD_BE50_51BB818EAF15 */
 
