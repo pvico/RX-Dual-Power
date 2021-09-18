@@ -1,11 +1,10 @@
 #include "s_port.h"
 #include <stdlib.h>
-#include <usart.h>
+#include "uart.h"
 #include <stm32l0xx.h>
-// #include <stm32l0xx_ll_usart.h>
 #include <stm32l0xx_ll_tim.h>
 #include <stm32l021xx.h>
-#include "usart.h"
+#include "uart.h"
 #include <string.h>
 #include "led.h"
 #include "power_source.h"

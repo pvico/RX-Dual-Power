@@ -1,5 +1,5 @@
 #include "debug_console.h"
-#include "usart.h"
+#include "uart.h"
 #include "voltage_sensor.h"
 #include "power_source.h"
 #include "config.h"

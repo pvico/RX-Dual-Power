@@ -7,12 +7,11 @@
 #include "power_source.h"
 #include "switching_logic.h"
 #include "telemetry.h"
-// #include <wwdg.h>
 #include "config.h"
-#include <usart.h>
 #include <gpio.h>
 #include "adc_dma.h"
 #include "watchdog.h"
+#include "uart.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -52,7 +51,6 @@ static void __normal_SWD_pins_GPIO_init() {
 
 void initialize() {
 init_watchdog();
-init_adc_dma();
 
 #ifdef DEBUG_SWD_ENABLED
   // Disable watchdog timer for debugging
@@ -68,6 +66,8 @@ init_adc_dma();
   // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
   // the model is powered up
   power_on();
+  init_adc_dma();
+  init_uart();
   
   // Configure the SWD GPIO pin in function of debug state
   __normal_SWD_pins_GPIO_init();

@@ -1,6 +1,5 @@
 #include "main_loop.h"
 #include "led.h"
-#include "button.h"
 #include "magnet.h"
 #include "gpio.h"
 #include <stm32l021xx.h>
@@ -20,6 +19,9 @@ extern volatile bool timer_flag;
 
 void main_loop() {
 
+// This one outside of the 1ms loop because it has to reply to the RX polling
+// after a delay (± 450µs, as for the FrSky vario high prec.) set by Timer21
+// and telemetry_loop will do it when the flag is set by the Timer21 interrupt
 #ifdef TELEMETRY_ENABLED
   telemetry_loop();
 #endif
@@ -43,10 +45,4 @@ void main_loop() {
 
     timer_flag = false;
   }
-
-  // debug_console display only if CONSOLE_OUTPUT is defined in config.h
-  // if (rough_second_tick()) {
-  //   debug_console_print_voltages();   
-  // }
-    
 }

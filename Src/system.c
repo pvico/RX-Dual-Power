@@ -4,7 +4,7 @@
 #include "debug_console.h"
 #include "main.h"
 #include "output_control.h"
-#include "usart.h"
+#include "uart.h"
 #include "config.h"
 #include "button.h"
 
