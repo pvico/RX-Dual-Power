@@ -14,6 +14,9 @@
         "stm32l0xx_ll_tim.h": "c",
         "telemetry.h": "c",
         "s_port.h": "c",
-        "button.h": "c"
+        "button.h": "c",
+        "watchdog.h": "c",
+        "stm32l0xx_ll_wwdg.h": "c",
+        "stm32l0xx_ll_bus.h": "c"
     }
 }

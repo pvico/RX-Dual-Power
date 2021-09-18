@@ -21,7 +21,6 @@
 #include "main.h"
 #include "tim.h"
 #include "usart.h"
-#include "wwdg.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -95,7 +94,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  MX_WWDG_Init();
   MX_TIM21_Init();
   /* USER CODE BEGIN 2 */
   initialize();

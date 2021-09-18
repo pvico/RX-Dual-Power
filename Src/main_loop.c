@@ -12,7 +12,8 @@
 #include "button.h"
 #include "switching_logic.h"
 #include "telemetry.h"
-#include <wwdg.h>
+#include "watchdog.h"
+
 
 extern volatile bool timer_flag;
 
