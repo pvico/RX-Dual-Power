@@ -1,4 +1,5 @@
 #include "telemetry.h"
+#include "main.h"
 #include "s_port.h"
 #include "sbus2.h"
 #include "x-bus.h"

@@ -1,7 +1,5 @@
 #include "adc_dma.h"
 #include "main.h"
-#include "stm32l021xx.h"
-#include "stm32l0xx_ll_dma.h"
 
 
 extern uint32_t adc_values[];

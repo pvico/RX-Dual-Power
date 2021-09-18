@@ -1,16 +1,14 @@
 #include "s_port.h"
+#include "main.h"
 #include <stdlib.h>
-#include "uart.h"
-#include <stm32l0xx.h>
-#include <stm32l0xx_ll_tim.h>
-#include <stm32l021xx.h>
 #include "uart.h"
 #include <string.h>
 #include "led.h"
 #include "power_source.h"
 #include "voltage_sensor.h"
 #include "switching_logic.h"
-#include "tim.h"
+#include "timer.h"
+
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;

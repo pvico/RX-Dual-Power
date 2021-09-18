@@ -1,4 +1,5 @@
 #include "system.h"
+#include "main.h"
 #include "magnet.h"
 #include "led.h"
 #include "debug_console.h"

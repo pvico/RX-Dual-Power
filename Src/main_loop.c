@@ -1,8 +1,8 @@
 #include "main_loop.h"
+#include "main.h"
 #include "led.h"
 #include "magnet.h"
 #include "gpio.h"
-#include <stm32l021xx.h>
 #include "voltage_sensor.h"
 #include <stdbool.h>
 #include "debug_console.h"

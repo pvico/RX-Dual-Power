@@ -1,4 +1,5 @@
 #include "voltage_sensor.h"
+#include "main.h"
 #include "power_source.h"
 #include "led.h"
 #include <stdint.h>

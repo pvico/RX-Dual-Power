@@ -1,6 +1,6 @@
 #include "watchdog.h"
-#include "stm32l0xx_ll_wwdg.h"
-#include "stm32l0xx_ll_bus.h"
+#include "main.h"
+
 
 void init_watchdog() {
   /* Peripheral clock enable */

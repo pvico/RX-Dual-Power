@@ -1,4 +1,5 @@
 #include "switching_logic.h"
+#include "main.h"
 #include "voltage_sensor.h"
 #include "power_source.h"
 #include "output_control.h"

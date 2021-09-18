@@ -1,4 +1,5 @@
 #include "debug_console.h"
+#include "main.h"
 #include "system.h"
 #include "gpio.h"
 #include "led.h"

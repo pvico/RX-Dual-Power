@@ -1,4 +1,5 @@
 #include "initialize.h"
+#include "main.h"
 #include "led.h"
 #include "button.h"
 #include "voltage_sensor.h"
@@ -8,10 +9,10 @@
 #include "switching_logic.h"
 #include "telemetry.h"
 #include "config.h"
-#include <gpio.h>
 #include "adc_dma.h"
 #include "watchdog.h"
 #include "uart.h"
+#include "timer.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -68,6 +69,7 @@ init_watchdog();
   power_on();
   init_adc_dma();
   init_uart();
+  init_timer();
   
   // Configure the SWD GPIO pin in function of debug state
   __normal_SWD_pins_GPIO_init();

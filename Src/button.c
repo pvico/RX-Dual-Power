@@ -1,7 +1,7 @@
 #include "button.h"
+#include "main.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "main.h"
 #include "gpio.h"
 #include "config.h"
 #include "led.h"

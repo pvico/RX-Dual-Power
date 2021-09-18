@@ -1,4 +1,5 @@
 #include "power_source.h"
+#include "main.h"
 #include "system.h"
 #include "debug_console.h"
 
