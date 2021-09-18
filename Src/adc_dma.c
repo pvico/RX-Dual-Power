@@ -5,6 +5,10 @@
 
 extern uint32_t adc_values[];
 
+static void __clear_all_dma_interrupt_flags() {
+  DMA1->IFCR = 0x1UL;
+}
+
 void init_adc_dma() {
     // Set ADC pins
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -106,7 +110,7 @@ void init_adc_dma() {
     LL_DMA_ConfigAddresses(DMA1, LL_DMA_CHANNEL_1, (uint32_t)&ADC1->DR, (uint32_t)adc_values, LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
 
     // Clear all interrupt flags
-    DMA1->IFCR = (0x1UL << 0U);
+    __clear_all_dma_interrupt_flags();
     // Enable transfer complete and transfer error interrupts
     LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_1);
     LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_1);
@@ -119,46 +123,41 @@ void init_adc_dma() {
 }
 
 void dma_callback() {
-//   uint32_t flag_it = hdma->DmaBaseAddress->ISR;
-  uint32_t flag_it = DMA1->ISR;
-  uint32_t source_it = DMA1_Channel1->CCR;
+  // Note: we don't check if the interrupts are enabled like HAL does
+  // as we have enabled it before starting comversions
 
-  /* Half Transfer Complete Interrupt management ******************************/
-  if ((0U != (flag_it & ((0x1UL << 2U)))) && (0U != (source_it & (0x1UL << 2U)))) {
-      /* Clear the half transfer complete flag */
-      DMA1->IFCR = (0x1UL << 2U);
-  }
-  /* Transfer Complete Interrupt management ***********************************/
-  else if ((0U != (flag_it & ((0x1UL << 1U)))) && (0U != (source_it & (0x1UL << 1U)))) {
-    if((DMA1_Channel1->CCR & (0x1UL << 5U)) == 0U) {
-      /* Disable the transfer complete and error interrupt */
-        CLEAR_BIT(DMA1_Channel1->CCR, ((0x1UL << 3U) | (0x1UL << 1U)));
-    }
+  //= if a transfer complete occurred
+  if (LL_DMA_IsActiveFlag_TC1(DMA1)) {
     /* Clear the transfer complete flag */
-    DMA1->IFCR = (0x1UL << 1U);
-
+    LL_DMA_ClearFlag_TC1(DMA1);
   }
-  /* Transfer Error Interrupt management **************************************/
-  else if ((0U != (flag_it & ((0x1UL << 3U)))) && (0U != (source_it & (0x1UL << 3U)))) {
-    /* When a DMA transfer error occurs */
-    /* A hardware clear of its EN bits is performed */
-    /* Disable ALL DMA IT */
-    CLEAR_BIT(DMA1_Channel1->CCR, ((0x1UL << 1U) | (0x1UL << 2U) | (0x1UL << 3U)));
+
+  //= if a transfer error occurred
+  else if (LL_DMA_IsActiveFlag_TE1(DMA1)) {
+    // When a DMA transfer error occurs, its EN bits are cleared by the hardware
+    /* Disable all DMA IT */
+    LL_DMA_DisableIT_TC(DMA1, LL_DMA_CHANNEL_1);
+    LL_DMA_DisableIT_HT(DMA1, LL_DMA_CHANNEL_1);
+    LL_DMA_DisableIT_TE(DMA1, LL_DMA_CHANNEL_1);
     /* Clear all flags */
-    DMA1->IFCR = (0x1UL << 0U);
+    __clear_all_dma_interrupt_flags();
+    //Re-enable interrupts
+    LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_1);
+    LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_1);
+    // Re-enable DMA
+    LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_1);
   }
 }
 
 void adc_callback() {
-  /* ========== Check End of Conversion flag for regular group ========== */
-  if( (READ_BIT(ADC1->ISR, (0x1UL << 2U)) && READ_BIT(ADC1->IER, (0x1UL << 2U))) || 
-      (READ_BIT(ADC1->ISR, (0x1UL << 3U)) && READ_BIT(ADC1->IER, (0x1UL << 3U)))) {
-    
-      ADC1->ISR = ((0x1UL << 2U) | (0x1UL << 3U));
+  // if end of sequence of channels conversion interrupt occurred
+  if (LL_ADC_IsActiveFlag_EOS(ADC1)) {
+    LL_ADC_ClearFlag_EOS(ADC1);
   }
-  /* ========== Check Overrun flag ========== */
-  if(READ_BIT(ADC1->ISR, (0x1UL << 4U)) && READ_BIT(ADC1->IER, (0x1UL << 4U))) {
-      /* Clear ADC overrun flag */
-      ADC1->ISR =  (0x1UL << 4U);
+  
+  // If overrun interrupt occurred
+  if (LL_ADC_IsActiveFlag_OVR(ADC1)) {
+    /* Clear ADC overrun flag */
+    LL_ADC_ClearFlag_OVR(ADC1);
   }
 }
