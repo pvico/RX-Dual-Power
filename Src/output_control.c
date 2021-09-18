@@ -1,7 +1,5 @@
 #include "output_control.h"
 #include "main.h"
-#include "gpio.h"
-#include <stm32l021xx.h>
 #include <stdint.h>
 
 // Only the code in this file can manipulate the LTC4412 CTL pins

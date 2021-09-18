@@ -17,6 +17,7 @@
         "button.h": "c",
         "watchdog.h": "c",
         "stm32l0xx_ll_wwdg.h": "c",
-        "stm32l0xx_ll_bus.h": "c"
+        "stm32l0xx_ll_bus.h": "c",
+        "main.h": "c"
     }
 }

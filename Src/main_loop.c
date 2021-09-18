@@ -2,7 +2,6 @@
 #include "main.h"
 #include "led.h"
 #include "magnet.h"
-#include "gpio.h"
 #include "voltage_sensor.h"
 #include <stdbool.h>
 #include "debug_console.h"

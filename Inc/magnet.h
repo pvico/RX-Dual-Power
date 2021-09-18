@@ -1,8 +1,7 @@
 #ifndef F70FDB9F_40FF_4C83_A6DE_912D82AD15A0
 #define F70FDB9F_40FF_4C83_A6DE_912D82AD15A0
 
-#include "gpio.h"
-#include <stm32l021xx.h>
+#include "main.h"
 #include "stdbool.h"
 
 // #define MAGNET_PIN GPIO_PIN_0

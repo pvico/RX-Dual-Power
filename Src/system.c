@@ -10,7 +10,12 @@
 #include "button.h"
 
 
-// extern UART_HandleTypeDef huart2;
+uint32_t SystemCoreClock = 2097152U; /* 32.768 kHz * 2^6 */
+
+const uint8_t AHBPrescTable[16] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U, 6U, 7U, 8U, 9U};
+const uint8_t APBPrescTable[8] = {0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U};
+const uint8_t PLLMulTable[9] = {3U, 4U, 6U, 8U, 12U, 16U, 24U, 32U, 48U};
+
 
 static void __set_not_needed_gpio_pins_to_analog() {
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -94,3 +99,6 @@ bool rough_quarter_second_tick() {
 }
 
 
+
+// Must be there, is called by assembler bootup code
+void SystemInit (void) {}

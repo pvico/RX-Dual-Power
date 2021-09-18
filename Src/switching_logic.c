@@ -6,7 +6,6 @@
 #include "led.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include "gpio.h"
 #include "system.h"
 #include "debug_console.h"
 #include "config.h"
