@@ -48,6 +48,7 @@ static void __normal_SWD_pins_GPIO_init() {
 #endif // DEBUG_SWD_ENABLED
 }
 
+
 void initialize() {
 
 init_adc_dma();

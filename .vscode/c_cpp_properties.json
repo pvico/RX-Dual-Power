@@ -12,6 +12,7 @@
                 "GPIOB",
                 "EXTI",
                 "USART2",
+                "ADC1",
                 "USE_HAL_UART_REGISTER_CALLBACKS"
             ],
             "macFrameworkPath": [],
