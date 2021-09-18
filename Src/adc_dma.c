@@ -1,6 +1,7 @@
 #include "adc_dma.h"
 #include "main.h"
 #include "stm32l021xx.h"
+#include "stm32l0xx_ll_dma.h"
 
 
 extern uint32_t adc_values[];
@@ -28,51 +29,38 @@ void init_adc_dma() {
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);     // ADC clock
     LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);     // DMA clock
 
-    // Initialize DMA
-
-    // Configuration
-    CLEAR_BIT(DMA1_Channel1->CCR, 
-              ( (0x1UL << 4U)   |     // DIR bits cleared => read from peripheral
-                (0x1UL << 6U)   |     // PINC bit cleared => peripheral increement disabled
-                (0x3UL << 8U)   |     // PSIZE bits cleared => this is needed to set specific bits in next statement
-                (0x3UL << 10U)  |     // MSIZE bits cleared => this is needed to set specific bits in next statement
-                (0x3UL << 12U)  |     // PL bits cleared => priority level low
-                (0x1UL << 14U)));     // MEM2MEM bit cleared => memory-to-memorymode disabled
-    SET_BIT(DMA1_Channel1->CCR,
-            ((0x1UL << 5U)      |     // CIRC bis set =>circular mode enabled
-            (0x1UL << 7U)       |     // MINC bis set => memory increement enabled
-            (0x2UL << 8U)       |     // PSIZE bis set to 0b010 => transfer 32 bits from peripheral
-            (0x2UL << 10U)));         // MSIZE bis set to 0b010 => transfer 32 bits to memory
-
     // DMA channel selection
     CLEAR_BIT(DMA1_CSELR->CSELR, (0xFUL << 0U));  // C1S bits cleared => this is needed to set specific bits in next statement
-    SET_BIT(DMA1_CSELR->CSELR, 0UL);              // C1S set to 0b0001 => DMA1 Channel1
+    SET_BIT(DMA1_CSELR->CSELR, 0UL);              // C1S set to 0b0001 => DMA1 Channel1            
+
+    LL_DMA_InitTypeDef dma_init = {0};
+    dma_init.PeriphOrM2MSrcAddress = (uint32_t)&ADC1->DR;
+    dma_init.MemoryOrM2MDstAddress = (uint32_t)adc_values;
+    dma_init.Mode = LL_DMA_MODE_CIRCULAR;
+    dma_init.MemoryOrM2MDstIncMode = LL_DMA_MEMORY_INCREMENT;
+    dma_init.PeriphOrM2MSrcDataSize = LL_DMA_PDATAALIGN_WORD;
+    dma_init.MemoryOrM2MDstDataSize = LL_DMA_MDATAALIGN_WORD;
+    dma_init.NbData = 2UL;
+    // dma_init.Direction = LL_DMA_DIRECTION_PERIPH_TO_MEMORY;      // LL_DMA_DIRECTION_PERIPH_TO_MEMORY is the default 0 value
+    // dma_init.PeriphOrM2MSrcIncMode = LL_DMA_PERIPH_NOINCREMENT;  // LL_DMA_PERIPH_NOINCREMENT is the default 0 value
+    // dma_init.PeriphRequest = LL_DMA_REQUEST_0;                   // LL_DMA_REQUEST_0 is the default 0 value
+    // dma_init.Priority = LL_DMA_PRIORITY_LOW;                     // LL_DMA_PRIORITY_LOW is the default 0 value
+    LL_DMA_Init(DMA1, LL_DMA_CHANNEL_1, &dma_init);
    
     // Initialize ADC
     
     // Enable voltage regulator
     LL_ADC_EnableInternalRegulator(ADC1);
 
-    CLEAR_BIT(ADC1->CFGR1, 
-              ( (0x3UL << 3U)  |      // RES bits cleared => this is needed to set specific bits in next statement
-                (0x1UL << 5U)  |      // ALIGN bit cleared => right alignment
-                (0x1UL << 2U)  |      // SCANDIR bit cleared => forward scan
-                (0x7UL << 6U)  |      // EXTSEL bits cleared => trigger source software
-                (0x3UL << 10U) |      // EXTEN bits cleared => hardware trigger detection disabled (conversions started by software)
-                (0x1UL << 12U) |      // OVRMOD bit cleared => ADC_DR register is preserved with the old data when an overrun is detected
-                (0x1UL << 14U) |      // WAIT bit cleared => Wait conversion mode of
-                (0x1UL << 15U) |      // AUTOFF bit cleared => Auto-off mode disabled
-                (0x1UL << 16U)  ));   // DISCEN bit cleared => Discontinuous mode disabled
-    SET_BIT(ADC1->CFGR1,
-            ( (1U << 3U)       |      // RES bits set to 0b01 => resolution 10 bits
-              (1U << 13U)      |      // CONT bit set => continuous conversion mode ENABLE
-              (1U << 1U)));           // DMACFG bit set => DMA circular mode
+    LL_ADC_InitTypeDef adc_init = {0};
+    adc_init.Clock = LL_ADC_CLOCK_SYNC_PCLK_DIV4;
+    adc_init.Resolution = LL_ADC_RESOLUTION_10B;    
+    // adc_init.DataAlignment = LL_ADC_DATA_ALIGN_RIGHT;   // LL_ADC_DATA_ALIGN_RIGHT is the default 0 value
+    // adc_init.LowPowerMode = LL_ADC_LP_MODE_NONE;     // LL_ADC_LP_MODE_NONE is the default 0 value
+    LL_ADC_Init(ADC1, &adc_init);
 
-    CLEAR_BIT(ADC1->CFGR2, 
-              ( (0x1UL << 0U)  |      // OVSE bit cleared => oversampler disabled
-                (0x3UL << 30U)));     // CKMODE bits cleared => this is needed to set specific bits in next statement
-    SET_BIT(ADC1->CFGR2,
-            ( (2U << 30U)));          // CKMODE bits set to 0b10 => synchronous clock mode, APB clock divided by 4
+    // Note: we don't use a LL_ADC_REG_InitTypeDef and LL_ADC_REG_Init() because all members are at default value except ContinuousMode
+    LL_ADC_REG_SetContinuousMode(ADC1, LL_ADC_REG_CONV_CONTINUOUS);
 
     LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_160CYCLES_5);
 
@@ -90,7 +78,6 @@ void init_adc_dma() {
 
     // Wait 1 us
     for (uint8_t i = 0; i < 16; i++) {}
-
     // Wait for ADC ready
     while (!LL_ADC_IsActiveFlag_ADRDY(ADC1)) {}
 
@@ -124,15 +111,15 @@ void init_adc_dma() {
 
 void dma_callback() {
   // Note: we don't check if the interrupts are enabled like HAL does
-  // as we have enabled it before starting comversions
+  // as we have enabled them before starting comversions
 
-  //= if a transfer complete occurred
+  // If a transfer complete occurred
   if (LL_DMA_IsActiveFlag_TC1(DMA1)) {
     /* Clear the transfer complete flag */
     LL_DMA_ClearFlag_TC1(DMA1);
   }
 
-  //= if a transfer error occurred
+  // If a transfer error occurred
   else if (LL_DMA_IsActiveFlag_TE1(DMA1)) {
     // When a DMA transfer error occurs, its EN bits are cleared by the hardware
     /* Disable all DMA IT */

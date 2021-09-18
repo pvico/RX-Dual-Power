@@ -13,7 +13,8 @@
                 "EXTI",
                 "USART2",
                 "ADC1",
-                "USE_HAL_UART_REGISTER_CALLBACKS"
+                "DMA1",
+                "USE_FULL_LL_DRIVER"
             ],
             "macFrameworkPath": [],
             "compilerPath": "/usr/local/bin/gcc-11",
