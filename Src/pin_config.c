@@ -2,7 +2,6 @@
 
 
 void init_pins() {
-
     LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -64,6 +63,7 @@ void init_pins() {
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(MAGNET_GPIO_Port, &GPIO_InitStruct);
 
+    // Set interrupt for magnet pin
     LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
     EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_0;
     EXTI_InitStruct.LineCommand = ENABLE;
@@ -82,7 +82,6 @@ void init_pins() {
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
 
-
     GPIO_InitStruct.Pin = SW2_Pin;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
@@ -98,7 +97,6 @@ void init_pins() {
     LL_EXTI_Init(&EXTI_InitStruct);
     NVIC_SetPriority(EXTI4_15_IRQn, 0);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
-
 #endif // DEBUG_SWD_ENABLED
 }
 

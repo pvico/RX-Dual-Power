@@ -25,12 +25,12 @@ void main_loop() {
   telemetry_loop();
 #endif
 
-  if (timer_flag) {
+  // Performed every 1 ms
+  if (timer_flag) {   // 1ms has elapsed flag
     
-    // ############## 1ms loop #################
-
     // refresh Watchdog
     LL_WWDG_SetCounter(WWDG, 0x7F);
+
     button_loop();
     magnet_loop();
     button_loop();
@@ -39,8 +39,6 @@ void main_loop() {
     power_source_loop();
     switching_logic_loop();
     system_loop();
-
-    // ############ end 1ms loop ###############
 
     timer_flag = false;
   }

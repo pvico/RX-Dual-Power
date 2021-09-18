@@ -26,6 +26,10 @@ static void __system_stop_mode() {
     
     LL_SYSTICK_DisableIT();
 
+    // Disable ADC voltage regulator to reduce power in stop mode
+    LL_ADC_Disable(ADC1);    // ADC must be disabled to disable internal regulator
+    LL_ADC_DisableInternalRegulator(ADC1);
+
     // Stop now
     LL_PWR_EnableUltraLowPower();
     LL_PWR_SetRegulModeLP(LL_PWR_REGU_LPMODES_LOW_POWER);
