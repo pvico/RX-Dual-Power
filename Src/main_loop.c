@@ -18,7 +18,7 @@ extern volatile bool timer_flag;
 
 void main_loop() {
 
-// This one outside of the 1ms loop because it has to reply to the RX polling
+// This call outside of the 1ms loop because it has to reply to the RX polling
 // after a delay (± 450µs, as for the FrSky vario high prec.) set by Timer21
 // and telemetry_loop will do it when the flag is set by the Timer21 interrupt
 #ifdef TELEMETRY_ENABLED

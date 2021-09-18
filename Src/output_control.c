@@ -1,5 +1,6 @@
 #include "output_control.h"
 #include "main.h"
+#include "pin_config.h"
 #include <stdint.h>
 
 // Only the code in this file can manipulate the LTC4412 CTL pins
@@ -11,51 +12,30 @@
 
 // ########################## Local Helper functions ##########################
 
-static void __set_CTL_pin_analog(GPIO_TypeDef *gpio, uint32_t pin) {
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(gpio, &GPIO_InitStruct);
-}
-
-static void __set_CTL_pin_GPIO_output(GPIO_TypeDef *gpio, uint32_t pin) {
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(gpio, &GPIO_InitStruct);
-
-}
-
 static void __put_CTL1_pin_high_impedance() {    
-    __set_CTL_pin_analog(CTL1_GPIO_Port, CTL1_Pin);
+    set_pin_to_analog(CTL1_GPIO_Port, CTL1_Pin);
 }
 
 static void __put_CTL2_pin_high_impedance() {    
-    __set_CTL_pin_analog(CTL2_GPIO_Port, CTL2_Pin);
+    set_pin_to_analog(CTL2_GPIO_Port, CTL2_Pin);
 }
 
 static void __put_CTL1_pin_GPIO_output() {    
-    __set_CTL_pin_GPIO_output(CTL1_GPIO_Port, CTL1_Pin);
+    set_pin_to_output_PP_no_pull(CTL1_GPIO_Port, CTL1_Pin);
 }
 
 static void __put_CTL2_pin_GPIO_output() {    
-    __set_CTL_pin_GPIO_output(CTL2_GPIO_Port, CTL2_Pin);
+    set_pin_to_output_PP_no_pull(CTL2_GPIO_Port, CTL2_Pin);
 }
 
 static void __force_main_power_off() {
     __put_CTL1_pin_GPIO_output();
-    CTL1_GPIO_Port->ODR |= CTL1_Pin;
+    LL_GPIO_SetOutputPin(CTL1_GPIO_Port, CTL1_Pin);
 }
 
 static void __force_stdby_power_off() {
     __put_CTL2_pin_GPIO_output();
-    CTL1_GPIO_Port->ODR |= CTL2_Pin;
+    LL_GPIO_SetOutputPin(CTL2_GPIO_Port, CTL2_Pin);
 }
 
 // ########################## Public functions ##########################

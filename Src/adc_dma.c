@@ -9,13 +9,6 @@ static void __clear_all_dma_interrupt_flags() {
 }
 
 void init_adc_dma() {
-    // Set ADC pins
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = V_MAIN_Pin | V_STBY_Pin;
-    GPIO_InitStruct.OutputType = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(S_PORT_GPIO_Port, &GPIO_InitStruct);
-
     // Set interrupts and  priorities
     // ADC has higher priority than DMA
     NVIC_SetPriority(DMA1_Channel1_IRQn, 1);

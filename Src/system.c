@@ -3,11 +3,11 @@
 #include "magnet.h"
 #include "led.h"
 #include "debug_console.h"
-#include "main.h"
 #include "output_control.h"
 #include "uart.h"
 #include "config.h"
 #include "button.h"
+#include "pin_config.h"
 
 
 uint32_t SystemCoreClock = 2097152U; /* 32.768 kHz * 2^6 */
@@ -17,39 +17,12 @@ const uint8_t APBPrescTable[8] = {0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U};
 const uint8_t PLLMulTable[9] = {3U, 4U, 6U, 8U, 12U, 16U, 24U, 32U, 48U};
 
 
-static void __set_not_needed_gpio_pins_to_analog() {
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-
-    GPIO_InitStruct.Pin = SW1_Pin;
-    LL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
-    
-    GPIO_InitStruct.Pin = LED2_Pin;
-    LL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = STAT_STBY_Pin;
-    LL_GPIO_Init(STAT_STBY_GPIO_Port, &GPIO_InitStruct);
-
-
-
-#ifndef DEBUG_SWD_ENABLED
-    GPIO_InitStruct.Pin = LED1_Pin;
-    LL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);         
-#endif
-
-    // HAL_UART_MspDeInit(&huart2);
-    // TODO in LL ?
-}
-
 static void __system_stop_mode() {
-    
     // debug_console_print_entering_stop_mode();
 
     power_off();
 
-    __set_not_needed_gpio_pins_to_analog();
+    set_stop_mode_not_needed_gpio_pins_to_analog();
     
     LL_SYSTICK_DisableIT();
 
@@ -100,5 +73,5 @@ bool rough_quarter_second_tick() {
 
 
 
-// Must be there, is called by assembler bootup code
-void SystemInit (void) {}
+// This function must be there, it is called by the assembler bootup code
+void SystemInit() {}

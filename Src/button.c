@@ -11,6 +11,7 @@
 extern button *buttons;
 static bool __dual_activation_state = false;
 
+// NOTE: does not work if programming clip is installed
 bool is_button_dual_activation_active() {
     return __dual_activation_state;
 }
