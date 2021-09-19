@@ -3,8 +3,6 @@
 
 
 void init_pins() {
-    LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     // Enable GPIO Ports Clock
 
@@ -13,6 +11,8 @@ void init_pins() {
     LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
     // Set GPIO pins
+    
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     // Set CTL1 and CTL2 pins in analog mode. They will be put
     // in output mode when required by switching_logic_loop()
@@ -32,12 +32,19 @@ void init_pins() {
     LL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
 
 #ifndef DEBUG_SWD_ENABLED
+    GPIO_InitStruct.Pin = (STAT_STBY_Pin | MAGNET_Pin | SW2_Pin);
+#else
     // When DEBUG_SWD_ENABLED is enabled, SW2 is SYS_SWDCLK
-    GPIO_InitStruct.Pin = SW2_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-    LL_GPIO_Init(SW2_GPIO_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = (STAT_STBY_Pin | MAGNET_Pin);
 #endif
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    // GPIO_InitStruct.Pin = MAGNET_Pin;
+    // GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    // GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    // LL_GPIO_Init(MAGNET_GPIO_Port, &GPIO_InitStruct);
 
 #ifndef DEBUG_SWD_ENABLED
     GPIO_InitStruct.Pin = (LED1_Pin | LED2_Pin);
@@ -51,11 +58,6 @@ void init_pins() {
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(LEDS_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = STAT_STBY_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(STAT_STBY_GPIO_Port, &GPIO_InitStruct);
-
     GPIO_InitStruct.Pin = S_PORT_Pin;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
@@ -64,12 +66,9 @@ void init_pins() {
     GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
     LL_GPIO_Init(S_PORT_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = MAGNET_Pin;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(MAGNET_GPIO_Port, &GPIO_InitStruct);
-
     // Set EXTI interrupts on pins
+
+    LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
 
     // Magnet pin
     LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
