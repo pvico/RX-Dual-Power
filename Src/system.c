@@ -30,11 +30,20 @@ static void __system_stop_mode() {
     LL_ADC_Disable(ADC1);    // ADC must be disabled to disable internal regulator
     LL_ADC_DisableInternalRegulator(ADC1);
 
+    // Disable GPIO clocks
+    // Note: disabling GPIOA clock will not prevent the interruption
+    // being fired on MAGNET and SW2 pins and disabling GPIOC clock 
+    // will not change the state of the CTL pins
+    LL_IOP_GRP1_DisableClock(LL_IOP_GRP1_PERIPH_GPIOA |
+                             LL_IOP_GRP1_PERIPH_GPIOB |
+                             LL_IOP_GRP1_PERIPH_GPIOC);
+
     // Stop now
     LL_PWR_EnableUltraLowPower();
     LL_PWR_SetRegulModeLP(LL_PWR_REGU_LPMODES_LOW_POWER);
     LL_PWR_SetPowerMode(LL_PWR_MODE_STOP);
-    LL_LPM_EnableDeepSleep(); 
+    LL_LPM_EnableDeepSleep();
+    // Wait for interrupt
     __WFI();
     // in stop mode here, will resume below when EXTI interrupt
 

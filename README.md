@@ -98,12 +98,13 @@ Position the RX Dual Power PCB appropriately in the model to be able to power of
 
 Alternatively, if you don't have a magnet, press both buttons (SW1 and SW2) simultaneously for 2" to power off the model. Press button SW2 to power it back on. However, using those tiny buttons is not really convenient <sup><a href="#note6">6</a></sup> and must be considered exceptional, using the magnet is the normal way.
 
-When the model is powered off, the current consumed is minimal (60 *micro* amperes!). A small 300mAh battery would completely discharge in about 2 weeks<sup><a href="#note7">7</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
+When the model is powered off, the current consumed is minimal (about 50 to 100 *micro* amperes<sup><a href="#note7">7</a></sup>). A small 300mAh 2S battery would completely discharge in about 2 weeks<sup><a href="#note8">8</a></sup>. Nevertheless, it is best to always start a flight session with fully charged batteries.
 #
 
 <sub><sup id="note5">5</sup> A stack of 8 round magnets of size 12x5mm will be detected when it is about 3cm (1 1/4") from the sensor. Be very careful when adding magnets to the stack: the pull force is very strong and they break really easily. Otherwise, a single round magnet of 20x10mm seems to be just right with a detection distance between 30 and 40mm.</sub><br/>
 <sub><sup id="note6">6</sup> If this is inconvenient due to the PCB location in the model, you still have the option of disconnecting **both** power sources from the PCB.</sub><br/>
-<sub><sup id="note7">7</sup> When powered off, the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
+<sub><sup id="note7">7</sup> This current depends on the highest voltage connected to the RX Dual Power. Measured currents are 45µA at 5V to 130µA at 8.3V</sub><br/>
+<sub><sup id="note8">8</sup> When powered off, most of the very small remaining current will be drawn from the highest voltage source. As an example, for an electric model using the ESC's BEC and with the BEC voltage lower than the backup battery, the RX Dual Power will draw this current from the STBY PWR battery. The main power drive battery, if remaining connected, will only provide the *quiescent current* of the ESC and its associated BEC (probably a few micro-amps as well). Even if the STBY PWR battery is very small (300mAh) and it provides the power off current, it should last the whole flight session and probably the following day as well, *provided there was never a condition where it was used in flight*</sub>
 
 ## S.Port reporting
 
@@ -164,8 +165,8 @@ Any voltage present at the power source inputs can be present at the output. So,
 
 A non-powered glider will use 2 batteries.
 
-- If **all** servos are of "HV" type (high voltage)<sup><a href="#note8">8</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
-- If **any** servo is not of HV type, you could use<sup><a href="#note9">9</a></sup>
+- If **all** servos are of "HV" type (high voltage)<sup><a href="#note9">9</a></sup>, you could use for example a 2S 1500mAh LiPo or 1600mAh LiFe ("18650" cells) as MAIN PWR and a 2S 500mAh LiPo or 300mAh LiFe ("CR2" cells) as STBY PWR.
+- If **any** servo is not of HV type, you could use<sup><a href="#note10">10</a></sup>
     * Any 3-4S LiPo or LiFe battery for both MAIN PWR and STBY PWR and place a BEC after the RX Dual Power
     * A 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 4S NiMh as STBY PWR
     * 4S NiMh batteries for both MAIN PWR and STBY PWR
@@ -195,8 +196,8 @@ An electric helicopter could still be landed in autorotaion after a failure of t
 The RX Dual Power is probably not very useful for multi-copters. Should the main power source fail, the motor(s) will stop and the model will crash anyway.
 #
 
-<sub><sup id="note8">8</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.2 or 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
-<sub><sup id="note9">9</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR.</sub><br/>
+<sub><sup id="note9">9</sup> Most servos are not HV and have a maximum voltage of 6V, some as low as 5.5V. HV servos usually have a max voltage of 8.4V but some are limited to 7.2 or 7.4V. In this last case use a 2S LiFe instead of a 2S LiPo. Check the specifications of your servos !</sub><br/>
+<sub><sup id="note10">10</sup> There are other possibilities. For example a 3-6S LiPo or LiFe and a BEC as MAIN PWR and a 3-6S LiPo or LiFe and a BEC as STBY PWR.</sub><br/>
 
 ## Configuring the RX Dual Power
 
@@ -213,7 +214,7 @@ It is a 4 layer PCB with generous copper fill areas and plenty of vias to connec
 <a href="(https://github.com/pvico/RX-Dual-Battery-Switch-R2.0/blob/main/Additional%20Documents/pdf/RX%20Dual%20Power%20Switch.pdf"><img css="margin:0 auto;" width="100%" src="Additional Documents/img/Schematic.png"></a>
 <p align="center"><sup>Click on the picture for the pdf file</sup></p></br>
 
-On each input, two P-channel MOSFET's (Q1/Q2 and Q3/Q4), mounted back-to-back<sup><a href="#note10">10</a></sup>, switch the associated power source on or off.
+On each input, two P-channel MOSFET's (Q1/Q2 and Q3/Q4), mounted back-to-back<sup><a href="#note11">11</a></sup>, switch the associated power source on or off.
 
 This circuit, using a STM32L021 micro-controller ("MCU" hereafter), is based on the Linear Technology LTC4412 "ideal diode" IC. This IC will drive the MOSFET's and will never allow a reverse current to enter the connected battery when the voltage at the output is higher than the battery, even if the MCU attempts to open the MOSFET's on both inputs.
 
@@ -221,8 +222,8 @@ By driving the CTL pin high, the MCU forces the LTC4412 to swicth its associated
 
 So, refering to the "Power source selection" section here above:
 * Step 1: the MCU drives the CTL2 signal high, forcing U3 to swicth off Q3 and Q4. This isolates the STBY PWR source from the output. The MCU puts its PC14 pin (CTL1) to high impedance. U2 will drive its CTL pin to low, opening Q1 and Q2, connecting MAIN PWR to the output.
-* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. The MCU puts its PC15 pin (CTL2) to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note11">11</a></sup>.
-* Step 3 (when both sources are below minimum voltage or if any one is disconnected<sup><a href="#note12">12</a></sup>  or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
+* Step 2: the MCU drives the CTL1 signal high, forcing U2 to swicth off Q1 and Q2. This isolates the MAIN PWR source from the output. The MCU puts its PC15 pin (CTL2) to high impedance. U3 will drive its CTL pin to low, opening Q3 and Q4, connecting STBY PWR to the output<sup><a href="#note12">12</a></sup>.
+* Step 3 (when both sources are below minimum voltage or if any one is disconnected<sup><a href="#note13">13</a></sup>  or in short-circuit): the MCU will put both CTL1 and CTL2 pins to high impedance. U2 and U3 will manage the source selection, connecting whichever source is 20mV above the other to the output.
 
 The STAT_STBY signals to the MCU when STBY PWR is powering the output.
 
@@ -239,9 +240,9 @@ When the model is powered off, if the AH180 detects a magnet or if the SW2 butto
 The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 ##  
 
-<sub><sup id="note10">10</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
-<sub><sup id="note11">11</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
-<sub><sup id="note12">12</sup> We do this if a battery is disconnected because it can be an intermittent bad contact and we don't want the MCU to constantly switch between step 1 and step 2 with annoying and confusing aural messages on the transmitter. Once a disconnect situation happens - past the first 30" after power up to allow for the 2nd battery connection by the user - the LTC4412's will automatically switch to the highest voltage source and, if it has a higher voltage, the intermittent contact one will be used whenever the contact is made.</sub><br/>
+<sub><sup id="note11">11</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
+<sub><sup id="note12">12</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
+<sub><sup id="note13">13</sup> We do this if a battery is disconnected because it can be an intermittent bad contact and we don't want the MCU to constantly switch between step 1 and step 2 with annoying and confusing aural messages on the transmitter. Once a disconnect situation happens - past the first 30" after power up to allow for the 2nd battery connection by the user - the LTC4412's will automatically switch to the highest voltage source and, if it has a higher voltage, the intermittent contact one will be used whenever the contact is made.</sub><br/>
 
 ## Building and Flashing the firmware
 
