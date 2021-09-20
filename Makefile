@@ -64,6 +64,7 @@ Src/button.c \
 Src/power_source.c \
 Src/switching_logic.c \
 Src/system.c \
+Src/eeprom.c \
 Src/configure.c \
 Src/uart.c \
 Src/telemetry.c \

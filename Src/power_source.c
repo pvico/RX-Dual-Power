@@ -2,6 +2,8 @@
 #include "main.h"
 #include "system.h"
 #include "debug_console.h"
+#include "configure.h"
+#include "config.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -134,12 +136,42 @@ void power_source_loop() {
 
 initialization_result init_power_sources() {
     // TODO
-
-    // example to start with
-    if (initialize_BEC_power_source(&main_power_source, MAIN) == INITIALIZE_OK &&
-        initialize_Battery_power_source(&stby_power_source, LIFE, _2S, STBY) == INITIALIZE_OK) {
-        return INITIALIZE_OK;
+    initialization_result res1, res2;
+    if (is_config_valid()) {
+        if(get_stored_configuration()->main_pwr_source_type == BEC) {
+            res1 = initialize_BEC_power_source(&main_power_source, MAIN);
+        } else {
+            res1 = initialize_Battery_power_source(&main_power_source, get_stored_configuration()->main_pwr_battery_type, 
+                                                    get_stored_configuration()->main_pwr_number_cells, MAIN);
+        }
+        if(get_stored_configuration()->stby_pwr_source_type  == BEC) {
+            res2 = initialize_BEC_power_source(&stby_power_source, STBY);
+        } else {
+            res2 = initialize_Battery_power_source(&stby_power_source, get_stored_configuration()->stby_pwr_battery_type,
+                                                    get_stored_configuration()->stby_pwr_number_cells, STBY);
+        }
+        if ((res1 == INITIALIZE_OK) && (res2 == INITIALIZE_OK)) {
+            return INITIALIZE_OK;
+        } else {
+            return INITIALIZE_NOT_OK;
+        }
     } else {
-        return INITIALIZE_NOT_OK;
+        if(DEFAULT_MAIN_SOURCE_TYPE == BEC) {
+            res1 = initialize_BEC_power_source(&main_power_source, MAIN);
+        } else {
+            res1 = initialize_Battery_power_source(&main_power_source, DEFAULT_MAIN_BATTERY_TYPE, 
+                                                    DEFAULT_MAIN_BATTERY_NUMBER_CELLS, MAIN);
+        }
+        if(DEFAULT_STBY_SOURCE_TYPE == BEC) {
+            res2 = initialize_BEC_power_source(&stby_power_source, STBY);
+        } else {
+            res2 = initialize_Battery_power_source(&stby_power_source, DEFAULT_STBY_BATTERY_TYPE,
+                                                    DEFAULT_STBY_BATTERY_NUMBER_CELLS, STBY);
+        }
+        if ((res1 == INITIALIZE_OK) && (res2 == INITIALIZE_OK)) {
+            return INITIALIZE_OK;
+        } else {
+            return INITIALIZE_NOT_OK;
+        }
     }
 }

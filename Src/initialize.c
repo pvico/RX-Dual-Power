@@ -14,6 +14,7 @@
 #include "uart.h"
 #include "timer.h"
 #include "pin_config.h"
+#include "configure.h"
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
@@ -55,23 +56,26 @@ void initialize() {
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
   __init_system_clock();
-  init_watchdog();
   init_pins();
+
+  // Whatever event brings us here, normal power on, wathchdog reset or spurious reset due to low voltage,
+  // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
+  // the model is powered up
+  power_on();
 
 #ifdef DEBUG_SWD_ENABLED
   // Disable watchdog timer for debugging
   SET_BIT(DBGMCU->APB1FZ, DBGMCU_APB1_FZ_DBG_WWDG_STOP);
 #endif
 
+  init_watchdog();
+  
   // Enable the Systick interrupt
   LL_SYSTICK_EnableIT();
 
   main_power_source.state = MAIN_PWR_ON_STBY_OK;
 
-  // Whatever event brings us here, normal power on, wathchdog reset or spurious reset due to low voltage,
-  // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
-  // the model is powered up
-  power_on();
+  init_configure();
   init_adc_dma();
   init_uart();
   init_timer();
@@ -84,10 +88,8 @@ void initialize() {
 #ifdef TELEMETRY_ENABLED
       || init_telemetry() == INITIALIZE_NOT_OK
 #endif                                          
-      )
-  {
-    leds_show_error();
+  ) {
+    leds_show_error_infinite_loop();
     // debug_console_print_initialization_error();
-    while(true) {}  // stop here
   }
 }

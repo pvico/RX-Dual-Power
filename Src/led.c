@@ -7,6 +7,7 @@
 #include "main.h"
 #include "switching_logic.h"
 #include "magnet.h"
+#include "configure.h"
 
 extern switching_states switching_state;
 
@@ -246,8 +247,12 @@ static void __set_leds_in_function_of_leds_state() {
 }
 
 void leds_loop() {
-    __set_leds_state_in_function_of_switching_state();
-    __set_leds_in_function_of_leds_state();
+    if (is_config_valid()) {
+        __set_leds_state_in_function_of_switching_state();
+        __set_leds_in_function_of_leds_state();
+    } else {
+        leds_show_error();
+    }
 
     // if (rough_quarter_second_tick()) {
     //     char text[] = "   \r\n";
