@@ -13,7 +13,6 @@
 
 
 typedef struct {
-    uint32_t config_ok_code;
     source_type main_pwr_source_type;
     battery_type main_pwr_battery_type;
     battery_number_cells main_pwr_number_cells;

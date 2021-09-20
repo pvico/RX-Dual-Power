@@ -138,17 +138,18 @@ initialization_result init_power_sources() {
     // TODO
     initialization_result res1, res2;
     if (is_config_valid()) {
-        if(get_stored_configuration()->main_pwr_source_type == BEC) {
+        config_data *stored_config = get_stored_configuration();
+        if(stored_config->main_pwr_source_type == BEC) {
             res1 = initialize_BEC_power_source(&main_power_source, MAIN);
         } else {
-            res1 = initialize_Battery_power_source(&main_power_source, get_stored_configuration()->main_pwr_battery_type, 
-                                                    get_stored_configuration()->main_pwr_number_cells, MAIN);
+            res1 = initialize_Battery_power_source(&main_power_source, stored_config->main_pwr_battery_type, 
+                                                    stored_config->main_pwr_number_cells, MAIN);
         }
-        if(get_stored_configuration()->stby_pwr_source_type  == BEC) {
+        if(stored_config->stby_pwr_source_type  == BEC) {
             res2 = initialize_BEC_power_source(&stby_power_source, STBY);
         } else {
-            res2 = initialize_Battery_power_source(&stby_power_source, get_stored_configuration()->stby_pwr_battery_type,
-                                                    get_stored_configuration()->stby_pwr_number_cells, STBY);
+            res2 = initialize_Battery_power_source(&stby_power_source, stored_config->stby_pwr_battery_type,
+                                                    stored_config->stby_pwr_number_cells, STBY);
         }
         if ((res1 == INITIALIZE_OK) && (res2 == INITIALIZE_OK)) {
             return INITIALIZE_OK;
