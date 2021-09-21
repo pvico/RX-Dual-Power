@@ -23,7 +23,7 @@
 #include <stdint.h>
 
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static void __put_CTL1_pin_high_impedance() {    
     set_pin_to_analog(CTL1_GPIO_Port, CTL1_Pin);
@@ -54,7 +54,7 @@ static void __force_stdby_power_off() {
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void use_main_power() {
     __put_CTL1_pin_high_impedance();

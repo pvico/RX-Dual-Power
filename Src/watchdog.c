@@ -10,7 +10,7 @@
 #include "main.h"
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void init_watchdog() {
   /* Peripheral clock enable */

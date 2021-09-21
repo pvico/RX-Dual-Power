@@ -31,11 +31,11 @@
 //      = 0.01988
 // 0.02 or 1/50 is close enough and avoids using floating point calculation
 
-// This define is the inverse of the multiply factor and will be used for voltage
+// This define is the inverse of the factor and will be used for voltage
 // conversion to string
-#define VOLTAGE_INVERSE_MULTIPLY_FACTOR 50
+#define VOLTAGE_INVERSE_FACTOR 50
 
-// This define is the multiply factor for millivolts and will be used for voltage
+// This define is the factor for millivolts and will be used for voltage
 // calculation in millivolts as required by the S.PORT prorocol
 #define ADC_TO_MILLIVOLTS 20        // 0.02 * 1000
 

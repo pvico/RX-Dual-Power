@@ -19,7 +19,7 @@ extern Power_Source stby_power_source;
 extern uint32_t adc_values[];
 
 
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static uint16_t __main_voltage() {
     return adc_values[0] + CORRECTION_VALUE;
@@ -32,7 +32,7 @@ static uint16_t __stby_voltage() {
 //######################################################################################
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void voltage_sensor_loop() {
     uint16_t main_voltage = __main_voltage();
@@ -99,8 +99,8 @@ void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
     // Rounded to 0.02  = 1/50 because we don't want any floating point
     // calculation as this would significantly increase the hex file size
     // and flash memory use
-    units = voltage / VOLTAGE_INVERSE_MULTIPLY_FACTOR;
-    decimals = (voltage % VOLTAGE_INVERSE_MULTIPLY_FACTOR) * 2;
+    units = voltage / VOLTAGE_INVERSE_FACTOR;
+    decimals = (voltage % VOLTAGE_INVERSE_FACTOR) * 2;
 
     buffer[0] = units < 10 ? ' ' : 48 + units / 10;
     buffer[1] = 48 + units % 10;

@@ -31,6 +31,13 @@
         "system.h": "c",
         "timer.h": "c",
         "uart.h": "c",
-        "voltage_sensor.h": "c"
+        "voltage_sensor.h": "c",
+        "bit": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "memory": "c",
+        "new": "c",
+        "functional": "c",
+        "system_clock.h": "c"
     }
 }

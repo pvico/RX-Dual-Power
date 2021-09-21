@@ -25,7 +25,7 @@ extern uint8_t* transmit_buffer;
 extern volatile bool requested_to_transmit_data ;
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
     uint16_t crc = 0;
@@ -42,7 +42,7 @@ static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 initialization_result init_s_port() {
 
@@ -51,6 +51,9 @@ initialization_result init_s_port() {
         return INITIALIZE_NOT_OK;
     }
 
+    // configure_uart(57600, _8N1, RX_INVERTED_TX_INVERTED);
+
+    LL_USART_Enable(USART2);  
     LL_USART_EnableHalfDuplex(USART2);
     LL_USART_EnableIT_RXNE(USART2);
 

@@ -21,7 +21,7 @@
 static uint16_t __first_32s__loop_counter = 0;
 
 
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static void __system_enter_stop_mode() {
     // debug_console_print_entering_stop_mode();
@@ -60,7 +60,7 @@ static void __system_enter_stop_mode() {
 //######################################################################################
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void system_loop() {
     __first_32s__loop_counter++;

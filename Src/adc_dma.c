@@ -13,7 +13,7 @@
 extern uint32_t adc_values[];
 
 
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static void __clear_all_dma_interrupt_flags() {
   DMA1->IFCR = 0x1UL;
@@ -22,7 +22,7 @@ static void __clear_all_dma_interrupt_flags() {
 //######################################################################################
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void init_adc_dma() {
     // Set interrupts and  priorities

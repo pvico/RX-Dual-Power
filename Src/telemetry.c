@@ -24,7 +24,7 @@ extern uint8_t* transmit_buffer;
 extern volatile bool uart_rx_complete;
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 initialization_result init_telemetry() {
     switch (telemetry_type) {

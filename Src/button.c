@@ -20,7 +20,7 @@ extern button *buttons;
 static bool __dual_activation_state = false;
 
 
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static bool __is_sw1_depressed() {
     return !(SW1_GPIO_Port->IDR & SW1_Pin);
@@ -37,7 +37,7 @@ static bool __is_sw2_depressed() {
 //######################################################################################
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 initialization_result init_buttons() {
     buttons = malloc(2 * sizeof(button));

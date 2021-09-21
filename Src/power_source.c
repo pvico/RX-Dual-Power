@@ -19,7 +19,7 @@ extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static bool __is_power_source_below_minimum_voltage(Power_Source *power_source) {
     // This uses the 16 seconds average (long integration)
@@ -57,7 +57,7 @@ static bool __is_power_source_above_reinstate_voltage(Power_Source *power_source
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 initialization_result init_power_sources() {
     initialization_result res1, res2;

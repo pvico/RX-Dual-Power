@@ -24,7 +24,7 @@
 extern volatile bool timer_flag;
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void main_loop() {
   // Performed every 1 ms

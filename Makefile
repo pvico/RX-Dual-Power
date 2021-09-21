@@ -47,6 +47,7 @@ Core/STM32L0xx_LL_Libraries/Src/stm32l0xx_ll_dma.c \
 Core/STM32L0xx_LL_Libraries/Src/stm32l0xx_ll_adc.c \
 Core/STM32L0xx_LL_Libraries/Src/stm32l0xx_ll_pwr.c \
 Src/main.c \
+Src/system_clock.c \
 Src/interrupt_handlers.c \
 Src/globals.c \
 Src/pin_config.c \

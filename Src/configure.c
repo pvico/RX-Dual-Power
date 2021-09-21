@@ -17,7 +17,7 @@ static uint32_t *__eeprom = (uint32_t *)DATA_EEPROM_BASE;
 static config_data __stored_data = {0};
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static void __write_config(config_data *new_config) {
     // for (uint16_t i = 0; i < NUM_WORDS_IN_CONFIG_DATA; i++) {
@@ -61,7 +61,7 @@ void __configure() {
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void init_configure() {
     // __configure();

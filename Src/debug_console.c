@@ -19,7 +19,7 @@ extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 #ifdef CONSOLE_OUTPUT
 // static void __transmit_string(uint8_t *text, uint16_t num_chars) {
@@ -41,7 +41,7 @@ extern Power_Source stby_power_source;
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 #ifdef CONSOLE_OUTPUT
 // void debug_console_print_voltages() {

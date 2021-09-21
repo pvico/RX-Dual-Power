@@ -19,7 +19,7 @@ static bool single_activation_state = false;
 static magnet_state __magnet_debounced_state = MAGNET_NOT_PRESENT;
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static bool __is_magnet_detected() {
   return !(MAGNET_GPIO_Port->IDR & MAGNET_Pin);
@@ -28,7 +28,7 @@ static bool __is_magnet_detected() {
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void magnet_loop() {
   static uint16_t __magnet_detected_loop_counter = 0;

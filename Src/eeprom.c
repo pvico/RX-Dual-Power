@@ -10,7 +10,7 @@
 #include <stdbool.h>
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 inline static bool __is_eeprom_ready() {
   return (((FLASH->SR) & FLASH_SR_READY) == FLASH_SR_READY);
@@ -55,7 +55,7 @@ static void __lock_eeprom() {
 //######################################################################################
  
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
  
 void eeprom_write_word(uint32_t word, uint16_t word_offset) {
     __unlock_eeprom();

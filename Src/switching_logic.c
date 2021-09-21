@@ -24,7 +24,7 @@ extern Power_Source stby_power_source;
 extern switching_states switching_state;
 
 
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static bool __is_stby_powering_RX() {
     return STAT_STBY_GPIO_Port->IDR & STAT_STBY_Pin;
@@ -80,7 +80,7 @@ static void __print_source_state() {
 //######################################################################################
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 // Minimum voltage is the voltage at which, if the average MAIN PWR measured
 // voltage was constantly below this value during 16 seconds, we will swicth

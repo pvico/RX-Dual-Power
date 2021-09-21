@@ -37,7 +37,7 @@ static __Led_Hardware __leds[1];
 #endif
  
  
-//################################## Helper functions ##################################
+//############################### Local helper functions ###############################
 
 static void __illuminate_led(led the_led) {
 #ifdef DEBUG_SWD_ENABLED
@@ -224,7 +224,7 @@ static void __set_leds_in_function_of_leds_state() {
 //######################################################################################
  
  
-//################################ Interface functions #################################
+//################################## Public functions ##################################
  
 initialization_result init_leds() {
 #ifndef DEBUG_SWD_ENABLED

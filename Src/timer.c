@@ -10,7 +10,7 @@
 #include "main.h"
 
 
-//################################ Interface functions #################################
+//################################## Public functions ##################################
 
 void init_timer() {
   LL_TIM_InitTypeDef TIM_InitStruct = {0};
