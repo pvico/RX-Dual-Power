@@ -1,6 +1,16 @@
+//######################################################################################
+// pin_config.c
+// GPIO pins initialization and reconfiguration functions
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+
 #include "pin_config.h"
 #include "config.h"
-
+ 
+ 
+//################################ Interface functions #################################
 
 void init_pins() {
 
@@ -31,12 +41,12 @@ void init_pins() {
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
     LL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
 
-#ifndef DEBUG_SWD_ENABLED
+    #ifndef DEBUG_SWD_ENABLED
     GPIO_InitStruct.Pin = (STAT_STBY_Pin | MAGNET_Pin | SW2_Pin);
-#else
+    #else
     // When DEBUG_SWD_ENABLED is enabled, SW2 is SYS_SWDCLK
     GPIO_InitStruct.Pin = (STAT_STBY_Pin | MAGNET_Pin);
-#endif
+    #endif
     GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -46,12 +56,12 @@ void init_pins() {
     // GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     // LL_GPIO_Init(MAGNET_GPIO_Port, &GPIO_InitStruct);
 
-#ifndef DEBUG_SWD_ENABLED
+    #ifndef DEBUG_SWD_ENABLED
     GPIO_InitStruct.Pin = (LED1_Pin | LED2_Pin);
-#else
+    #else
     // When DEBUG_SWD_ENABLED is enabled, LED1 is SYS_SWDIO
     GPIO_InitStruct.Pin = LED2_Pin;
-#endif
+    #endif
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
@@ -79,7 +89,7 @@ void init_pins() {
     LL_EXTI_Init(&EXTI_InitStruct);
     NVIC_SetPriority(EXTI0_1_IRQn, 0);
     NVIC_EnableIRQ(EXTI0_1_IRQn);
-#ifndef DEBUG_SWD_ENABLED
+    #ifndef DEBUG_SWD_ENABLED
     // SW2 pin
     // NOTE: interrupt does not work if programming clip is installed
     LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE14);
@@ -90,7 +100,7 @@ void init_pins() {
     LL_EXTI_Init(&EXTI_InitStruct);
     NVIC_SetPriority(EXTI4_15_IRQn, 0);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
-#endif // DEBUG_SWD_ENABLED
+    #endif // DEBUG_SWD_ENABLED
 }
 
 void set_pin_to_analog(GPIO_TypeDef *gpio, uint32_t pin) {
@@ -128,3 +138,5 @@ void set_stop_mode_not_needed_gpio_pins_to_analog() {
     GPIO_InitStruct.Pin = (LED1_Pin | LED2_Pin | STAT_STBY_Pin | STAT_STBY_Pin);
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
+ 
+//######################################################################################

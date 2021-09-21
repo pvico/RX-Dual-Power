@@ -1,3 +1,11 @@
+//######################################################################################
+// configure.c
+// Configuration of power sources stored in EEPROM
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+ 
 #include "configure.h"
 #include "led.h"
 #include <stdbool.h>
@@ -7,6 +15,9 @@
 
 static uint32_t *__eeprom = (uint32_t *)DATA_EEPROM_BASE;
 static config_data __stored_data = {0};
+ 
+ 
+//################################## Helper functions ##################################
 
 static void __write_config(config_data *new_config) {
     // for (uint16_t i = 0; i < NUM_WORDS_IN_CONFIG_DATA; i++) {
@@ -26,7 +37,8 @@ static void __write_config(config_data *new_config) {
     uint32_t config_word = 0L;
     config_word = (new_config->main_pwr_source_type         | 
                   (new_config->main_pwr_battery_type << 2L) |
-                  (new_config->main_pwr_number_cells << 5L)   ) |
+                  (new_config->main_pwr_number_cells << 5L)   )
+                  |
                   ((new_config->stby_pwr_source_type        | 
                   (new_config->stby_pwr_battery_type << 2L) |
                   (new_config->stby_pwr_number_cells << 5L)) << 16);
@@ -38,13 +50,18 @@ static void __write_config(config_data *new_config) {
 void __configure() {
     config_data data = {0};
     data.main_pwr_source_type = BATTERY;
-    data.main_pwr_battery_type = LIPO;
+    data.main_pwr_battery_type = LIFE;
     data.main_pwr_number_cells = _2S;
     data.stby_pwr_source_type = BATTERY;
     data.stby_pwr_battery_type = LIFE;
     data.stby_pwr_number_cells = _2S;
     __write_config(&data);
 }
+ 
+//######################################################################################
+ 
+ 
+//################################ Interface functions #################################
 
 void init_configure() {
     // __configure();
@@ -69,3 +86,5 @@ config_data *get_stored_configuration() {
 bool is_config_valid() {
     return (__eeprom[0] == CONFIG_OK_CODE);
 }
+ 
+//######################################################################################

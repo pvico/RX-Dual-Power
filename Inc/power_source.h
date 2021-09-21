@@ -1,5 +1,14 @@
+//######################################################################################
+// power_source.h
+// Initialization and monitoring loop of power sources
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #ifndef A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77
 #define A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77
+
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -60,12 +69,13 @@
 
 #define HYSTERESIS_ADC_VALUE_FOR_REUSING_POWER_SOURCE  12   // 0.24V
 
-// typedef's
+
 typedef enum {BEC, BATTERY} source_type;
 typedef enum {BATT_TYPE_UNDEFINED=0, LIPO, LIFE, NIMH} battery_type;
 typedef enum {BATT_CELLS_UNDEFINED=0, _2S = 2, _3S, _4S, _5S} battery_number_cells;
 typedef enum {MAIN, STBY} source_position;
 typedef enum {OK, LOW, DISCONNECTED_OR_SHORT} power_state;
+
 
 typedef struct {
     source_type source_type;
@@ -81,14 +91,11 @@ typedef struct {
     bool valid;
 } Power_Source;
 
-// prototypes
-
-initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position);
-initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position);
 
 initialization_result init_power_sources();
-
 void power_source_loop();
+initialization_result initialize_BEC_power_source(Power_Source *power_source, source_position position);
+initialization_result initialize_Battery_power_source(Power_Source *power_source, battery_type type, battery_number_cells numbers_cells, source_position position);
 
 
 #endif /* A6A27D9F_3D7E_42DF_8B43_C4DB9E5F2B77 */

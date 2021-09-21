@@ -19,6 +19,13 @@
         "stm32l0xx_ll_wwdg.h": "c",
         "stm32l0xx_ll_bus.h": "c",
         "main.h": "c",
-        "pin_config.h": "c"
+        "pin_config.h": "c",
+        "adc_dma.h": "c",
+        "configure.h": "c",
+        "debug_console.h": "c",
+        "eeprom.h": "c",
+        "magnet.h": "c",
+        "main_loop.h": "c",
+        "output_control.h": "c"
     }
 }

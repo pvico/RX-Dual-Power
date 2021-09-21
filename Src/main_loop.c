@@ -1,3 +1,11 @@
+//######################################################################################
+// main_loop.c
+// Main loop code, executes in an infinite loop after initialization
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+
 #include "main_loop.h"
 #include "main.h"
 #include "led.h"
@@ -15,6 +23,8 @@
 
 extern volatile bool timer_flag;
 
+
+//################################ Interface functions #################################
 
 void main_loop() {
   // Performed every 1 ms
@@ -41,3 +51,5 @@ void main_loop() {
   telemetry_loop();
 #endif
 }
+ 
+//######################################################################################

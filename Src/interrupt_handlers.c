@@ -1,3 +1,6 @@
+
+
+
 #include "main.h"
 #include "interrupt_handlers.h"
 #include <stdbool.h>
@@ -9,6 +12,7 @@
 
 
 extern volatile bool timer_flag;
+extern volatile uint32_t system_tick;
 
 
 void NMI_Handler(void) {
@@ -25,6 +29,7 @@ void PendSV_Handler(void) {}
 
 void SysTick_Handler(void) {
   timer_flag = true;
+  system_tick++;
 }
 
 void EXTI0_1_IRQHandler(void) {

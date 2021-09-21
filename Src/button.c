@@ -1,3 +1,11 @@
+//######################################################################################
+// button.c
+// Intitialization and loop code for buttons and managament of button state 
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "button.h"
 #include "main.h"
 #include <stdint.h>
@@ -11,10 +19,8 @@
 extern button *buttons;
 static bool __dual_activation_state = false;
 
-// NOTE: does not work if programming clip is installed
-bool is_button_dual_activation_active() {
-    return __dual_activation_state;
-}
+
+//################################## Helper functions ##################################
 
 static bool __is_sw1_depressed() {
     return !(SW1_GPIO_Port->IDR & SW1_Pin);
@@ -27,6 +33,11 @@ static bool __is_sw2_depressed() {
     return false;
 #endif
 }
+
+//######################################################################################
+
+
+//################################ Interface functions #################################
 
 initialization_result init_buttons() {
     buttons = malloc(2 * sizeof(button));
@@ -81,3 +92,9 @@ void button_loop() {
     } 
 }
 
+// NOTE: does not work if programming clip is installed
+bool is_button_dual_activation_active() {
+    return __dual_activation_state;
+}
+
+//######################################################################################

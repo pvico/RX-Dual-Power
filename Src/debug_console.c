@@ -1,3 +1,11 @@
+//######################################################################################
+// debug_console.c
+// Output on serial telemetry port for debugging purpose
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+ 
 #include "debug_console.h"
 #include "uart.h"
 #include "voltage_sensor.h"
@@ -8,6 +16,9 @@
 
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
+ 
+ 
+//################################## Helper functions ##################################
 
 // #ifdef CONSOLE_OUTPUT
 // static void __transmit_string(uint8_t *text, uint16_t num_chars) {
@@ -25,6 +36,11 @@ extern Power_Source stby_power_source;
 //     while (!LL_USART_IsActiveFlag_TC(USART2));      // Wait for TC flag to be raised for last char
 // }
 // #endif
+ 
+//######################################################################################
+ 
+ 
+//################################ Interface functions #################################
 
 // void debug_console_print_voltages() {
 //   #ifdef CONSOLE_OUTPUT
@@ -83,3 +99,5 @@ extern Power_Source stby_power_source;
 //     __transmit_string(text, sizeof(text)-1);
 //   #endif
 // }
+ 
+//######################################################################################

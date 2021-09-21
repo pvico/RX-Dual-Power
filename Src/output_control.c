@@ -1,16 +1,29 @@
+//######################################################################################
+// output_control.c
+// Interface functions for changing the switching of the power sources
+// 
+// Only the code in this file can manipulate the LTC4412 CTL pins
+// to select the power source and/or switch on/off the output
+// In particular, the ONLY way to remove power to the model is to call power_off()
+// defined here
+// 
+// Extra attention required when modifying this code!!!
+// 
+// CTL pin of the LTC4412, when set to high, always swicthes off
+// the associated MOSFET(s)
+// See README for electronic circuit details
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+
 #include "output_control.h"
 #include "main.h"
 #include "pin_config.h"
 #include <stdint.h>
 
-// Only the code in this file can manipulate the LTC4412 CTL pins
-// to select the power source and/or switch on/off the output
-// Extra attention required when modifying this code
-// CTL pin of the LTC4412, when set to high, always swicthes off
-// the associated MOSFET(s)
-
-
-// ########################## Local Helper functions ##########################
+ 
+//################################## Helper functions ##################################
 
 static void __put_CTL1_pin_high_impedance() {    
     set_pin_to_analog(CTL1_GPIO_Port, CTL1_Pin);
@@ -37,10 +50,11 @@ static void __force_stdby_power_off() {
     __put_CTL2_pin_GPIO_output();
     LL_GPIO_SetOutputPin(CTL2_GPIO_Port, CTL2_Pin);
 }
-
-// ########################## Public functions ##########################
-
-// See README for electronic circuit explanation
+ 
+//######################################################################################
+ 
+ 
+//################################ Interface functions #################################
 
 void use_main_power() {
     __put_CTL1_pin_high_impedance();
@@ -68,4 +82,7 @@ void power_on() {
     // control of power source selection
     let_LTCs_determine_power_source();
 }
+ 
+//######################################################################################
+
 

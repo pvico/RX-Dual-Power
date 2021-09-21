@@ -1,3 +1,11 @@
+//######################################################################################
+// s_port.c
+// Telemetry interface for S.PORT protocol (FrSky)
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+ 
 #include "s_port.h"
 #include "main.h"
 #include <stdlib.h>
@@ -15,7 +23,9 @@ extern Power_Source stby_power_source;
 extern switching_states switching_state;
 extern uint8_t* transmit_buffer;
 extern volatile bool requested_to_transmit_data ;
-
+ 
+ 
+//################################## Helper functions ##################################
 
 static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
     uint16_t crc = 0;
@@ -28,6 +38,11 @@ static uint8_t __compute_FrSky_CRC (uint8_t *packet) {
     }
     return ~crc;
 }
+ 
+//######################################################################################
+ 
+ 
+//################################ Interface functions #################################
 
 initialization_result init_s_port() {
 
@@ -97,6 +112,11 @@ void s_port_loop() {
         LL_USART_EnableDirectionRx(USART2);
     }
 }
+ 
+//######################################################################################
+
+
+//################################ Callback functions ##################################
 
 void s_port_uart_receive_byte_callback() {
     static bool poll_first_byte_detected = false;
@@ -124,4 +144,5 @@ void s_port_response_timer_callback() {
     LL_TIM_DisableIT_UPDATE(TIM21);
     LL_TIM_DisableCounter(TIM21);
 }
-
+ 
+//######################################################################################

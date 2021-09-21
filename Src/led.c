@@ -1,15 +1,25 @@
-#include "debug_console.h"
+//######################################################################################
+// led.c
+//  Initialization and code for managing the LED's state
+//
+// Philippe Vico - 2021
+//######################################################################################
+ 
+ 
+#include "led.h"
 #include "main.h"
 #include "system.h"
-#include "led.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include "main.h"
+#include "debug_console.h"
 #include "switching_logic.h"
 #include "magnet.h"
 #include "configure.h"
 
+
 extern switching_states switching_state;
+
 
 typedef struct {
     GPIO_TypeDef *gpio_port;
@@ -18,12 +28,16 @@ typedef struct {
     bool illuminated;
 } __Led_Hardware;
 
+
+// LED1 is on the SYS_SWDIO pin and is not included in the code if debugging through SWD
 #ifndef DEBUG_SWD_ENABLED
 static __Led_Hardware __leds[2];
 #else
 static __Led_Hardware __leds[1];
 #endif
-
+ 
+ 
+//################################## Helper functions ##################################
 
 static void __illuminate_led(led the_led) {
 #ifdef DEBUG_SWD_ENABLED
@@ -40,45 +54,6 @@ static void __extinguish_led(led the_led) {
     SET_BIT(__leds[the_led].gpio_port->ODR, __leds[the_led].pin);
     __leds[the_led].illuminated = false;
 }
-
-initialization_result init_leds() {
-#ifndef DEBUG_SWD_ENABLED
-    __leds[LED1].gpio_port = LED1_GPIO_Port;
-    __leds[LED1].pin = LED1_Pin;
-    __leds[LED1].state = OFF;
-    __leds[LED1].illuminated = false;
-    __extinguish_led(LED1);
-#endif
-    __leds[LED2].gpio_port = LED2_GPIO_Port;
-    __leds[LED2].pin = LED2_Pin;
-    __leds[LED2].state = OFF;
-    __leds[LED2].illuminated = false;
-    __extinguish_led(LED2);
-
-    return INITIALIZE_OK;
-}
-
-void leds_show_error() {
-#ifndef DEBUG_SWD_ENABLED
-    __illuminate_led(LED1);
-#endif
-    __illuminate_led(LED2);
-}
-
-void leds_show_error_infinite_loop() {
-    leds_show_error();
-    while(1);
-}
-
-
-led_state get_led_state(led the_led) {
-    return __leds[the_led].state;
-}
-
-void set_led_state(led the_led, led_state state) {
-    __leds[the_led].state = state;
-}
-
 
 static uint16_t __led_counters[2] = {0};
 
@@ -245,6 +220,28 @@ static void __set_leds_in_function_of_leds_state() {
         __led_counters[the_led]++;
     }
 }
+ 
+//######################################################################################
+ 
+ 
+//################################ Interface functions #################################
+ 
+initialization_result init_leds() {
+#ifndef DEBUG_SWD_ENABLED
+    __leds[LED1].gpio_port = LED1_GPIO_Port;
+    __leds[LED1].pin = LED1_Pin;
+    __leds[LED1].state = OFF;
+    __leds[LED1].illuminated = false;
+    __extinguish_led(LED1);
+#endif
+    __leds[LED2].gpio_port = LED2_GPIO_Port;
+    __leds[LED2].pin = LED2_Pin;
+    __leds[LED2].state = OFF;
+    __leds[LED2].illuminated = false;
+    __extinguish_led(LED2);
+
+    return INITIALIZE_OK;
+}
 
 void leds_loop() {
     if (is_config_valid()) {
@@ -261,3 +258,25 @@ void leds_loop() {
     //     debug_console_print(text, sizeof(text));
     // }
 }
+
+led_state get_led_state(led the_led) {
+    return __leds[the_led].state;
+}
+
+void set_led_state(led the_led, led_state state) {
+    __leds[the_led].state = state;
+}
+
+void leds_show_error() {
+    #ifndef DEBUG_SWD_ENABLED
+    __illuminate_led(LED1);
+    #endif
+    __illuminate_led(LED2);
+}
+
+void leds_show_error_infinite_loop() {
+    leds_show_error();
+    while(1);
+}
+
+//######################################################################################

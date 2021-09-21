@@ -1,14 +1,21 @@
+//######################################################################################
+// configure.h
+// Configuration of power sources stored in EEPROM
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #ifndef B4D26B50_52A0_4F93_BC59_89DE8DDA842C
 #define B4D26B50_52A0_4F93_BC59_89DE8DDA842C
+
 
 #include "main.h"
 #include "power_source.h"
 #include <stdint.h>
 
-// TODO
 
 #define EEPROM_SIZE (DATA_EEPROM_END - DATA_EEPROM_BASE)
-
 #define CONFIG_OK_CODE ((((uint32_t)'C') << 24UL) | (((uint32_t)'F') << 16UL) | (((uint32_t)'O') << 8UL) | ((uint32_t)'K'))
 
 
@@ -27,5 +34,6 @@ typedef struct {
 void init_configure();
 bool is_config_valid();
 config_data *get_stored_configuration();
+
 
 #endif /* B4D26B50_52A0_4F93_BC59_89DE8DDA842C */

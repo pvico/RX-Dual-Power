@@ -1,3 +1,11 @@
+//######################################################################################
+// initialize.c
+// All initialization before entering the main loop
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "initialize.h"
 #include "main.h"
 #include "led.h"
@@ -16,10 +24,13 @@
 #include "pin_config.h"
 #include "configure.h"
 
+
 extern Power_Source main_power_source;
 extern Power_Source stby_power_source;
 extern switching_states switching_state;
 
+
+//################################## Helper functions ##################################
 
 static void __init_system_clock() {
   LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
@@ -49,6 +60,10 @@ static void __init_system_clock() {
   LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1);
 }
 
+//######################################################################################
+
+
+//################################ Interface functions #################################
 
 void initialize() {
   // Reset of all peripherals, Initializes the Flash interface and the Systick.
@@ -62,18 +77,16 @@ void initialize() {
   // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
   // the model is powered up
   power_on();
+  // Enable the Systick interrupt
+  LL_SYSTICK_EnableIT();
 
 #ifdef DEBUG_SWD_ENABLED
   // Disable watchdog timer for debugging
   SET_BIT(DBGMCU->APB1FZ, DBGMCU_APB1_FZ_DBG_WWDG_STOP);
 #endif
-
   init_watchdog();
   
-  // Enable the Systick interrupt
-  LL_SYSTICK_EnableIT();
 
-  main_power_source.state = MAIN_PWR_ON_STBY_OK;
 
   init_configure();
   init_adc_dma();
@@ -91,5 +104,9 @@ void initialize() {
   ) {
     leds_show_error_infinite_loop();
     // debug_console_print_initialization_error();
+  } else {
+
   }
 }
+
+//######################################################################################

@@ -1,12 +1,28 @@
+//######################################################################################
+// adc_dma.c
+// Initialization and interrupt callback functions for ADC and DMA
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "adc_dma.h"
 #include "main.h"
 
 
 extern uint32_t adc_values[];
 
+
+//################################## Helper functions ##################################
+
 static void __clear_all_dma_interrupt_flags() {
   DMA1->IFCR = 0x1UL;
 }
+
+//######################################################################################
+
+
+//################################ Interface functions #################################
 
 void init_adc_dma() {
     // Set interrupts and  priorities
@@ -100,6 +116,11 @@ void init_adc_dma() {
     LL_ADC_REG_StartConversion(ADC1);
 }
 
+//######################################################################################
+
+
+//################################ Callback functions ##################################
+
 void dma_callback() {
   // Note: we don't check if the interrupts are enabled like HAL does
   // as we have enabled them before starting comversions
@@ -127,6 +148,7 @@ void dma_callback() {
   }
 }
 
+
 void adc_callback() {
   // if end of sequence of channels conversion interrupt occurred
   if (LL_ADC_IsActiveFlag_EOS(ADC1)) {
@@ -139,3 +161,5 @@ void adc_callback() {
     LL_ADC_ClearFlag_OVR(ADC1);
   }
 }
+
+//######################################################################################
