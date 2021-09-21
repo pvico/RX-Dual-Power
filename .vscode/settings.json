@@ -26,6 +26,11 @@
         "eeprom.h": "c",
         "magnet.h": "c",
         "main_loop.h": "c",
-        "output_control.h": "c"
+        "output_control.h": "c",
+        "switching_logic.h": "c",
+        "system.h": "c",
+        "timer.h": "c",
+        "uart.h": "c",
+        "voltage_sensor.h": "c"
     }
 }

@@ -1,6 +1,16 @@
+//######################################################################################
+// timer.c
+// Timer(s) initializaton
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "timer.h"
 #include "main.h"
 
+
+//################################ Interface functions #################################
 
 void init_timer() {
   LL_TIM_InitTypeDef TIM_InitStruct = {0};
@@ -20,3 +30,5 @@ void init_timer() {
   LL_TIM_SetTriggerOutput(TIM21, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM21);
 }
+
+//######################################################################################

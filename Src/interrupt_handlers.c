@@ -1,8 +1,13 @@
-
+//######################################################################################
+// interrupt_handlers.c
+// Interrupt handler functions. Implementation of the functions referenced by the vector
+// table in the assembler bootup caode
+//
+// Philippe Vico - 2021
+//######################################################################################
 
 
 #include "main.h"
-#include "interrupt_handlers.h"
 #include <stdbool.h>
 #include "voltage_sensor.h"
 #include "telemetry.h"
@@ -13,6 +18,9 @@
 
 extern volatile bool timer_flag;
 extern volatile uint32_t system_tick;
+
+
+// Any function present here must be present in the vector table in startup_stm32l021xx.s 
 
 
 void NMI_Handler(void) {

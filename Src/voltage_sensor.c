@@ -1,3 +1,11 @@
+//######################################################################################
+// voltage_sensor.c
+// Determines the voltage sensed in the power sources
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "voltage_sensor.h"
 #include "main.h"
 #include "power_source.h"
@@ -11,6 +19,8 @@ extern Power_Source stby_power_source;
 extern uint32_t adc_values[];
 
 
+//################################## Helper functions ##################################
+
 static uint16_t __main_voltage() {
     return adc_values[0] + CORRECTION_VALUE;
 }
@@ -19,29 +29,10 @@ static uint16_t __stby_voltage() {
     return adc_values[1] + CORRECTION_VALUE;
 }
 
-uint16_t voltage_ADC_to_millivolts(uint16_t adc_value) {
-    return  20 * adc_value;
-}
+//######################################################################################
 
-void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
-    uint8_t units;
-    uint8_t decimals;
 
-    // Real conversion ratio is 0.0198840816
-    // Rounded to 0.02  = 1/50 because we don't want any floating point
-    // calculation as this would significantly increase the hex file size
-    // and flash memory use
-    units = voltage / 50;
-    decimals = (voltage % 50) * 2;
-
-    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
-    buffer[1] = 48 + units % 10;
-    buffer[2] = '.';
-    buffer[3] = 48 + decimals / 10;
-    buffer[4] = 48 + decimals % 10;
-    buffer[5] = 'V';
-}
-
+//################################ Interface functions #################################
 
 void voltage_sensor_loop() {
     uint16_t main_voltage = __main_voltage();
@@ -95,3 +86,29 @@ void voltage_sensor_loop() {
     }
 }
 
+uint16_t voltage_ADC_to_millivolts(uint16_t adc_value) {
+    return  ADC_TO_MILLIVOLTS * adc_value;
+}
+
+#ifdef CONSOLE_OUTPUT
+void voltage_to_str(uint32_t voltage, uint8_t *buffer) {
+    uint8_t units;
+    uint8_t decimals;
+
+    // Real conversion ratio is 0.0198840816
+    // Rounded to 0.02  = 1/50 because we don't want any floating point
+    // calculation as this would significantly increase the hex file size
+    // and flash memory use
+    units = voltage / VOLTAGE_INVERSE_MULTIPLY_FACTOR;
+    decimals = (voltage % VOLTAGE_INVERSE_MULTIPLY_FACTOR) * 2;
+
+    buffer[0] = units < 10 ? ' ' : 48 + units / 10;
+    buffer[1] = 48 + units % 10;
+    buffer[2] = '.';
+    buffer[3] = 48 + decimals / 10;
+    buffer[4] = 48 + decimals % 10;
+    buffer[5] = 'V';
+}
+#endif
+
+//######################################################################################

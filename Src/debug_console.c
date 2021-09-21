@@ -1,6 +1,7 @@
 //######################################################################################
 // debug_console.c
-// Output on serial telemetry port for debugging purpose
+// Console output on serial telemetry port for debugging purpose
+// CONSOLE_OUTPUT must be defined in config.h include the functions in the code
 //
 // Philippe Vico - 2021
 //######################################################################################
@@ -20,7 +21,7 @@ extern Power_Source stby_power_source;
  
 //################################## Helper functions ##################################
 
-// #ifdef CONSOLE_OUTPUT
+#ifdef CONSOLE_OUTPUT
 // static void __transmit_string(uint8_t *text, uint16_t num_chars) {
 //     uint16_t index = 0;
 
@@ -35,69 +36,55 @@ extern Power_Source stby_power_source;
 
 //     while (!LL_USART_IsActiveFlag_TC(USART2));      // Wait for TC flag to be raised for last char
 // }
-// #endif
+#endif
  
 //######################################################################################
  
  
 //################################ Interface functions #################################
 
+#ifdef CONSOLE_OUTPUT
 // void debug_console_print_voltages() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "MAIN: ______\tSTBY: ______\r\n";
 //   voltage_to_str(main_power_source.last_16ms_average_voltage_ADC_value, text+6);
 //   voltage_to_str(stby_power_source.last_16ms_average_voltage_ADC_value, text+19);
 //   __transmit_string(text, 27);
-//   #endif
 // }
 
 // void debug_console_print(char *text, uint16_t num_chars) {
-//   #ifdef CONSOLE_OUTPUT 
 //   __transmit_string((uint8_t*)text, num_chars);
-//   #endif
 // }
 
 // void debug_console_print_magnet_present() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "MAGNET PRESENT\r\n";
 //   __transmit_string(text, sizeof(text)-1);   
-//   #endif
 // }
 
 // void debug_console_print_single_activation() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "SINGLE ACTIVATION\r\n";
 //   __transmit_string(text, sizeof(text)-1);   
-//   #endif
 // }
 
 // void debug_console_print_double_activation() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "DOUBLE ACTIVATION\r\n";
 //   __transmit_string(text, sizeof(text)-1);   
-//   #endif
 // }
 
 // void debug_console_print_sw1_depressed() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "SW1 DEPRESSED\r\n";
 //   __transmit_string(text, sizeof(text)-1);   
-//   #endif
 // }
 
 // void debug_console_print_initialization_error() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "\r\nInitialization error. Stopped.\r\n";
 //   __transmit_string(text, sizeof(text)-1);   
-//   #endif
 // }
 
 // void debug_console_print_splash() {
-//   #ifdef CONSOLE_OUTPUT
 //   uint8_t text[] = "\r\nRX Dual Power\r\nPhilippe Vico - 2021\r\n";
 // //   __transmit_string(text);   
 //     __transmit_string(text, sizeof(text)-1);
-//   #endif
 // }
+#endif
  
 //######################################################################################

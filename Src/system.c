@@ -1,3 +1,11 @@
+//######################################################################################
+// system.c
+// Determines power off activation and some timing functiopns
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "system.h"
 #include "main.h"
 #include "magnet.h"
@@ -10,14 +18,12 @@
 #include "pin_config.h"
 
 
-uint32_t SystemCoreClock = 2097152U; /* 32.768 kHz * 2^6 */
-
-const uint8_t AHBPrescTable[16] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U, 6U, 7U, 8U, 9U};
-const uint8_t APBPrescTable[8] = {0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U};
-const uint8_t PLLMulTable[9] = {3U, 4U, 6U, 8U, 12U, 16U, 24U, 32U, 48U};
+static uint16_t __first_32s__loop_counter = 0;
 
 
-static void __system_stop_mode() {
+//################################## Helper functions ##################################
+
+static void __system_enter_stop_mode() {
     // debug_console_print_entering_stop_mode();
 
     power_off();
@@ -51,7 +57,10 @@ static void __system_stop_mode() {
     NVIC_SystemReset();
 }
 
-static uint16_t __first_32s__loop_counter = 0;
+//######################################################################################
+
+
+//################################ Interface functions #################################
 
 void system_loop() {
     __first_32s__loop_counter++;
@@ -60,11 +69,11 @@ void system_loop() {
     }
 
     if (is_magnet_double_activation_active()) {
-        __system_stop_mode();
+        __system_enter_stop_mode();
     }
 
     if (is_button_dual_activation_active()) {
-        __system_stop_mode();
+        __system_enter_stop_mode();
     }
 }
 
@@ -84,7 +93,4 @@ bool rough_quarter_second_tick() {
     return (__first_32s__loop_counter & 0xFF) == 0;
 }
 
-
-
-// This function must be there, it is called by the assembler bootup code
-void SystemInit() {}
+//######################################################################################

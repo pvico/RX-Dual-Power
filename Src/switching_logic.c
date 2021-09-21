@@ -1,3 +1,11 @@
+//######################################################################################
+// switching_logic.c
+// Switching loop, determines the switching state and swicth power source accordingly
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "switching_logic.h"
 #include "main.h"
 #include "voltage_sensor.h"
@@ -10,6 +18,69 @@
 #include "debug_console.h"
 #include "config.h"
 
+
+extern Power_Source main_power_source;
+extern Power_Source stby_power_source;
+extern switching_states switching_state;
+
+
+//################################## Helper functions ##################################
+
+static bool __is_stby_powering_RX() {
+    return STAT_STBY_GPIO_Port->IDR & STAT_STBY_Pin;
+}
+
+#ifdef CONSOLE_OUTPUT
+static void __print_source_state() {
+    if(rough_quarter_second_tick()) {
+        char text[] = "Main:       STBY:     \r\n";
+        switch (main_power_source.state) {
+        case OK:
+            text[6] = 'O';
+            text[7] = 'K';
+            break;        
+        case LOW:
+            text[6] = 'L';
+            text[7] = 'O';
+            text[8] = 'W';
+            break;        
+        case DISCONNECTED_OR_SHORT:
+            text[6] = 'D';
+            text[7] = 'I';
+            text[8] = 'S';
+            text[9] = 'C';
+            break;        
+        default:
+            break;
+        }
+        switch (stby_power_source.state) {
+        case OK:
+            text[18] = 'O';
+            text[19] = 'K';
+            break;        
+        case LOW:
+            text[18] = 'L';
+            text[19] = 'O';
+            text[20] = 'W';
+            break;        
+        case DISCONNECTED_OR_SHORT:
+            text[18] = 'D';
+            text[19] = 'I';
+            text[20] = 'S';
+            text[21] = 'C';
+            break;        
+        default:
+            break;
+        }
+        debug_console_print(text, 24);
+    }
+}
+#endif
+
+//######################################################################################
+
+
+//################################ Interface functions #################################
 
 // Minimum voltage is the voltage at which, if the average MAIN PWR measured
 // voltage was constantly below this value during 16 seconds, we will swicth
@@ -31,72 +102,7 @@
 // See power_source.h for the values of minimum and critical voltage in
 // function of power source type
 
-
-extern Power_Source main_power_source;
-extern Power_Source stby_power_source;
-
-extern switching_states switching_state;
-
-static bool __is_stby_powering_RX() {
-    return STAT_STBY_GPIO_Port->IDR & STAT_STBY_Pin;
-}
-
-// static void __print_source_state() {
-//     #ifdef CONSOLE_OUTPUT
-//     if(rough_quarter_second_tick()) {
-//         char text[] = "Main:       STBY:     \r\n";
-//         switch (main_power_source.state) {
-//         case OK:
-//             text[6] = 'O';
-//             text[7] = 'K';
-//             break;        
-//         case LOW:
-//             text[6] = 'L';
-//             text[7] = 'O';
-//             text[8] = 'W';
-//             break;        
-//         case DISCONNECTED_OR_SHORT:
-//             text[6] = 'D';
-//             text[7] = 'I';
-//             text[8] = 'S';
-//             text[9] = 'C';
-//             break;        
-//         default:
-//             break;
-//         }
-//         switch (stby_power_source.state) {
-//         case OK:
-//             text[18] = 'O';
-//             text[19] = 'K';
-//             break;        
-//         case LOW:
-//             text[18] = 'L';
-//             text[19] = 'O';
-//             text[20] = 'W';
-//             break;        
-//         case DISCONNECTED_OR_SHORT:
-//             text[18] = 'D';
-//             text[19] = 'I';
-//             text[20] = 'S';
-//             text[21] = 'C';
-//             break;        
-//         default:
-//             break;
-//         }
-//         debug_console_print(text, 24);
-//     }
-//     #endif
-// }
-
-
 void switching_logic_loop() {
-
-    // if (rough_second_tick()) {
-    //     __print_source_state();
-    //     char text[] = " \r\n";
-    //     text[0] = 48 + switching_state;
-    //     debug_console_print(text, 3);
-    // }
 
     static bool main_power_disconnect_flag = false;
     static bool stby_power_disconnect_flag = false;
@@ -181,3 +187,5 @@ void switching_logic_loop() {
         }
     }
 }
+
+//######################################################################################

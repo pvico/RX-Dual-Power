@@ -1,3 +1,12 @@
+//######################################################################################
+// telemetry.c
+// Generic telemetry initialization, loop and callbacks. Switches to the appropriate
+// protocol functions
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #include "telemetry.h"
 #include "main.h"
 #include "s_port.h"
@@ -15,9 +24,9 @@ extern uint8_t* transmit_buffer;
 extern volatile bool uart_rx_complete;
 
 
-initialization_result init_telemetry() {
-    // TODO: config
+//################################ Interface functions #################################
 
+initialization_result init_telemetry() {
     switch (telemetry_type) {
     case S_PORT_TYPE:
         telemetry_type = S_PORT_TYPE;
@@ -51,6 +60,11 @@ void telemetry_loop() {
     }
 }
 
+//######################################################################################
+
+
+//################################ Callback functions ##################################
+
 void uart_receive_byte_callback() {
     switch (telemetry_type) {
     case S_PORT_TYPE:
@@ -66,3 +80,5 @@ void uart_receive_byte_callback() {
         break;
     }
 }
+
+//######################################################################################

@@ -1,6 +1,13 @@
+//######################################################################################
+// switching_logic.h
+// Switching loop, determines the switching state and swicth power source accordingly
+//
+// Philippe Vico - 2021
+//######################################################################################
+
+
 #ifndef E36CD3DA_CBA9_4CC2_93ED_4CD5DDDC849A
 #define E36CD3DA_CBA9_4CC2_93ED_4CD5DDDC849A
-
 
 
 typedef enum { MAIN_PWR_ON_STBY_OK,                                                     // RBOX RBCS CH01
@@ -16,6 +23,8 @@ typedef enum { MAIN_PWR_ON_STBY_OK,                                             
                CRITICAL_MAIN_DISCONNECT_OR_BAD_CONTACT_STBY_DISCONNECT_OR_BAD_CONTACT   // RBOX RBCS CH11
                } switching_states;
 
+
 void switching_logic_loop();
+
 
 #endif /* E36CD3DA_CBA9_4CC2_93ED_4CD5DDDC849A */
