@@ -49,9 +49,9 @@ static void __write_config(config_data *new_config) {
 
 void __configure() {
     config_data data = {0};
-    data.main_pwr_source_type = BATTERY;
-    data.main_pwr_battery_type = LIFE;
-    data.main_pwr_number_cells = _2S;
+    data.main_pwr_source_type = BEC;
+    data.main_pwr_battery_type = BATT_TYPE_UNDEFINED;
+    data.main_pwr_number_cells = BATT_CELLS_UNDEFINED;
     data.stby_pwr_source_type = BATTERY;
     data.stby_pwr_battery_type = LIFE;
     data.stby_pwr_number_cells = _2S;
