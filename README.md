@@ -216,7 +216,7 @@ Configure:
     - STBY PWR source
     - Telemetry protocol (S.Port, SBUS2, X-BUS, etc)
 
-Many existing commercial dual power devices do not require configuration but they do not perform the same way as the RX Dual Power. They can measure the sources voltages but they can't determine their battery types - how could they differentiate between a fully charged LiFe 2S and a fully discharged LiPo 2S? - and consequently, they use both power sources in parallel. If the batteries are not of the same type, one could deep discharge and sustain damage.
+Many existing commercial dual power devices do not require configuration but they do not perform the same way as the RX Dual Power. They can measure the source voltages but they can't determine their battery types - how could they differentiate between a fully charged LiFe 2S and a fully discharged LiPo 2S? - and consequently, they use both power sources in parallel. If the batteries are not of the same type, one could deep discharge and sustain damage.
 
 The RX Dual Power can conserve the STBY PWR battery charge if you replace the MAIN PWR battery before it has discharged to a low level and the STBY PWR battery has not powered the model. In this case, the STBY PWR battery doesn't need replacing during the flying session. You could locate the STBY PWR battery in a remote location in the model if you extend its charging wires so that they are accessible.
 
