@@ -211,7 +211,7 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 
 ## Configuring the RX Dual Power
 
-Configure:
+Configuration:
 
     - MAIN PWR source
     - STBY PWR source
