@@ -25,6 +25,8 @@ Future development:
 - SBUS2 (Futaba)
 - X-BUS (Spektrum)
 - M-LINK (Multiplex)
+- EX Bus (Jeti)
+- iBUS (FlySky)
 
 A transmitter using OpenTX is ideal but not mandatory.
 #

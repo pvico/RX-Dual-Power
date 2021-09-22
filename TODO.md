@@ -5,6 +5,10 @@
 
 ### Optional
 
-- SBUS2 (Futaba)
-- X-BUS (Spektrum)
-- M-LINK (Multiplex)
+- UART auto baudrate
+- Other protocols:
+    - SBUS2 (Futaba)
+    - X-BUS (Spektrum)
+    - M-LINK (Multiplex)
+    - EX Bus (Jeti)
+    - iBUS (FlySky)

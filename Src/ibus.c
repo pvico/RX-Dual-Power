@@ -1,12 +1,12 @@
 //######################################################################################
-// x-bus.c
-// Telemetry interface for iBUS protocol (FlySky)
+// ibus.c
+// Telemetry interface for X-BUS protocol (Spektrum)
 //
 // Philippe Vico - 2021
 //######################################################################################
  
  
-#include "x-bus.h"
+#include "ibus.h"
 
 
 // FUTURE DEV

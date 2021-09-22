@@ -1,12 +1,12 @@
 //######################################################################################
-// x-bus.c
-// Telemetry interface for iBUS protocol (FlySky)
+// exbus.c
+// Telemetry interface for EX Bus protocol (Jeti)
 //
 // Philippe Vico - 2021
 //######################################################################################
  
  
-#include "x-bus.h"
+#include "exbus.h"
 
 
 // FUTURE DEV

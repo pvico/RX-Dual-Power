@@ -51,7 +51,7 @@ initialization_result init_s_port() {
         return INITIALIZE_NOT_OK;
     }
 
-    // configure_uart(57600, _8N1, RX_INVERTED_TX_INVERTED);
+    configure_uart(57600, BYTE_FORMAT_8N1, RX_INVERTED_TX_INVERTED);
 
     LL_USART_Enable(USART2);  
     LL_USART_EnableHalfDuplex(USART2);

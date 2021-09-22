@@ -72,6 +72,8 @@ Src/telemetry.c \
 Src/s_port.c \
 Src/sbus2.c \
 Src/x-bus.c \
+Src/ibus.c \
+Src/exbus.c \
 Src/m-link.c 
 
 # ASM sources
