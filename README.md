@@ -224,9 +224,10 @@ The RX Dual Power can conserve the STBY PWR battery charge if you replace the MA
 Furthermore, the RX Dual Power can transmit through telemetry a battery discharge or bad contact situation and - more importantly - a critical condition with both power sources not ok. Existing devices cannot do this, they just transmit the voltages.
 
 Configuration through the telemetry connector: **TBD**
-    - Using a USB to serial adapter and a Windows/MAC OS/Linux app
-    - Using a dedicated multi-device (RX Dual Power, SBUS Decoder and other future devices) programmer with OLED screen
-    - Using a Bluetooth LE device and a iOS or Android app
+
+- Using a USB to serial adapter and a Windows/MAC OS/Linux app
+- Using a dedicated multi-device (RX Dual Power, SBUS Decoder and other future devices) programmer with OLED screen
+- Using a Bluetooth LE device and a iOS or Android app
 
 ## PCB
 
