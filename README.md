@@ -212,6 +212,7 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 ## Configuring the RX Dual Power
 
 Configure:
+
     - MAIN PWR source
     - STBY PWR source
     - Telemetry protocol (S.Port, SBUS2, X-BUS, etc)
