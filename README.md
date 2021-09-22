@@ -211,11 +211,11 @@ The RX Dual Power is probably not very useful for multi-copters. Should the main
 
 ## Configuring the RX Dual Power
 
-Configuration:
+Configure:
 
-    - MAIN PWR source
-    - STBY PWR source
-    - Telemetry protocol (S.Port, SBUS2, X-BUS, etc)
+- MAIN PWR source
+- STBY PWR source
+- Telemetry protocol (S.Port, SBUS2, X-BUS, etc)
 
 Many existing commercial dual power devices do not require configuration but they do not perform the same way as the RX Dual Power. They can measure the source voltages but they can't determine their battery types - how could they differentiate between a fully charged LiFe 2S and a fully discharged LiPo 2S? - and consequently, they use both power sources in parallel. If the batteries are not of the same type, one could deep discharge and sustain damage.
 
