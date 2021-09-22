@@ -221,7 +221,7 @@ Many existing commercial dual power devices do not require configuration but the
 
 The RX Dual Power can conserve the STBY PWR battery charge if you replace the MAIN PWR battery before it has discharged to a low level and the STBY PWR battery has not powered the model. In this case, the STBY PWR battery doesn't need replacing during the flying session. You could locate the STBY PWR battery in a remote location in the model if you extend its charging wires so that they are accessible.
 
-Furthermore, the RX Dual Power can transmit through telemetry a battery discharge or bad contact situation and - more importantly - a critical condition with both power sources not ok. Existing devices cannot do this, they just transmit the voltages.
+Furthermore, the RX Dual Power can transmit through telemetry a battery discharge or bad contact situation and - more importantly - a critical condition if both power sources are not ok. Existing devices cannot do this, they just transmit the voltages.
 
 Configuration through the telemetry connector: **TBD**
 
