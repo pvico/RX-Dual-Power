@@ -227,7 +227,7 @@ Configuration through the telemetry connector: **TBD**
 
 - Using a USB to serial adapter and a Windows/MAC OS/Linux app
 - Using a dedicated multi-device (RX Dual Power, SBUS Decoder and other future devices) programmer with OLED screen
-- Using a Bluetooth LE device and a iOS or Android app
+- Using a Bluetooth LE device and an iOS or Android app
 
 ## PCB
 
