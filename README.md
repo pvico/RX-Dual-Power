@@ -63,7 +63,7 @@ An external LED can be connected to the PCB. It will illuminate together with th
 |       BLINK SLOW      | Source below minimum voltage                           |
 |       BLINK FAST      | Source is disconnected or has a bad contact<sup>*</sup>|
 
-<sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (intermittent bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest volatge).</sub></br></br>
+<sub><sup>*</sup> The LED will keep blinking fast until power off, even if it was a temporary disconnect (intermittent bad contact). This makes it possible to see the bad contact condition after landing. From the moment of the first disconnect, source selection is from Step 3 above (source with the highest voltage).</sub></br></br>
 
 **Note: whenever the two LED's blink simultaneously - fast or slow - it is a critical condition: a CRITICAL message is transmitted by telemetry. It is imperative to land as soon as possible.**
 
