@@ -18,10 +18,10 @@ Power_Source stby_power_source = {0};
 switching_states switching_state;
 volatile bool timer_flag = 0;
 volatile bool requested_to_transmit_data = false;
-// volatile bool 
+bool uart_in_config_mode = false;
 telemetry_types telemetry_type;
 uint8_t* receive_buffer = NULL;
 uint8_t* transmit_buffer = NULL;
 button *buttons;
 uint32_t adc_values[2] = {0};
-uint32_t system_tick = 0;   // updated every 1ms, it will roll over after ± 50days
+volatile uint32_t system_tick = 0;   // updated every 1ms, it will roll over after ± 50days

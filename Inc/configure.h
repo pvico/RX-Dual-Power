@@ -33,6 +33,7 @@ typedef struct {
 
 void init_configure();
 bool is_config_valid();
+void check_serial_configuration();
 config_data *get_stored_configuration();
 
 

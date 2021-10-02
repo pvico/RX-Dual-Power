@@ -279,4 +279,8 @@ void leds_show_error_infinite_loop() {
     while(1);
 }
 
+void leds_on() {
+    leds_show_error();
+}
+
 //######################################################################################

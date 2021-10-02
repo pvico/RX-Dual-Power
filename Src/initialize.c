@@ -24,6 +24,7 @@
 #include "timer.h"
 #include "pin_config.h"
 #include "configure.h"
+#include "system.h"
 
 
 extern Power_Source main_power_source;
@@ -45,18 +46,22 @@ void initialize() {
   // we first put the LTC4412's in their default mode of selecting the highest voltage source to ensure
   // the model is powered up
   power_on();
+
+
+  init_uart();    // UART is now half-duplex 9600bds 8N1
   // Enable the Systick interrupt
   LL_SYSTICK_EnableIT();
 
+  check_serial_configuration(); 
+  init_configure();     // Not sure this is needed
+
+  init_watchdog();
 #ifdef DEBUG_SWD_ENABLED
   // Disable watchdog timer for debugging
   SET_BIT(DBGMCU->APB1FZ, DBGMCU_APB1_FZ_DBG_WWDG_STOP);
 #endif
-  init_watchdog();
   
-  init_configure();
   init_adc_dma();
-  init_uart();
   init_timer();
   
   #ifdef CONSOLE_OUTPUT

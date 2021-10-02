@@ -36,6 +36,7 @@ led_state get_led_state(led the_led);
 
 void leds_show_error();
 void leds_show_error_infinite_loop();
+void leds_on();
 
 
 #endif /* D86274A9_C095_49D9_9A72_98E31E11064A */

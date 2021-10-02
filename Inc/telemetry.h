@@ -14,7 +14,7 @@
 #include "initialize.h"
 
 
-typedef enum { S_PORT_TYPE, SBUS2_TYPE, X_BUS_TYPE, M_LINK_TYPE } telemetry_types;
+typedef enum { S_PORT_TYPE, SBUS2_TYPE, X_BUS_TYPE, M_LINK_TYPE, EX_BUS_TYPE, IBUS_TYPE } telemetry_types;
 
 
 initialization_result init_telemetry();

@@ -28,7 +28,7 @@ void init_uart() {
   LL_USART_SetOverSampling(USART2, LL_USART_OVERSAMPLING_16);
   LL_USART_DisableOverrunDetect(USART2);
   LL_USART_ConfigHalfDuplexMode(USART2);
-  configure_uart(9600, BYTE_FORMAT_8N1, NO_INVERSION);
+  configure_uart(9600, BYTE_FORMAT_8N1, NO_INVERSION);    // Configure initially for serial configuration device
 
   // TODO ?
   // Auto baudrate
@@ -62,6 +62,7 @@ void configure_uart(uint32_t baudrate, uart_byte_format byte_format, uart_pin_in
     break;
   
   default:
+    // If unrecognized config, defaults to 8N1
     data_width = LL_USART_DATAWIDTH_8B;
     parity = LL_USART_PARITY_NONE;
     stop_bits = LL_USART_STOPBITS_1;

@@ -22,6 +22,7 @@ extern telemetry_types telemetry_type;
 extern uint8_t* receive_buffer;
 extern uint8_t* transmit_buffer;
 extern volatile bool uart_rx_complete;
+extern bool uart_in_config_mode;
 
 
 //################################## Public functions ##################################
@@ -37,6 +38,10 @@ initialization_result init_telemetry() {
     // case X_BUS_TYPE:
     //     break;
     // case M_LINK_TYPE:
+    //     break;
+    // case EX_BUS_TYPE:
+    //     break;
+    // case IBUS_TYPE:
     //     break;
     default:
         break;
@@ -54,6 +59,10 @@ void telemetry_loop() {
     // case X_BUS_TYPE:
     //     break;
     // case M_LINK_TYPE:
+    //     break;
+    // case EX_BUS_TYPE:
+    //     break;
+    // case IBUS_TYPE:
     //     break;
     default:
         break;
@@ -75,6 +84,10 @@ void uart_receive_byte_callback() {
     // case X_BUS_TYPE:
     //     break;
     // case M_LINK_TYPE:
+    //     break;
+    // case EX_BUS_TYPE:
+    //     break;
+    // case IBUS_TYPE:
     //     break;
     default:
         break;

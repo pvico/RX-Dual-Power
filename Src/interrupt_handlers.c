@@ -18,6 +18,7 @@
 
 extern volatile bool timer_flag;
 extern volatile uint32_t system_tick;
+extern bool uart_in_config_mode;
 
 
 // Any function present here must be present in the vector table in startup_stm32l021xx.s 
