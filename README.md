@@ -266,7 +266,7 @@ When the model is powered off, if the AH180 detects a magnet or if the SW2 butto
 The configuration of the RX Dual Power is stored in the EEPROM of the STM32L021.
 ##  
 
-<sub><sup id="note11">11</sup> This is required: if a single MOSFET was used, its body diode would allow a reverse current to flow into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
+<sub><sup id="note11">11</sup> This is required: if a single MOSFET was used, a reverse current would flow through the MOSFET's body diode and into the connected battery when the output voltage coming from the other input source is higher than the battery voltage.</sub><br/>
 <sub><sup id="note12">12</sup> Note that we have to do this instead of putting both CTL pins to low or high impedance because MAIN PWR below its minimum voltage can still be above the STBY PWR voltage: consider the case of a discharged LIPO 2S as MAIN PWR (< 7.2V) and a fully charged LIFE 2S (7V) or NIMH 4S (5.4V) as STBY PWR .</sub><br/>
 <sub><sup id="note13">13</sup> We do this if a battery is disconnected because it can be an intermittent bad contact and we don't want the MCU to constantly switch between step 1 and step 2 with annoying and confusing aural messages on the transmitter. Once a disconnect situation happens - past the first 30" after power up to allow for the 2nd battery connection by the user - the LTC4412's will automatically switch to the highest voltage source and, if it has a higher voltage, the intermittent contact one will be used whenever the contact is made.</sub><br/>
 
