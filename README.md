@@ -73,7 +73,7 @@ An external LED can be connected to the PCB. It will illuminate together with th
 | :----------: | :-----------: | ---------------------------------------------------- | ------------------------------------------- |
 |      DIM     |      OFF      | Using MAIN PWR, STBY PWR is ok                       |                                             |
 |  BLINK SLOW  |      DIM      | Using STBY PWR, MAIN PWR LOW                         | Replace MAIN PWR battery                    |
-|  BLINK FAST  |      DIM      | Using STBY PWR, MAIN PWR disconnected or bad contact | Connect a battery or check MAIN PWR battery |
+|  BLINK FAST  |      DIM      | Using STBY PWR, MAIN PWR disconnected or bad contact | Connect a battery or verify MAIN PWR battery if connected |
 |      OFF     |  BLINK FAST   | Using STBY PWR, but it was temporarily disconnected<sup>*</sup> | Check STBY PWR battery            |
 |  BLINK SLOW  |   BLINK SLOW  | Critical condition, both batteries have a low voltage | Replace both batteries   |
 |  BLINK FAST  |   BLINK SLOW  | Critical condition, MAIN PWR disconnected or bad contact and STBY PWR low voltage | Replace STBY PWR battery and check MAIN PWR battery   |
