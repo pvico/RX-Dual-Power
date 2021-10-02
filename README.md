@@ -16,11 +16,11 @@ The RX Dual Power:
 * Uses a magnet to power off the receiver and servos (you can use the buttons if you forgot your magnet!).
 * Is small enough (60x40mm) to be placed in most models.
 * Can power the receiver and servos up to 10A. 
-* XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) to connect batteries.
+* XT30 or XT60 connectors can be soldered directly on the printed circuit board (PCB) for super easy connection of batteries.
 
-The RX Dual Power will at first uses S.Port to communicate with the receiver and will initially only work with FrSky or compatible receivers.
+The RX Dual Power will initially only use the S.Port protocol to communicate with the receiver and will only work with FrSky or compatible receivers.
 
-Future development: 
+Future developments will include other protocols: 
 
 - SBUS2 (Futaba)
 - X-BUS (Spektrum)
